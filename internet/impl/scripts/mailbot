@@ -1,0 +1,296 @@
+#!/usr/bin/perl
+# Mail robot for processing of PCI ID submissions
+# (c) 2001--2002 Martin Mares <mj@ucw.cz>
+# 2008 Michal Vaner <vorner@ucw.cz>
+
+use Mail::Header;
+use Getopt::Long;
+use IO::Handle;
+BEGIN {
+	unshift @INC, ".";
+}
+use PciIds::Db;
+use PciIds::Log;
+use PciIds::Notifications;
+use PciIds::DBQ;
+
+my $patch = 0;
+my $emulate = 0;
+my $debug = 0;
+my $original = "";
+my $author = "";
+GetOptions(
+	'patch!' => \$patch,
+	'emulate!' => \$emulate,
+	'debug!' => \$debug,
+	'orig=s' => \$original,
+	'author=s' => \$author
+) || die "Usage: mailbot [--patch] [--emulate] [--debug] [--orig <name>] [--author <mailaddr>]";
+
+my $reply = "";
+my $reply_plain = "";
+my $msgid = "";
+my $subject = "";
+my $tables = PciIds::DBQ::new( connectDb() );
+
+my $hasAuth = $tables->dbh()->prepare( 'SELECT id FROM users WHERE email = ?' );
+my $addAuth = $tables->dbh()->prepare( "INSERT INTO users (email, passwd) VALUES(?, '')" );
+my $hasItem = $tables->dbh()->prepare( "SELECT 1 FROM locations WHERE id = ?" );
+my $addItem = $tables->dbh()->prepare( "INSERT INTO locations (id, parent) VALUES (?, ?)" );
+my $addComment = $tables->dbh()->prepare( "INSERT INTO history (owner, location, text, nodename, nodedescription) VALUES (?, ?, ?, ?, ?)" );
+
+sub getAuthor( $ ) {
+	my( $mail ) = @_;
+	$hasAuth->execute( $mail );
+	if( my( $id ) = $hasAuth->fetchrow_array ) {
+		return $id;
+	} else {
+		tlog( "mailbot: Creating user $mail" );
+		$addAuth->execute( $mail );
+		my $nid = $dbh->last_insert_id( undef, undef, undef, undef );
+		tlog( "mailbot: User ($mail) id: $nid" );
+		return $nid;
+	}
+}
+
+sub submitItem( $$$$$ ) {
+	my( $id, $name, $description, $text, $author ) = @_;
+	my $created;
+	$id =~ s/(.{8})(.*)/$1\\$2/;
+	$id =~ s/(.{4})(.*)/$1\\$2/;
+	$id = "PC/$id";
+	$hasItem->execute( $id );
+	unless( $hasItem->fetchrow_array ) {
+		tlog( "mailbot: Item created (empty) $id" );
+		my $parent = $id;
+		$parent =~ s/\/[^\/]*//;
+		$addItem->execute( $id, $parent );
+		$created = 1;
+	}
+	$addComment->execute( $author, $id, $text, $name, $description );
+	my $hid = $tables->last();
+	tlog( "mailbot: Comment created $hid $id ".logEscape( $name )." ".logEscape( $description )." ".logEscape( $text ) );
+	notify( $tables, $id, $hid, $created ? 2 : 1, $created ? 0 : 1 );
+}
+
+if (!$patch) {
+	$hdr = new Mail::Header;
+	$hdr->modify(1);
+	$hdr->mail_from(COERCE);
+	$hdr->read(*STDIN{IO});
+	$hdr->unfold();
+	$mfrom = $hdr->get('Mail-From');
+	chomp $mfrom;
+	($mfrom =~ /^MAILER-DAEMON@/i) && blackhole("From mailer daemon");
+	$mfrom =~ s/  .*// or blackhole("Malformed envelope sender");
+	($reply = $hdr->get('Reply-To')) || ($reply = $hdr->get('From')) ||
+		blackhole("Don't know who should I reply to");
+	chomp $reply;
+	if ($reply =~ /<(\S*)>/) {
+		$reply_plain = $1;
+	} elsif ($reply =~ /^\S+$/) {
+		$reply_plain = $reply;
+	} else {
+		$reply_plain = $mfrom;
+	}
+	$reply_plain =~ tr/\n'"\\//d;
+	$msgid = $hdr->get('Message-Id');
+	chomp $msgid;
+	my $subj = $hdr->get('Subject');
+	chomp $subj;
+	if ($subj =~ /^IDS: (.*)/) {
+		$subject = $1;
+	}
+	$author = $reply_plain;
+}
+
+$tprefix = "tmp/mbot-$$";
+$home = "../..";
+mkdir("tmp", 0777);
+mkdir($tprefix, 0777) || error("Cannot create tmpdir");
+chdir($tprefix) || error("Cannot chdir to tmpdir");
+
+open(TEMP, ">patch") || error("Cannot create tmpfile");
+if ($debug || $reply eq "") {
+	open(LOG, ">&STDOUT") || error ("Cannot create outfile");
+} else {
+	open(LOG, ">log") || error ("Cannot create outfile");
+	LOG->autoflush(1);
+}
+if ($reply) {
+	print LOG "Got mail from $reply, will reply to $reply_plain.\n";
+	print LOG "Scanning mail for patch.\n";
+} else {
+	print LOG "Scanning STDIN for patch.\n";
+}
+while (<STDIN>) {
+	while (/^--- /) {
+		$l0 = $_;
+		$_ = <STDIN>;
+		if (/^\+\+\+ /) {
+			print TEMP $l0;
+			print TEMP $_;
+			while (1) {
+				$_ = <STDIN>;
+				chomp;
+				if (/^\s*$/ || !/^[ +\@-]/) {
+					close TEMP;
+					process();
+					exit 0;
+				}
+				print TEMP "$_\n";
+				/^@@ -\d+,(\d+) \+\d+,(\d+) @@/ || error("Malformed patch");
+				$old = $1;
+				$new = $2;
+				while ($old || $new) {
+					$_ = <STDIN>;
+					print TEMP $_;
+					if (/^ /) { $old--; $new--; }
+					elsif (/^-/) { $old--; }
+					elsif (/^\+/) { $new--; }
+					else { error("Malformed patch"); }
+					if ($old<0 || $new<0) { error("Malformed patch"); }
+				}
+			}
+		}
+	}
+}
+error("No patch found");
+
+sub cleanup
+{
+	chdir($home);
+	`rm -rf $tprefix` unless $debug;
+	exit 0;
+}
+
+sub blackhole
+{
+	my $reason = shift @_;
+	print STDERR "Blackholed: $reason\n";
+	cleanup();
+}
+
+sub error
+{
+	my $reason = shift @_;
+	print LOG "$reason\n";
+	mail_reply($reason);
+	cleanup();
+}
+
+sub process
+{
+	print LOG "Patch found.\n";
+	print LOG "Searching for original pci.ids version.\n";
+	foreach $orig (($original eq "") ? glob("$home/origs/*") : ("../../$original")) {
+		print LOG "Trying $orig\n";
+		unlink "pci.ids";
+		unlink "pci.rej";
+		print LOG `/usr/bin/patch <patch --no-backup -o pci.ids -r pci.rej $orig`;
+		if ($?) {
+			print LOG "Failed.\n";
+		} else {
+			print LOG "Patch succeeded.\n";
+			print LOG "Parsing patched file.\n";
+			print LOG `$home/tools/ids_to_dbdump <$orig 2>&1 >orig.db.unsorted`;
+			$? && error("Error parsing original ID database");
+			print LOG `sort +1 <orig.db.unsorted >orig.db`;
+			$? && error("Error sorting original ID database");
+			print LOG `$home/tools/ids_to_dbdump <pci.ids 2>&1 >new.db.unsorted`;
+			$? && error("Error parsing the patched pci.ids file");
+			print LOG `sort +1 <new.db.unsorted >new.db`;
+			$? && error("Error sorting the patched pci.ids file");
+			print LOG "Finding ID differences.\n";
+			`diff -U0 new.db orig.db >diffs`;
+			if ($? > 256) { error("Diff failed. Why?"); }
+			elsif (!$?) { error("No ID changes encountered."); }
+			open(DIFF, "diffs") || error("Cannot open the diff");
+			$subject = undef if $subject eq '';
+			my $authorId = getAuthor( $author );
+			my $live = (!$emulate && !$debug);
+			while (<DIFF>) {
+				chomp;
+				/^(\+\+\+|---)/ && next;
+				/^[+-]/ || next;
+				($tt,$id,$name,$stat,$cmt) = split /\t/;
+				if ($tt =~ /^\+(.*)/) {
+					defined $seen{$id} && next;
+					$name = $cmt = "";
+				} elsif ($tt =~ /^-(.*)/) {
+					$seen{$id} = 1;
+				} else { error("Internal bug #23"); }
+				print LOG "$id\t$name\t$cmt\n";
+				submitItem( $id, $name, $cmt, $subject, $authorId ) if $live;
+			}
+			$dbh->commit();
+			close DIFF;
+			$time = localtime;
+			`echo >>$home/log/mailbot.log "## $time $reply"`;
+			`cat result >>$home/log/mailbot.log`;
+			print LOG "Done.\n";
+			mail_reply("OK");
+			cleanup();
+		}
+	}
+	error("Unable to find any version of pci.ids the patch applies to.");
+}
+
+sub mail_reply
+{
+	my $reason = shift @_;
+	my $sendmail_opts = "-fmj+iderr\@ucw.cz '$reply_plain' mj+idecho\@ucw.cz";
+	if ($debug || $reply eq "") {
+		print "$reason\n";
+		return;
+	} elsif ($emulate) {
+		open(MAIL, ">&STDOUT") || die;
+		print MAIL "SENDMAIL $sendmail_opts\n";
+	} elsif (!open MAIL, "|/usr/sbin/sendmail $sendmail_opts") {
+		print STDERR "Unable to ask mailer for replying!!!\n";
+		print LOG "Unable to ask mailer for replying!!!\n";
+		exit 1;
+	}
+	print MAIL "From: The PCI ID Robot <mj+iderr\@ucw.cz>\n";
+	print MAIL "To: $reply\n";
+	print MAIL "Subject: IDbot: $reason\n";
+	print MAIL "In-Reply-To: $msgid\n" if $msgid ne "";
+	print MAIL "\n";
+	print MAIL <<EOF
+This is an automatic reply from the PCI ID Mail Robot. If you want to contact
+the administrator of the robot, please write to pciids-devel\@lists.sourceforge.net.
+
+EOF
+;
+	if ($reason eq "OK") {
+		print MAIL "Your submission has been accepted.\n\n";
+	} else {
+		print MAIL <<EOF
+Your submission has been rejected. Please make sure that the mail you've sent
+is a unified diff (output of diff -u) against the latest pci.ids file, that
+the diff is not reversed and that your mailer doesn't damage long lines
+and doesn't change tabs to spaces or vice versa. Also, we don't accept MIME
+attachments in base64 encoding yet. If you are unable to fix your problems,
+just use the Web interface at http://pciids.sf.net/ or submit the patch
+to pciids-devel\@lists.sourceforge.net where it will be processed manually.
+See the log below for additional information.
+
+EOF
+;
+	}
+	print MAIL "--- Processing Log ---\n\n";
+	if (open L, "<log") {
+		while (<L>) { print MAIL "$_"; }
+		close L;
+	}
+	print MAIL "\n--- End ---\n";
+	close MAIL;
+}
+
+sub url_encode
+{
+	$_ = shift @_;
+	s/([^a-zA-Z0-9.!*,_-])/'%'.unpack('H2',$1)/ge;
+	s/%20/+/g;
+	$_;
+}

@@ -1,0 +1,6 @@
+./scripts/initdb.pl
+./scripts/feeddb.pl pci.ids
+./scripts/transfer.pl pciidsold
+./scripts/importlog.pl iii.log
+echo 'Database is prepared, but it does not contain admins. Add them manually, please.'
+echo 'Just register like ordinary user and run ./scripts/rights.pl + username validate'

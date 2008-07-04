@@ -1,0 +1,27 @@
+.menu, .navigation
+{
+	overflow: hidden;
+	display: none;
+}
+.author, .time
+{
+	font-style: italic;
+}
+.itemname, .name
+{
+	font-weight: bold;
+}
+.itemdescription, .description
+{
+	font-style: italic;
+	font-weight: bold;
+}
+.unnamedItem
+{
+	font-style: italic;
+}
+.comment, .unseen-comment, .main-comment
+{
+	border-bottom: dotted;
+	border-bottom-width: 1px;
+}

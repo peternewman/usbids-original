@@ -1,0 +1,19 @@
+ PCI IDčkovátko
+================
+Webová aplikace pro ukládání a updatování informací o PCI ID zařízení.
+Je to přepsání již existující a nasazené aplikace, která postrádá
+některé žádané schopnosti (http://pci-ids.ucw.cz/).
+
+Ke každému objektu (tedy, PCI ID, ID výrobce, ID subsystému, ID třídy
+zařízení) bude možno vést diskusi, ve které bude možnost jednak psát
+komentáře a jednak zasílat nové verze popisu ID. Pro tuto diskusi bude
+možné objednat upozornění mailem (a to buď pro každou úpravu zvlášť,
+nebo dávkově).
+
+Diskuse bude chráněná registrací s ověřením emailové adresy. Tato
+adresa bude jednak zobrazena a zpřístupněna administrátorům, jednak
+bude sloužit k zasílání upozornění.
+
+Administrátor bude mít schopnost mazat příspěvky. Taktéž bude moct
+označit (či odznačit) některou verzi informací o daném ID jako
+finální.

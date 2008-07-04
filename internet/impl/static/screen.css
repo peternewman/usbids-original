@@ -1,0 +1,45 @@
+body
+{
+	color: black;
+	background: #DDDDFF;
+}
+.unnamedItem, .unseen-comment
+{
+	background: #D5D5D5;
+}
+.item, .comment
+{
+	background: #F0F0F0;
+}
+.main-comment
+{
+	background: #DDFFDD;
+}
+.itemname, .name
+{
+	font-weight: bold;
+}
+.itemdescription, .description
+{
+	font-weight: bold;
+	font-style: italic;
+}
+.error
+{
+	font-weight: bold;
+	color: red;
+}
+.author, .time
+{
+	font-style: italic;
+	color: #444444;
+}
+.discussion div p, .admin div p
+{
+	padding-left: 5px;
+	padding-right: 5px;
+}
+.menu ul
+{
+	list-style-type: none;
+}

@@ -1,0 +1,11 @@
+db = pciids
+dbuser = pciids
+dbpasswd = 1234
+passwdsalt = 1234
+regmailsalt = 1234
+authsalt = 1234
+from_addr = vorner+pciids@ucw.cz
+sendmail = /home/vorner/bin/sendmail-apache
+logfile = /home/vorner/skola/cvika/internet/impl/pciids.log
+hostname = localhost
+xmpp_pipe = /home/vorner/bin/xmpp_pipe
