@@ -4,10 +4,10 @@ use warnings;
 use base 'Exporter';
 
 #Where are data?
-our $directory = '/home/vorner/skola/cvika/internet/impl';
+our $directory = '/home/vorner/prog/pciids/';
 our @EXPORT=qw($directory);
 
 #Where are the modules?
-use lib ( '/home/vorner/skola/cvika/internet/impl' );
+use lib ( '/home/vorner/prog/pciids/' );
 
 1;

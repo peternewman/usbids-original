@@ -6,6 +6,6 @@ regmailsalt = 1234
 authsalt = 1234
 from_addr = vorner+pciids@ucw.cz
 sendmail = /home/vorner/bin/sendmail-apache
-logfile = /home/vorner/skola/cvika/internet/impl/pciids.log
+logfile = /home/vorner/prog/pciids/pciids.log
 hostname = localhost
 xmpp_pipe = /home/vorner/bin/xmpp_pipe
