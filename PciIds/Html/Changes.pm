@@ -16,7 +16,7 @@ sub genNewItemForm( $$$$$ ) {
 	genHtmlHead( $req, "$prettyAddr - add new item", undef );
 	print "<h1>$prettyAddr - add new item</h1>\n";
 	print "<div class='error'>$error</div>\n" if( defined $error );
-	print "<form name='newitem' id='newitem' method='POST' action='".setAddrPrefix( $req->uri(), "mods" ).buildExcept( 'action', $args )."?action=newitem'>\n<table>";
+	print "<form name='newitem' id='newitem' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'input', 'Id:', 'text', 'id', 'maxlength="50"' ],
 		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],
 		[ 'input', 'Description*:', 'text', 'description', 'maxlength="1024"' ],
@@ -85,7 +85,7 @@ sub genNewCommentForm( $$$$$ ) {
 	genHtmlHead( $req, "$prettyAddr - add a comment to discussion", undef );
 	print "<h1>$prettyAddr - add a comment to discussion</h1>\n";
 	print "<div class='error'>$error</div>\n" if( defined $error );
-	print "<form name='newcomment' id='newitem' method='POST' action='".setAddrPrefix( $req->uri(), "mods" ).buildExcept( 'action', $args )."?action=newcomment'>\n<table>";
+	print "<form name='newcomment' id='newitem' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'textarea', 'Text:', undef, 'text', 'rows="5" cols="50"' ],
 		[ 'input', 'Name*:', 'text', 'name', 'maxlength="200"' ],
 		[ 'input', 'Description*:', 'text', 'description', 'maxlength="1024"' ],

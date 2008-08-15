@@ -20,7 +20,7 @@ sub genRegisterForm( $$$$ ) {
 	genHtmlHead( $req, 'Register a new user', undef );
 	print '<h1>Register a new user</h1>';
 	print '<div class="error">'.$error.'</div>' if( defined $error );
-	print '<form name="register" id="register" method="POST" action="'.setAddrPrefix( $req->uri(), 'mods' ).buildExcept( 'action', $args ).'?action=register">
+	print '<form name="register" id="register" method="POST" action="">
 		<table>';
 	genForm( [ [ 'Email:', 'text', 'email', 'maxlength="255"' ],
 		[ '', 'submit', 'register', 'value="Register"' ] ], $values );
@@ -83,7 +83,7 @@ sub genConfirmForm( $$$$ ) {
 	print '<h1>Confirm registration</h1>';
 	print '<div class="error">'.$error.'</div>' if( defined $error );
 	print '<p>Email address: '.encode( $values->{'email'} );
-	print '<form name="register-confirm" id="register-confirm" method="POST" action="'.setAddrPrefix( $req->uri(), 'mods' ).'?action=register-confirm">';
+	print '<form name="register-confirm" id="register-confirm" method="POST" action="">';
 	print '<div class="hidden"><p><input type="hidden" value="'.encode( $values->{'email'} ).'" name="email"><input type="hidden" value="'.encode( $values->{'confirm'} ).'" name="confirm"></div>';
 	print '<table>';
 	genForm( [ [ 'Login (Optional):', 'text', 'login', 'maxlength="50"' ],
@@ -182,7 +182,7 @@ sub genLoginForm( $$$$ ) {
 	my $addr = PciIds::Address::new( $req->uri() );
 	genCustomMenu( $addr, $args, [ [ 'Register', 'register' ], [ 'Reset password', 'respass' ] ] );
 	print '<div class="error"><p>'.$error.'</div>' if( defined $error );
-	print '<form name="login" id="login" method="POST" action="'.setAddrPrefix( $req->uri(), 'mods' ).buildExcept( 'action', $args ).'?action=login"><table>';
+	print '<form name="login" id="login" method="POST" action=""><table>';
 	genForm( [ [ 'Login name or email:', 'text', 'login', 'maxlength="255"' ],
 		[ 'Password:', 'password', 'password' ],
 		[ '', 'submit', 'login', 'value="Login"' ] ], $values );
@@ -260,7 +260,7 @@ sub genResetPasswdForm( $$$$ ) {
 	print "<p>If you forgot your password (or didn't create one yet), you can reset it to a new value here.\n";
 	print "Provide your email address here and further instructions will be sent to you.\n";
 	print '<div class="error">'.$error.'</div>' if( defined $error );
-	print '<form name="respass" id="respass" method="POST" action="'.setAddrPrefix( $req->uri(), 'mods' ).buildExcept( 'action', $args ).'?action=respass">
+	print '<form name="respass" id="respass" method="POST" action="">
 		<table>';
 	genForm( [ [ 'Email:', 'text', 'email', 'maxlength="255"' ],
 		[ '', 'submit', 'respass', 'value="Send"' ] ], $values );
@@ -308,7 +308,7 @@ sub genResetPasswdConfigForm( $$$$$$ ) {
 	print "<h1>Reset password</h1>\n";
 	print '<div class="error">'.$error.'</div>' if( defined $error );
 	print "<p>You can enter new password here:\n";
-	print '<form name="respass-confirm" id="respass-confirm" method="POST" action="'.setAddrPrefix( $req->uri(), 'mods' ).buildExcept( 'action', $args ).'?action=respass-confirm">
+	print '<form name="respass-confirm" id="respass-confirm" method="POST" action="">
 		<table>';
 	genForm( [ [ 'Password:', 'password', 'password' ],
 		[ 'Confirm password:', 'password', 'confirm_password' ],
@@ -376,7 +376,7 @@ sub genProfileForm( $$$$$ ) {
 	print "<h1>User profile</h1>\n";
 	print '<div class="error"><p>'.$error.'</div>' if defined $error;
 	print "<div class='info'><p>$info</div>\n" if defined $info;
-	print '<form name="profile" id="profile" method="POST" action="'.setAddrPrefix( $req->uri(), 'mods' ).buildExcept( 'action', $args ).'?action=profile"><table>';
+	print '<form name="profile" id="profile" method="POST" action=""><table>';
 	genForm( [ [ 'Email:', 'text', 'email', 'maxlength="255"' ],
 		[ 'Login:', 'text', 'login', 'maxlength="50"' ],
 		[ 'Xmpp:', 'text', 'xmpp', 'maxlength="255"' ],

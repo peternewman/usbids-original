@@ -14,7 +14,7 @@ sub genNewAdminForm( $$$$ ) {
 	genHtmlHead( $req, 'Administration ‒ pending events', undef );
 	print "<h1>Administration ‒ pending events</h1>\n";
 	print "<div class='error'>".$error."</div>\n" if( defined $error );
-	print '<form name="admin" id="admin" class="admin" method="POST" action="'.setAddrPrefix( $req->uri(), 'mods' ).buildExcept( 'action', $args )."?action=admin\">\n";
+	print "<form name='admin' id='admin' class='admin' method='POST' action=''>\n";
 	my $lastId;
 	my $started = 0;
 	my $cnt = 0;

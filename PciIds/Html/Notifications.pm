@@ -27,7 +27,7 @@ sub genNotifForm( $$$$$$ ) {
 		}
 	}
 	print "</ul></div>\n" if( $started );
-	print "<form name='notifications' id='notifications' method='POST' action='".setAddrPrefix( $req->uri(), "mods" ).buildExcept( 'action', $args )."?action=notifications'>\n";
+	print "<form name='notifications' id='notifications' method='POST' action=''>\n";
 	print "<p><input type='checkbox' value='recursive' name='recursive'".( $data->{'recursive'} ? " checked='checked'" : "" )."> Recursive\n";
 	print "<h3>Notification level</h3>\n";
 	print "<p>\n";
