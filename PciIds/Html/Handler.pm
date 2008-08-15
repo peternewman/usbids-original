@@ -13,6 +13,7 @@ use PciIds::Html::Notifications;
 use PciIds::Notifications;
 use Apache2::Const qw(:common :http);
 
+$ENV{'PATH'} = '';
 my $dbh = connectDb();
 my $tables = PciIds::Html::Tables::new( $dbh );
 
