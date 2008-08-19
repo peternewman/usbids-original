@@ -28,7 +28,11 @@ sub list( $$$$ ) {
 	genMenu( $address, $args, $auth );
 	print htmlDiv( 'name', '<p>'.encode( $name ) ) if( defined( $name ) );
 	print htmlDiv( 'description', '<p>'.encode( $description ) ) if( defined( $description ) );
-	print '<p><a class="navigation" href="/read/'.$address->parent()->get().'/">'.encode( $address->parent()->pretty() )."</a>" if( defined( $address->parent() ) );
+	if( defined( $address->parent() ) ) {
+		print '<p><a class="navigation" href="/read/'.$address->parent()->get().'/">'.encode( $address->parent()->pretty() )."</a>";
+	} else {
+		print '<p><a class="navigation" href="/index.html">Main page</a>';
+	}
 	my $diss = 0;
 	my $comment;
 	foreach $comment ( @{$tables->history( $address->get() )} ) {
