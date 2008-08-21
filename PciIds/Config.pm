@@ -1,7 +1,7 @@
 package PciIds::Config;
 use strict;
 use warnings;
-use Startup;
+use PciIds::Startup;
 use base 'Exporter';
 
 our @EXPORT = qw(&checkConf &defConf %config &confList);

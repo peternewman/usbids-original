@@ -1,4 +1,4 @@
-package Startup;
+package PciIds::Startup;
 use strict;
 use warnings;
 use base 'Exporter';

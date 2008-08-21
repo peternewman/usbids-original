@@ -7,7 +7,7 @@ use DBI;
 use PciIds::Config;
 use Digest::MD5 qw(md5_base64 md5_hex);#TODO Some better algorithm?
 use HTML::Entities;
-use Startup;
+use PciIds::Startup;
 use PciIds::Log;
 use Apache2::Connection;
 
