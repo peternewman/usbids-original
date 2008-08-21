@@ -182,7 +182,7 @@ sub genLoginForm( $$$$ ) {
 	my $addr = PciIds::Address::new( $req->uri() );
 	genCustomMenu( $addr, $args, [ [ 'Register', 'register' ], [ 'Reset password', 'respass' ] ] );
 	print '<div class="error"><p>'.$error.'</div>' if( defined $error );
-	print '<form name="login" id="login" method="POST" action=""><table>';
+	print '<form name="login" id="login" method="POST" action="'.setAddrPrefix( $req->uri(), 'mods' ).buildExcept( 'action', $args ).'?action=login"><table>';
 	genForm( [ [ 'Login name or email:', 'text', 'login', 'maxlength="255"' ],
 		[ 'Password:', 'password', 'password' ],
 		[ '', 'submit', 'login', 'value="Login"' ] ], $values );
