@@ -10,7 +10,7 @@ use PciIds::Html::Debug;
 use PciIds::Html::Changes;
 use PciIds::Html::Admin;
 use PciIds::Html::Notifications;
-use PciIds::Notifications;
+use PciIds::Html::Help;
 use Apache2::Const qw(:common :http);
 
 $ENV{'PATH'} = '';
@@ -59,6 +59,7 @@ sub handler( $$ ) {
 	my( $req, $hasSSL ) = @_;
 	return HTTPRedirect( $req, $req->uri()."index.html" ) if( $req->uri() eq '/' );
 	return DECLINED if( $req->uri() =~ /^\/((static)\/|robots.txt|index.html)/ );
+	return getHelp( $req ) if( $req->uri() =~ /^\/help/ );
 	my $args = parseArgs( $req->args() );
 	my $action = $args->{'action'};
 	$action = '' unless( defined $action );
