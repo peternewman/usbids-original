@@ -69,8 +69,15 @@ sub handler( $$ ) {
 	return HTTP_BAD_REQUEST unless( defined $sub );#I do not know this action for given method
 	my $auth = checkLogin( $req, $tables );#Check if logged in
 	$auth->{'ssl'} = $hasSSL;
-	my $result = &{$sub}( $req, $args, $tables, $auth );#Just do the right thing
-	$tables->commit();
+	my( $result );
+	eval {
+		$result = &{$sub}( $req, $args, $tables, $auth );#Just do the right thing
+		$tables->commit();
+	};
+	if( $@ ) {
+		$tables->rollback();
+		die $@;
+	}
 	return $result;
 }
 
