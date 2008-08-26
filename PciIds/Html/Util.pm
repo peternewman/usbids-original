@@ -68,13 +68,16 @@ sub genMenu( $$$ ) {
 	genCustomMenu( $address, $args, \@list );
 }
 
-sub genTableHead( $$ ) {
-	my( $class, $captions ) = @_;
-	print '<table class="'.$class.'"><tr>';
-	foreach( @{$captions} ) {
-		print '<th>'.$_;
+sub genTableHead( $$$ ) {
+	my( $class, $captions, $cols ) = @_;
+	print '<table class="'.$class.'">';
+	foreach( @{$cols} ) {
+		print "<col class='$_'>\n";
 	}
-	print '</tr>';
+	print "<tr>\n";
+	foreach( @{$captions} ) {
+		print '<th>'.$_."\n";
+	}
 }
 
 sub genTableTail() {

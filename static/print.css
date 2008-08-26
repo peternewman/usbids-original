@@ -25,3 +25,16 @@
 	border-bottom: dotted;
 	border-bottom-width: 1px;
 }
+table.subnodes
+{
+	width: 99%;
+	table-layout: fixed;
+}
+col.id-col
+{
+	width: 3em;
+}
+col.name-col
+{
+	width: 60%;
+}

@@ -69,7 +69,7 @@ sub list( $$$$ ) {
 		my $url = '/read/'.$address->get().buildExcept( 'sort', $args );
 		my $sort = ( $args->{'sort'} or 'id' );
 		my( $sort_id, $sort_name ) = ( ( $sort eq 'id' ? 'rid' : 'id' ), ( $sort eq 'name' ? 'rname' : 'name' ) );
-		genTableHead( 'subnodes', [ '<a href="'.$url.'?sort='.$sort_id.'">Id</a>', '<a href="'.$url.'?sort='.$sort_name.'">Name</a>', 'Description' ] );
+		genTableHead( 'subnodes', [ '<a href="'.$url.'?sort='.$sort_id.'">Id</a>', '<a href="'.$url.'?sort='.$sort_name.'">Name</a>', 'Description' ], [ 'id-col', 'name-col', 'desc-col' ] );
 		$args->{'restrict'} = $address->defaultRestrict() unless( defined( $args->{'restrict'} ) );
 		$tables->nodes( $address->get(), $args );
 		genTableTail();
