@@ -15,7 +15,7 @@ my $db = PciIds::DBQAny::new( connectDb(), {
 foreach( @{$db->query( 'list', [] )} ) {
 	my( $id, $name, $description ) = @{$_};
 	$_ = $id;
-	my $prefix = ( /^PC/ ) ? '' : 'C ';
+	my $prefix = ( /^PD\/..$/ ) ? 'C ' : '';
 	s/^P.\///;
 	s/[^\/]//g;
 	s/\//\t/g;
