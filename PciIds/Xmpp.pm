@@ -15,7 +15,8 @@ sub sendXmpp( $$$ ) {
 
 sub flushXmpp() {
 	return unless @pending;
-	open JELNET, "|$config{xmpp_pipe} > /dev/null" or die "Could not start XMPP sender\n";
+	open JELNET, "|$config{jelnet} --silent-passwd \"$config{xmpp_name}\" > /dev/null" or die "Could not start XMPP sender\n";
+	print JELNET $config{"xmpp_passwd"}."\n";
 	foreach( @pending ) {
 		my( $to, $subject, $body ) = @{$_};
 		$subject =~ s/&/&amp;/g;
@@ -29,6 +30,6 @@ sub flushXmpp() {
 	close JELNET;
 }
 
-checkConf( [ "xmpp_pipe" ] );
+checkConf( [ "xmpp_name", "xmpp_passwd", "jelnet" ] );
 
 1;

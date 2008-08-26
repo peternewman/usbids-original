@@ -8,4 +8,6 @@ from_addr = vorner+pciids@ucw.cz
 sendmail = /home/vorner/bin/sendmail-apache
 logfile = /home/vorner/prog/pciids/pciids.log
 hostname = localhost
-xmpp_pipe = /home/vorner/bin/xmpp_pipe
+jelnet = /home/vorner/bin/jelnet
+xmpp_passwd = 1234
+xmpp_name = none
