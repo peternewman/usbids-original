@@ -2,6 +2,7 @@ package PciIds::Email;
 use strict;
 use warnings;
 use PciIds::Config;
+use PciIds::Users;
 use base 'Exporter';
 
 our @EXPORT = qw(&sendMail);
@@ -12,6 +13,9 @@ defConf( { 'sendmail' => '/usr/sbin/sendmail' } );
 sub sendMail( $$$ ) {
 	my( $to, $subject, $body ) = @_;
 	my( $from, $sendmail ) = confList( [ 'from_addr', 'sendmail' ] );
+	my $error;
+	( $error, $to ) = emailCheck( $to, undef );
+	die "Invalid email in database $to\n" if defined $error;
 	$body =~ s/^\.$/../gm;
 	open SENDMAIL, "|$sendmail -f$from $to" or die 'Can not send mail';
 	print SENDMAIL "From: $from\n".

@@ -16,6 +16,7 @@ sub loadConf() {
 		my( $name, $val );
 		die "Invalid syntax on line $_\n" unless( ( $name, $val ) = /^\s*(.*\S)\s*=\s*(.*\S)\s*$/ );
 		$val =~ s/^"(.*)"$/$1/;
+		( $val ) = ( $val =~ /(.*)/ ); #Untaint the value - config is considered part of the program
 		$config{$name} = $val;
 	}
 	close CONFIG;

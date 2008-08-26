@@ -43,15 +43,6 @@ sub loginCheck( $$ ) {
 	return undef;
 }
 
-sub emailCheck( $$ ) {
-	my( $email, $tables ) = @_;
-	my $newmail;
-	return 'Does not look like an email address' unless ( ( $newmail ) = ( $email =~ /^([^,? "'`;]+@[^@,?\/ "'`;]+)$/ ) );#make sure the mail is not only reasonable looking, but safe to work with too
-	return 'Email too long' if length $newmail > 255;
-	return 'An account for this email address already exists' if( $tables->hasEmail( $newmail ) );
-	return ( undef, $newmail );
-}
-
 sub registerSubmit( $$$ ) {#A registration form has been submited
 	my( $req, $args, $tables ) = @_;
 	my( $data, $error ) = getForm( {

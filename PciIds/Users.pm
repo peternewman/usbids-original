@@ -13,7 +13,16 @@ use Apache2::Connection;
 
 my( %privnames, %privnums );
 
-our @EXPORT = qw(&addUser &emailConfirm &checkConfirmHash &saltedPasswd &genAuthToken &checkAuthToken &hasRight &getRightDefs &genResetHash &changePasswd &pushProfile);
+our @EXPORT = qw(&addUser &emailConfirm &checkConfirmHash &saltedPasswd &genAuthToken &checkAuthToken &hasRight &getRightDefs &genResetHash &changePasswd &pushProfile &emailCheck);
+
+sub emailCheck( $$ ) {
+	my( $email, $tables ) = @_;
+	my $newmail;
+	return 'Does not look like an email address' unless ( ( $newmail ) = ( $email =~ /^([^,? "'`;]+@[^@,?\/ "'`;]+)$/ ) );#make sure the mail is not only reasonable looking, but safe to work with too
+	return 'Email too long' if length $newmail > 255;
+	return 'An account for this email address already exists' if( ( defined $tables ) && $tables->hasEmail( $newmail ) );
+	return ( undef, $newmail );
+}
 
 sub saltedPasswd( $$ ) {
 	my( $email, $passwd ) = @_;
