@@ -27,9 +27,9 @@ sub htmlFormatTable( $$$$$$ ) {
 			}
 			my $data = &{$func}( $line->[ $i ] );
 			$data = "" unless( defined( $data ) );
-			print $header.$data.'</td>';
+			print $header.$data;
 		}
-		print "</tr>\n";
+		print "\n";
 	}
 }
 
