@@ -187,7 +187,7 @@ sub submitItem( $$$ ) {
 	return( 'exists', undef ) if( defined( $self->item( $addr->get(), 0 ) ) );
 	eval {
 		$self->command( 'newitem', [ $addr->get(), $addr->parent()->get() ] );
-		$self->command( 'newhistory', [ $addr->get(), $auth->{'authid'}, $data->{'text'}, $data->{'name'}, $data->{'description'} ] );
+		$self->command( 'newhistory', [ $addr->get(), $auth->{'authid'}, $data->{'discussion'}, $data->{'name'}, $data->{'note'} ] );
 
 	};
 	if( $@ ) {
@@ -199,7 +199,7 @@ sub submitItem( $$$ ) {
 
 sub submitHistory( $$$$ ) {
 	my( $self, $data, $auth, $address ) = @_;
-	$self->command( 'newhistory', [ $address->get(), $auth->{'authid'}, $data->{'text'}, $data->{'name'}, $data->{'description'} ], 1 );
+	$self->command( 'newhistory', [ $address->get(), $auth->{'authid'}, $data->{'text'}, $data->{'name'}, $data->{'note'} ], 1 );
 	return $self->last();
 }
 

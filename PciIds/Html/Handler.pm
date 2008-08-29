@@ -23,7 +23,7 @@ my %handlers = (
 		'' => \&PciIds::Html::List::list,
 		#Database changes
 		'newitem' => \&PciIds::Html::Changes::newItemForm,
-		'newcomment' => \&PciIds::Html::Changes::newCommentForm,
+		'newhistory' => \&PciIds::Html::Changes::newHistoryForm,
 		#Registering users
 		'register' => \&PciIds::Html::Users::registerForm,
 		'register-confirm' => \&PciIds::Html::Users::confirmForm,
@@ -43,7 +43,7 @@ my %handlers = (
 	},
 	'POST' => {
 		'newitem' => \&PciIds::Html::Changes::newItemSubmit,
-		'newcomment' => \&PciIds::Html::Changes::newCommentSubmit,
+		'newhistory' => \&PciIds::Html::Changes::newHistorySubmit,
 		'register' => \&PciIds::Html::Users::registerSubmit,
 		'register-confirm' => \&PciIds::Html::Users::confirmSubmit,
 		'login' => \&PciIds::Html::Users::loginSubmit,

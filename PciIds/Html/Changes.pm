@@ -10,7 +10,7 @@ use Apache2::Const qw(:common :http);
 
 sub genNewItemForm( $$$$$ ) {
 	my( $req, $args, $tables, $error, $values ) = @_;
-	my( $ok, $parent, $name, $description, $address ) = loadItem( $tables, $req->uri() );
+	my( $ok, $parent, $name, $note, $address ) = loadItem( $tables, $req->uri() );
 	return NOT_FOUND unless( $ok );
 	my $prettyAddr = encode( $address->pretty() );
 	genHtmlHead( $req, "$prettyAddr - add new item", undef );
@@ -19,8 +19,8 @@ sub genNewItemForm( $$$$$ ) {
 	print "<form name='newitem' id='newitem' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'input', 'Id:', 'text', 'id', 'maxlength="50"' ],
 		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],
-		[ 'input', 'Description*:', 'text', 'description', 'maxlength="1024"' ],
-		[ 'textarea', 'Text*:', undef, 'text', 'rows="5" cols="50"' ],
+		[ 'input', 'Note*:', 'text', 'note', 'maxlength="1024"' ],
+		[ 'textarea', 'Discussion*:', undef, 'discussion', 'rows="5" cols="50"' ],
 		[ 'input', '', 'submit', 'submit', 'value="Submit"' ] ], $values );
 	print '</table></form>';
 	print '<p>Items marked with * are optional.';
@@ -40,7 +40,7 @@ sub newItemForm( $$$$ ) {
 sub newItemSubmit( $$$$ ) {
 	my( $req, $args, $tables, $auth ) = @_;
 	if( defined $auth->{'authid'} ) {
-		my( $pok, $parent, $pname, $pdescription, $paddress ) = loadItem( $tables, $req->uri() );
+		my( $pok, $parent, $pname, $pnote, $paddress ) = loadItem( $tables, $req->uri() );
 		return NOT_FOUND unless( $pok );
 		my( $data, $error ) = getForm( {
 			'id' => sub{ return ( length shift ) ? undef : 'Please, provide the ID'; }, #Checked at the bottom and added as address
@@ -50,8 +50,8 @@ sub newItemSubmit( $$$$ ) {
 				return 'Lenght limit of the name is 200 characters' if( length $name > 200 );
 				return undef;
 			},
-			'description' => sub { return ( length shift > 1024 ) ? 'Description can not be longer than 1024 characters' : undef; },
-			'text' => sub { return ( length shift > 1024 ) ? 'Text can not be longer than 1024 characters' : undef; }
+			'note' => sub { return ( length shift > 1024 ) ? 'Note can not be longer than 1024 characters' : undef; },
+			'discussion' => sub { return ( length shift > 1024 ) ? 'Discussion can not be longer than 1024 characters' : undef; }
 		}, [ sub { my( $data ) = @_;
 			my $errstr;
 			return undef unless( length $data->{'id'} );#No address, so let it for the first check
@@ -70,50 +70,50 @@ sub newItemSubmit( $$$$ ) {
 			die "Failed to submit new item: $result\n";
 		}
 		notify( $tables, $data->{'address'}->get(), $comName, 2, 0 );
-		tulog( $auth->{'authid'}, "Item created ".$data->{'address'}->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'description'} )." ".logEscape( $data->{'text'} )." $comName" );
+		tulog( $auth->{'authid'}, "Item created ".$data->{'address'}->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'note'} )." ".logEscape( $data->{'discussion'} )." $comName" );
 		return HTTPRedirect( $req, '/read/'.$data->{'address'}->get().'?action=list' );
 	} else {
 		return notLoggedComplaint( $req, $args, $auth );
 	}
 }
 
-sub genNewCommentForm( $$$$$ ) {
+sub genNewHistoryForm( $$$$$ ) {
 	my( $req, $args, $tables, $error, $values ) = @_;
-	my( $ok, $parent, $name, $description, $address ) = loadItem( $tables, $req->uri() );
+	my( $ok, $parent, $name, $note, $address ) = loadItem( $tables, $req->uri() );
 	return NOT_FOUND unless( $ok );
 	my $prettyAddr = encode( $address->pretty() );
-	genHtmlHead( $req, "$prettyAddr - add a comment to discussion", undef );
-	print "<h1>$prettyAddr - add a comment to discussion</h1>\n";
+	genHtmlHead( $req, "$prettyAddr - discuss", undef );
+	print "<h1>$prettyAddr - discuss</h1>\n";
 	print "<div class='error'>$error</div>\n" if( defined $error );
-	print "<form name='newcomment' id='newitem' method='POST' action=''>\n<table>";
+	print "<form name='newhistory' id='newhistory' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'textarea', 'Text:', undef, 'text', 'rows="5" cols="50"' ],
 		[ 'input', 'Name*:', 'text', 'name', 'maxlength="200"' ],
-		[ 'input', 'Description*:', 'text', 'description', 'maxlength="1024"' ],
+		[ 'input', 'Note*:', 'text', 'note', 'maxlength="1024"' ],
 		[ 'input', '', 'submit', 'submit', 'value="Submit"' ] ], $values );
 	print '</table></form>';
-	print '<p>Items marked with * are optional, use them only if you want to change the name and description.';
-	print '<p>If you specify description must include name too.';
+	print '<p>Items marked with * are optional, use them only if you want to change the name and note.';
+	print '<p>If you specify note, you must include name too.';
 	genHtmlTail();
 	return OK;
 }
 
-sub newCommentForm( $$$$ ) {
+sub newHistoryForm( $$$$ ) {
 	my( $req, $args, $tables, $auth ) = @_;
 	if( defined $auth->{'authid'} ) {
-		return genNewCommentForm( $req, $args, $tables, undef, {} );
+		return genNewHistoryForm( $req, $args, $tables, undef, {} );
 	} else {
 		return notLoggedComplaint( $req, $args, $auth );
 	}
 }
 
-sub newCommentSubmit( $$$$ ) {
+sub newHistorySubmit( $$$$ ) {
 	my( $req, $args, $tables, $auth ) = @_;
 	if( defined $auth->{'authid'} ) {
-		my( $ok, $parent, $name, $description, $address ) = loadItem( $tables, $req->uri() );
+		my( $ok, $parent, $name, $note, $address ) = loadItem( $tables, $req->uri() );
 		return NOT_FOUND unless( $ok );
 		my( $data, $error ) = getForm( {
 			'name' => sub { return ( length shift > 200 ) ? 'Lenght limit of the name is 200 characters' : undef; },
-			'description' => sub { return ( length shift > 1024 ) ? 'Description can not be longer than 1024 characters' : undef; },
+			'note' => sub { return ( length shift > 1024 ) ? 'Note can not be longer than 1024 characters' : undef; },
 			'text' => sub {
 				my( $expl ) = @_;
 				return 'Text can not be longer than 1024 characters' if ( length $expl > 1024 );
@@ -121,10 +121,10 @@ sub newCommentSubmit( $$$$ ) {
 				return undef;
 			}
 		}, [ sub { my( $data ) = @_;
-			return 'You must provide name too' if( ( length $data->{'description'} ) && ( ! length $data->{'name'} ) );
+			return 'You must provide name too' if( ( length $data->{'note'} ) && ( ! length $data->{'name'} ) );
 			return undef;
 		}, sub { return $address->canAddComment() ? undef : 'You can not discuss this item'; } ] );
-		return genNewCommentForm( $req, $args, $tables, $error, $data ) if( defined $error );
+		return genNewHistoryForm( $req, $args, $tables, $error, $data ) if( defined $error );
 		my $hid = $tables->submitHistory( $data, $auth, $address );
 		tulog( $auth->{'authid'}, "Comment created $hid ".$address->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'description'} )." ".logEscape( $data->{'text'} ) );
 		notify( $tables, $address->get(), $hid, ( defined $name && ( $name ne '' ) ) ? 1 : 0, 1 );

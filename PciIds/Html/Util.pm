@@ -61,7 +61,7 @@ sub genMenu( $$$ ) {
 		push @list, [ 'Log in', 'login' ];
 	}
 	push @list, [ 'Add item', 'newitem' ] if( $address->canAddItem() );
-	push @list, [ 'Discuss', 'newcomment' ] if( $address->canAddComment() );
+	push @list, [ 'Discuss', 'newhistory' ] if( $address->canAddComment() );
 	push @list, [ 'Administrate', 'admin' ] if( hasRight( $auth->{'accrights'}, 'validate' ) );
 	push @list, [ 'Profile', 'profile' ] if defined $auth->{'authid'};
 	push @list, [ 'Notifications', 'notifications' ] if defined $auth->{'authid'};
