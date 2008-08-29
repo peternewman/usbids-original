@@ -45,7 +45,7 @@ body
 }
 table.subnodes
 {
-	width: 99%;
+	width: 100%;
 	table-layout: fixed;
 }
 col.id-col
