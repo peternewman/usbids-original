@@ -69,4 +69,8 @@ sub defaultRestrictList( $ ) {
 	}
 }
 
+sub parent( $ ) {
+	return undef;
+}
+
 1;

@@ -7,7 +7,7 @@ use PciIds::Users;
 use Apache2::Const qw(:common :http);
 use APR::Table;
 
-our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect);
+our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath);
 
 sub encode( $ ) {
 	return encode_entities( shift, "\"'&<>" );
@@ -118,6 +118,18 @@ sub HTTPRedirect( $$ ) {
 	my( $req, $link ) = @_;
 	$req->headers_out->add( 'Location' => $link );
 	return HTTP_SEE_OTHER;
+}
+
+sub genPath( $$ ) {
+	my( $address, $printAddr ) = @_;
+	my $path = $address->path();
+	push @{$path}, $address if( $printAddr );
+	print "<div class='navigation'><ul>\n";
+	foreach my $addr ( @{$path} ) {
+		print "  <li><a href='/read/".$addr->get()."/'>".encode( $addr->pretty() )."</a>\n";
+	}
+	print "<li><a href='/index.html'>Main page</a>\n";
+	print "</div>\n";
 }
 
 1;

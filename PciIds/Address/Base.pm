@@ -35,4 +35,14 @@ sub defaultRestrict( $ ) { return "" };
 
 sub defaultRestrictList( $ ) { return [] };
 
+sub path( $ ) {
+	my( $self ) = @_;
+	my @result;
+	my $address = $self;
+	while( defined( $address = $address->parent() ) ) {
+		push @result, $address;
+	}
+	return \@result;
+}
+
 1;

@@ -15,7 +15,7 @@ sub pretty( $ ) {
 	$_ = $self->get();
 	s/^PC\/?//;
 	s/\//:/g;
-	s/([0-9a-f]{4,4})([0-9a-f]{4,4})/$1 $2/g;
+	s/([0-9a-f]{4})([0-9a-f]{4})/$1 $2/g;
 	my $prefix = '';
 	if( /:.*:/ ) {
 		$prefix = 'Subsystem';
@@ -30,7 +30,7 @@ sub pretty( $ ) {
 sub tail( $ ) {
 	my( $new ) = ( shift->get() );
 	$new =~ s/.*\/(.)/$1/;
-	$new =~ s/([0-9a-f]{4,4})([0-9a-f]{4,4})/$1 $2/g;
+	$new =~ s/([0-9a-f]{4})([0-9a-f]{4})/$1 $2/g;
 	return $new;
 }
 
@@ -50,6 +50,14 @@ sub append( $$ ) {
 	$suffix =~ s/ //g;
 	return ( undef, "Invalid ID syntax" ) unless ( ( ( $self->get() !~ /^PC\/.*\// ) && ( $suffix =~ /^[0-9a-f]{4}$/ ) ) || ( ( $self->get() =~ /^PC\/.*\// ) && ( $suffix =~ /^[0-9a-f]{8}$/ ) ) );
 	return ( PciIds::Address::Base::new( $self->{'value'} . ( ( $self->{'value'} =~ /\/$/ ) ? '' : '/' ) . $suffix ), undef );
+}
+
+sub path( $ ) {
+	my( $self ) = @_;
+	my $result = PciIds::Address::Base::path( $self );
+	my( $vid ) = ( $self->get() =~ /^PC\/[0-9a-f]{4}\/[0-9a-f]{4}\/([0-9a-f]{4})/ );
+	splice @{$result}, 2, 0, PciIds::Address::new( "PC/$vid" ) if( defined $vid ) && ( $result->[1]->get() ne "PC/$vid" );
+	return $result;
 }
 
 1;
