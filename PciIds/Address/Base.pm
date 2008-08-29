@@ -25,7 +25,7 @@ sub tail( $ ) {
 	return $new;
 }
 
-sub canAddComment( $ ) {
+sub canDiscuss( $ ) {
 	return 1; #By default, comments can be added anywhere
 }
 

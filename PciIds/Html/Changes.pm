@@ -123,10 +123,10 @@ sub newHistorySubmit( $$$$ ) {
 		}, [ sub { my( $data ) = @_;
 			return 'You must provide name too' if( ( length $data->{'note'} ) && ( ! length $data->{'name'} ) );
 			return undef;
-		}, sub { return $address->canAddComment() ? undef : 'You can not discuss this item'; } ] );
+		}, sub { return $address->canDiscuss() ? undef : 'You can not discuss this item'; } ] );
 		return genNewHistoryForm( $req, $args, $tables, $error, $data ) if( defined $error );
 		my $hid = $tables->submitHistory( $data, $auth, $address );
-		tulog( $auth->{'authid'}, "Comment created $hid ".$address->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'description'} )." ".logEscape( $data->{'text'} ) );
+		tulog( $auth->{'authid'}, "Discussion created $hid ".$address->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'description'} )." ".logEscape( $data->{'text'} ) );
 		notify( $tables, $address->get(), $hid, ( defined $name && ( $name ne '' ) ) ? 1 : 0, 1 );
 		return HTTPRedirect( $req, '/read/'.$address->get().'?action=list' );
 	} else {

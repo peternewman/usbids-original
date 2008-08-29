@@ -21,18 +21,18 @@ sub genNewAdminForm( $$$$ ) {
 	my $hiscnt = 0;
 	my $subcnt;
 	foreach( @{$tables->adminDump()} ) {
-		my( $locId, $actName, $actDescription, $actCom, $actUser, $actText,
-			$com, $text, $name, $description, $user ) = @{$_};
+		my( $locId, $actName, $actNote, $actHist, $actUser, $actDisc,
+			$hist, $disc, $name, $note, $user ) = @{$_};
 		if( !defined( $lastId ) || ( $lastId ne $locId ) ) {
 			$lastId = $locId;
 			print "</div>\n" if( $started );
 			$started = 1;
-			print "<div class='".( defined( $actCom ) ? 'item' : 'unnamedItem' )."'>\n";
+			print "<div class='".( defined( $actHist ) ? 'item' : 'unnamedItem' )."'>\n";
 			my $addr = PciIds::Address::new( $locId );
 			print "<h3><a href='/read/".$addr->get()."/'>".encode( $addr->pretty() )."</a></h3>\n";
 			print htmlDiv( 'name', '<p>'.encode( $actName ) ) if( defined( $actName ) );
-			print htmlDiv( 'description', '<p>'.encode( $actDescription ) ) if( defined( $actDescription ) );
-			print '<p>'.encode( $actText ) if( defined( $actText ) );
+			print htmlDiv( 'note', '<p>'.encode( $actNote ) ) if( defined( $actNote ) );
+			print '<p>'.encode( $actDisc ) if( defined( $actDisc ) );
 			print '<p><a class="navigation" href="/read/'.$addr->parent()->get().'/">'.encode( $addr->parent()->pretty() )."</a>" if( defined( $addr->parent() ) );
 			print htmlDiv( 'author', '<p>'.encode( $actUser ) ) if( defined( $actUser ) );
 			print "<input type='hidden' name='subcnt-$cnt' value='$subcnt'>\n" if( defined( $subcnt ) );
@@ -40,28 +40,28 @@ sub genNewAdminForm( $$$$ ) {
 			$cnt++;
 			print "<input type='hidden' name='loc-$cnt' value='".$addr->get()."'>\n";
 			print "<p><input type='radio' name='action-$cnt' value='ignore' checked='checked'> I will decide later.\n";
-			if( defined( $actCom ) ) {
+			if( defined( $actHist ) ) {
 				print "<br><input type='radio' name='action-$cnt' value='keep'> Keep current name.\n";
 			}
 			print "<br><input type='radio' name='action-$cnt' value='delete'> Delete item.\n";
-			print "<br>Add comment:\n";
+			print "<br>Add discussion:\n";
 			print "<br><table>\n";
 			print "<tr><td>Set name:<td><input type='text' name='name-$cnt' maxlength='200'>\n";
-			print "<tr><td>Set description:<td><input type='text' name='description-$cnt' maxlength='1024'>\n";
-			print "<tr><td>Text:<td><textarea name='text-$cnt' rows='2'></textarea>\n";
+			print "<tr><td>Set note:<td><input type='text' name='note-$cnt' maxlength='1024'>\n";
+			print "<tr><td>Discussion:<td><textarea name='discussion-$cnt' rows='2'></textarea>\n";
 			print "</table>\n";
 		}
-		print "<div class='unseen-comment'>\n";
+		print "<div class='unseen-history'>\n";
 		print "<p class='name'>".encode( $name ) if( defined( $name ) );
-		print "<p class='description'>".encode( $description ) if( defined( $description ) );
-		print '<p>'.encode( $text ) if( defined( $text ) );
+		print "<p class='note'>".encode( $note ) if( defined( $note ) );
+		print '<p>'.encode( $disc ) if( defined( $disc ) );
 		print "<p class='author'>".encode( $user ) if( defined( $user ) );
-		print "<p><input type='radio' name='action-$cnt' value='set-$com'> Use this one.\n" if( defined( $name ) && ( $name ne "" ) );
+		print "<p><input type='radio' name='action-$cnt' value='set-$hist'> Use this one.\n" if( defined( $name ) && ( $name ne "" ) );
 		$hiscnt ++;
-		print "<br><input type='checkbox' name='delete-$hiscnt' value='delete-$com'> Delete comment.\n";
+		print "<br><input type='checkbox' name='delete-$hiscnt' value='delete-$hist'> Delete history.\n";
 		print "</div>\n";
 		$subcnt ++;
-		print "<input type='hidden' name='sub-$cnt-$subcnt' value='$com'>\n";
+		print "<input type='hidden' name='sub-$cnt-$subcnt' value='$hist'>\n";
 	}
 	print "<input type='hidden' name='subcnt-$cnt' value='$subcnt'>\n" if( defined( $subcnt ) );
 	if( $started ) {
@@ -69,7 +69,7 @@ sub genNewAdminForm( $$$$ ) {
 		print "<p><input type='submit' name='submit' value='Submit'>\n";
 		print "<input type='hidden' name='max-cnt' value='$cnt'><input type='hidden' name='max-hiscnt' value='$hiscnt'>\n";
 	} else {
-		print "<p>No pending comments.\n";
+		print "<p>No pending items.\n";
 	}
 	print "</form>\n";
 	genHtmlTail();
@@ -94,7 +94,7 @@ sub markAllChecked( $$$$ ) {
 		next unless( defined( $id ) );
 		next if( $deleted->{$id} );#Do not update this one, already deleted
 		$tables->markChecked( $id );
-		tulog( $authid, "Comment checked $id" );
+		tulog( $authid, "Discussion checked $id" );
 	}
 }
 
@@ -112,36 +112,36 @@ sub submitAdminForm( $$$$ ) {
 			if( $del ne '' ) {
 				$deleted{$del} = 1;
 				$tables->deleteHistory( $del );
-				tulog( $authid, "Comment deleted $del" );
+				tulog( $authid, "Discussion deleted $del" );
 			}
 		}
 		for( my $i = 1; $i <= $maxcnt; $i ++ ) {
 			my $action = getFormValue( "action-$i", 'ignore' );
 			my $loc = getFormValue( "loc-$i", undef );
 			next unless( defined( $loc ) );
-			my( $text, $name, $description ) = (
-				getFormValue( "text-$i", undef ),
+			my( $discussion, $name, $note ) = (
+				getFormValue( "discussion-$i", undef ),
 				getFormValue( "name-$i", undef ),
-				getFormValue( "description-$i", undef ) );
-			if( defined( $description ) && ( $description ne '' ) && ( !defined( $name ) || ( length $name < 3 ) ) ) {
+				getFormValue( "note-$i", undef ) );
+			if( defined( $note ) && ( $note ne '' ) && ( !defined( $name ) || ( length $name < 3 ) ) ) {
 				if( $errors eq '' ) {
 					$errors = '<p>';
 				} else {
 					$errors .= '<br>';
 				}
-				$errors .= "$loc - You need to provide name if you provide description\n";
+				$errors .= "$loc - You need to provide name if you provide note\n";
 				next;
 			}
-			if( ( defined( $name ) && ( length $name >= 3 ) ) || ( defined( $text ) && ( $text ne '' ) ) ) { #Submited comment
+			if( ( defined( $name ) && ( length $name >= 3 ) ) || ( defined( $discussion ) && ( $discussion ne '' ) ) ) { #Submited comment
 				my $addr = PciIds::Address::new( $loc );
-				my $comId = $tables->submitHistory( { 'name' => $name, 'description' => $description, 'explanation' => $text }, $auth, $addr );
+				my $histId = $tables->submitHistory( { 'name' => $name, 'note' => $note, 'text' => $discussion }, $auth, $addr );
 				my $main = defined $name && ( $name ne '' );
-				notify( $tables, $addr->get(), $comId, $main ? 2 : 0, $main ? 2 : 1 );
-				$tables->markChecked( $comId );
-				tulog( $authid, "Comment created (admin) $comId $loc ".logEscape( $name )." ".logEscape( $description )." ".logEscape( $text ) );
+				notify( $tables, $addr->get(), $histId, $main ? 2 : 0, $main ? 2 : 1 );
+				$tables->markChecked( $histId );
+				tulog( $authid, "Discussion submited (admin) $histId $loc ".logEscape( $name )." ".logEscape( $note )." ".logEscape( $discussion ) );
 				if( defined( $name ) && ( length $name >= 3 ) ) {
-					$tables->setMainHistory( $loc, $comId );
-					tulog( $authid, "Item main comment changed $loc $comId" );
+					$tables->setMainHistory( $loc, $histId );
+					tulog( $authid, "Item main history changed $loc $histId" );
 					$action = 'keep';
 				}
 			}
@@ -157,7 +157,7 @@ sub submitAdminForm( $$$$ ) {
 				next if( $deleted{$setId} );
 				$tables->setMainHistory( $loc, $setId );
 				notify( $tables, $loc, $setId, 2, 2 );
-				tulog( $authid, "Item main comment changed $loc $setId" );
+				tulog( $authid, "Item main history changed $loc $setId" );
 				markAllChecked( $tables, $i, \%deleted, $authid );
 			}
 		}
