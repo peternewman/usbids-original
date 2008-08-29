@@ -62,9 +62,12 @@ sub getUser( $ ) {
 }
 
 sub addComment( $$$$$ ) {
-	my( $email, $time, $name, $comment, $history ) = @_;
+	my( $email, $time, $name, $comment, $discussion ) = @_;
 	my $user = getUser( $email );
-	$newcomment->execute( $user, $addr->get(), $time, $name, $comment, $history );
+	$name = undef if( ( defined $name ) && $name !~ /\S/ );
+	$comment = undef if( ( defined $comment ) && $comment !~ /\S/ );
+	$discussion = undef if( ( defined $discussion ) && $discussion !~ /\S/ );
+	$newcomment->execute( $user, $addr->get(), $time, $name, $comment, $discussion );
 	my $id = $db->last();
 	$comment = "" unless defined $comment;
 	$name = "" unless defined $name;
@@ -100,10 +103,10 @@ while( defined( $_ = <> ) ) {
 			my $hid = addComment( $email, $time, $name, $comment, $discussion );
 		} elsif ( $command eq "APPROVE" ) {
 			my( $time, $email, $name, $comment ) = @params;
-			$comment = "" unless defined $comment;
-			$name = "" unless defined $name;
+			$comment = "" if( !defined $comment || $comment !~ /\S/ );
+			$name = "" if( !defined $name || $name !~ /\S/ );
 			my $hid = $ids{"$name\t$comment"};
-			$hid = addComment( $email, $time, $name, $comment, undef );
+			$hid = addComment( $email, $time, $name, $comment, undef ) unless defined $hid;
 			markAllSeen();
 			setMain( $hid );
 		} elsif ( $command eq "COMMENT" ) {# Comments are from admins -> they mark as seen too
