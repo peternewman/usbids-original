@@ -82,7 +82,7 @@ sub markAllSeen() {
 }
 
 sub setMain( $ ) {
-	$db->setMainComment( $addr->get(), shift );
+	$db->setMainHistory( $addr->get(), shift );
 }
 
 print "Importing\n";

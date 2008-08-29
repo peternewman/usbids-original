@@ -125,7 +125,7 @@ sub newCommentSubmit( $$$$ ) {
 			return undef;
 		}, sub { return $address->canAddComment() ? undef : 'You can not discuss this item'; } ] );
 		return genNewCommentForm( $req, $args, $tables, $error, $data ) if( defined $error );
-		my $hid = $tables->submitComment( $data, $auth, $address );
+		my $hid = $tables->submitHistory( $data, $auth, $address );
 		tulog( $auth->{'authid'}, "Comment created $hid ".$address->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'description'} )." ".logEscape( $data->{'text'} ) );
 		notify( $tables, $address->get(), $hid, ( defined $name && ( $name ne '' ) ) ? 1 : 0, 1 );
 		return HTTPRedirect( $req, '/read/'.$address->get().'?action=list' );

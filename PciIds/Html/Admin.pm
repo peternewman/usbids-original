@@ -134,13 +134,13 @@ sub submitAdminForm( $$$$ ) {
 			}
 			if( ( defined( $name ) && ( length $name >= 3 ) ) || ( defined( $text ) && ( $text ne '' ) ) ) { #Submited comment
 				my $addr = PciIds::Address::new( $loc );
-				my $comId = $tables->submitComment( { 'name' => $name, 'description' => $description, 'explanation' => $text }, $auth, $addr );
+				my $comId = $tables->submitHistory( { 'name' => $name, 'description' => $description, 'explanation' => $text }, $auth, $addr );
 				my $main = defined $name && ( $name ne '' );
 				notify( $tables, $addr->get(), $comId, $main ? 2 : 0, $main ? 2 : 1 );
 				$tables->markChecked( $comId );
 				tulog( $authid, "Comment created (admin) $comId $loc ".logEscape( $name )." ".logEscape( $description )." ".logEscape( $text ) );
 				if( defined( $name ) && ( length $name >= 3 ) ) {
-					$tables->setMainComment( $loc, $comId );
+					$tables->setMainHistory( $loc, $comId );
 					tulog( $authid, "Item main comment changed $loc $comId" );
 					$action = 'keep';
 				}
@@ -155,7 +155,7 @@ sub submitAdminForm( $$$$ ) {
 				} #Ignore if it was already deleted by superitem
 			} elsif( my( $setId ) = ( $action =~ /set-(.*)/ ) ) {
 				next if( $deleted{$setId} );
-				$tables->setMainComment( $loc, $setId );
+				$tables->setMainHistory( $loc, $setId );
 				notify( $tables, $loc, $setId, 2, 2 );
 				tulog( $authid, "Item main comment changed $loc $setId" );
 				markAllChecked( $tables, $i, \%deleted, $authid );

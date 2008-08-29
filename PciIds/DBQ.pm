@@ -28,7 +28,7 @@ sub new( $ ) {
 		'setlastlog' => 'UPDATE users SET logtime = now(), lastlog = ? WHERE id = ?',
 		'rights' => 'SELECT rightId FROM rights WHERE userId = ?',
 		'newitem' => 'INSERT INTO locations (id, parent) VALUES(?, ?)',
-		'newcomment' => 'INSERT INTO history (location, owner, discussion, nodename, nodenote) VALUES(?, ?, ?, ?, ?)',
+		'newhistory' => 'INSERT INTO history (location, owner, discussion, nodename, nodenote) VALUES(?, ?, ?, ?, ?)',
 		'history' => 'SELECT history.id, history.discussion, history.time, history.nodename, history.nodenote, history.seen, users.login FROM history LEFT OUTER JOIN users ON history.owner = users.id WHERE history.location = ? ORDER BY history.time',
 		'admindump' => 'SELECT
 			locations.id, locations.name, locations.note, locations.mainhistory, musers.login, main.discussion,
@@ -39,11 +39,11 @@ sub new( $ ) {
 			LEFT OUTER JOIN history AS main ON locations.mainhistory = main.id
 			LEFT OUTER JOIN users AS musers ON main.owner = musers.id WHERE history.seen = "0"
 		ORDER BY locations.id, history.id
-		LIMIT 15',#Dumps new comments with their senders and corresponding main comments and names
+		LIMIT 15',#Dumps new discussion submits with their senders and corresponding main history and names
 		'delete-hist' => 'DELETE FROM history WHERE id = ?',
 		'mark-checked' => 'UPDATE history SET seen = 1 WHERE id = ?',
 		'delete-item' => 'DELETE FROM locations WHERE id = ?',
-		'set-maincomment' => 'UPDATE locations SET
+		'set-mainhist' => 'UPDATE locations SET
 				mainhistory = ?,
 				name = ( SELECT nodename FROM history WHERE id = ? ),
 				note = ( SELECT nodenote FROM history WHERE id = ? )
@@ -187,7 +187,7 @@ sub submitItem( $$$ ) {
 	return( 'exists', undef ) if( defined( $self->item( $addr->get(), 0 ) ) );
 	eval {
 		$self->command( 'newitem', [ $addr->get(), $addr->parent()->get() ] );
-		$self->command( 'newcomment', [ $addr->get(), $auth->{'authid'}, $data->{'text'}, $data->{'name'}, $data->{'description'} ] );
+		$self->command( 'newhistory', [ $addr->get(), $auth->{'authid'}, $data->{'text'}, $data->{'name'}, $data->{'description'} ] );
 
 	};
 	if( $@ ) {
@@ -197,9 +197,9 @@ sub submitItem( $$$ ) {
 	return( '', $self->last() );
 }
 
-sub submitComment( $$$$ ) {
+sub submitHistory( $$$$ ) {
 	my( $self, $data, $auth, $address ) = @_;
-	$self->command( 'newcomment', [ $address->get(), $auth->{'authid'}, $data->{'text'}, $data->{'name'}, $data->{'description'} ], 1 );
+	$self->command( 'newhistory', [ $address->get(), $auth->{'authid'}, $data->{'text'}, $data->{'name'}, $data->{'description'} ], 1 );
 	return $self->last();
 }
 
@@ -222,9 +222,9 @@ sub deleteItem( $$ ) {
 	$self->command( 'delete-item', [ $id ] );
 }
 
-sub setMainComment( $$$ ) {
-	my( $self, $location, $comment ) = @_;
-	$self->command( 'set-maincomment', [ $comment, $comment, $comment, $location ] );
+sub setMainHistory( $$$ ) {
+	my( $self, $location, $history ) = @_;
+	$self->command( 'set-mainhist', [ $history, $history, $history, $location ] );
 }
 
 sub resetInfo( $$ ) {
@@ -285,9 +285,9 @@ sub submitNotification( $$$$ ) {
 }
 
 sub pushNotifications( $$$$$ ) {
-	my( $self, $location, $comment, $priority, $reason ) = @_;
-	$self->command( 'notify', [ $comment, 0, $reason, 0, $priority, $location, $location ] );
-	$self->command( 'notify', [ $comment, 1, $reason, 1, $priority, $location, $location ] );
+	my( $self, $location, $history, $priority, $reason ) = @_;
+	$self->command( 'notify', [ $history, 0, $reason, 0, $priority, $location, $location ] );
+	$self->command( 'notify', [ $history, 1, $reason, 1, $priority, $location, $location ] );
 	$self->command( 'newtime-mail', [ $priority, $location, $location ] );
 	$self->command( 'newtime-xmpp', [ $priority, $location, $location ] );
 }
