@@ -14,38 +14,38 @@ sub loadItem( $$ ) {
 	return ( 0 ) unless( defined $address );
 	my $item = $tables->item( $address->get() );
 	return ( 0 ) unless( defined $item );
-	my( $parent, $name, $description, $maincomment ) = @{$item};
-	return ( 1, $parent, $name, $description, $address, $maincomment );
+	my( $parent, $name, $note, $mainhistory ) = @{$item};
+	return ( 1, $parent, $name, $note, $address, $mainhistory );
 }
 
 sub list( $$$$ ) {
 	my( $req, $args, $tables, $auth ) = @_;
-	my( $ok, $parent, $name, $description, $address, $mid ) = loadItem( $tables, $req->uri() );
+	my( $ok, $parent, $name, $note, $address, $mid ) = loadItem( $tables, $req->uri() );
 	return NOT_FOUND unless( $ok );
 	my $id = $address->pretty();
 	genHtmlHead( $req, $id, undef );
 	print '<h1>'.encode( $id ).'</h1>';
 	genMenu( $address, $args, $auth );
 	print htmlDiv( 'name', '<p>'.encode( $name ) ) if( defined( $name ) );
-	print htmlDiv( 'description', '<p>'.encode( $description ) ) if( defined( $description ) );
+	print htmlDiv( 'note', '<p>'.encode( $note ) ) if( defined( $note ) );
 	genPath( $address, 0 );
 	my $diss = 0;
-	my $comment;
-	foreach $comment ( @{$tables->history( $address->get() )} ) {
+	my $history;
+	foreach $history ( @{$tables->history( $address->get() )} ) {
 		unless( $diss ) {
 			print "<div class='discussion'>\n<h2>Discussion</h2>";
 			$diss = 1;
 		}
-		my( $id, $text, $time, $name, $description, $seen, $user ) = @{$comment};
-		my $type = $seen ? 'comment' : 'unseen-comment';
-		$type = 'main-comment' if( defined( $mid ) && ( $id == $mid ) );
+		my( $id, $text, $time, $name, $note, $seen, $user ) = @{$history};
+		my $type = $seen ? 'history' : 'unseen-history';
+		$type = 'main-history' if( defined( $mid ) && ( $id == $mid ) );
 		print "<div class='$type'>\n";
 		print "<p class='itemname'>Name: ".encode( $name )."\n" if( defined( $name ) && ( $name ne '' ) );
-		print "<p class='itemdescription'>Description: ".encode( $description )."\n" if( defined( $description ) && ( $description ne '' ) );
+		print "<p class='itemnote'>Note: ".encode( $note )."\n" if( defined( $note ) && ( $note ne '' ) );
 		if( defined( $text ) && ( $text ne '' ) ) {
 			$text = encode( $text );
 			$text =~ s/\n/<br>/g;
-			print "<p class='comment-text'>$text\n";
+			print "<p class='discussion-text'>$text\n";
 		}
 		print "<p class='author'>".encode( $user )."\n" if( defined( $user ) );
 		print "<p class='time'>".encode( $time )."\n";
@@ -65,7 +65,7 @@ sub list( $$$$ ) {
 		my $url = '/read/'.$address->get().buildExcept( 'sort', $args );
 		my $sort = ( $args->{'sort'} or 'id' );
 		my( $sort_id, $sort_name ) = ( ( $sort eq 'id' ? 'rid' : 'id' ), ( $sort eq 'name' ? 'rname' : 'name' ) );
-		genTableHead( 'subnodes', [ '<a href="'.$url.'?sort='.$sort_id.'">Id</a>', '<a href="'.$url.'?sort='.$sort_name.'">Name</a>', 'Description' ], [ 'id-col', 'name-col', 'desc-col' ] );
+		genTableHead( 'subnodes', [ '<a href="'.$url.'?sort='.$sort_id.'">Id</a>', '<a href="'.$url.'?sort='.$sort_name.'">Name</a>', 'Note' ], [ 'id-col', 'name-col', 'note-col' ] );
 		$args->{'restrict'} = $address->defaultRestrict() unless( defined( $args->{'restrict'} ) );
 		$tables->nodes( $address->get(), $args );
 		genTableTail();

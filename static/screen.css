@@ -3,15 +3,15 @@ body
 	color: black;
 	background: #DDDDFF;
 }
-.unnamedItem, .unseen-comment
+.unnamedItem, .unseen-history
 {
 	background: #D5D5D5;
 }
-.item, .comment
+.item, .history
 {
 	background: #F0F0F0;
 }
-.main-comment
+.main-history
 {
 	background: #DDFFDD;
 }
@@ -19,7 +19,7 @@ body
 {
 	font-weight: bold;
 }
-.itemdescription, .description
+.itemnote, .note
 {
 	font-weight: bold;
 	font-style: italic;

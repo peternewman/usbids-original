@@ -11,7 +11,7 @@
 {
 	font-weight: bold;
 }
-.itemdescription, .description
+.itemnote, .note
 {
 	font-style: italic;
 	font-weight: bold;
@@ -20,7 +20,7 @@
 {
 	font-style: italic;
 }
-.comment, .unseen-comment, .main-comment
+.history, .unseen-history, .main-history
 {
 	border-bottom: dotted;
 	border-bottom-width: 1px;
