@@ -25,10 +25,10 @@ sub list( $$$$ ) {
 	my $id = $address->pretty();
 	genHtmlHead( $req, $id, undef );
 	print '<h1>'.encode( $id ).'</h1>';
-	genMenu( $address, $args, $auth );
+	genMenu( $req, $address, $args, $auth );
 	print htmlDiv( 'name', '<p>'.encode( $name ) ) if( defined( $name ) );
 	print htmlDiv( 'note', '<p>'.encode( $note ) ) if( defined( $note ) );
-	genPath( $address, 0 );
+	genPath( $req, $address, 0 );
 	my $diss = 0;
 	my $history;
 	foreach $history ( @{$tables->history( $address->get() )} ) {

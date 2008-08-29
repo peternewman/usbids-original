@@ -39,21 +39,21 @@ sub item( $$$ ) {
 	print "  <li><a href='".$url.$action."'>$label</a>\n";
 }
 
-sub genCustomMenu( $$$ ) {
-	my( $address, $args, $list ) = @_;
+sub genCustomMenu( $$$$ ) {
+	my( $req, $address, $args, $list ) = @_;
 	my $url = '/'.$address->get().buildExcept( 'action', $args ).'?action=';
 	print "<div class='menu'>\n<ul>\n";
 	foreach( @{$list} ) {
 		my( $label, $action ) = @{$_};
 		my $prefix = '/mods';
 		$prefix = '/read' if( !defined( $action ) or ( $action eq 'list' ) or ( $action eq '' ) );
-		item( $prefix.$url, $label, $action );
+		item( 'http://'.$req->hostname().$prefix.$url, $label, $action );
 	}
 	print "</ul></div>\n";
 }
 
-sub genMenu( $$$ ) {
-	my( $address, $args, $auth ) = @_;
+sub genMenu( $$$$ ) {
+	my( $req, $address, $args, $auth ) = @_;
 	my @list;
 	if( defined( $auth->{'authid'} ) ) {
 		push @list, [ 'Log out', 'logout' ];
@@ -65,7 +65,7 @@ sub genMenu( $$$ ) {
 	push @list, [ 'Administrate', 'admin' ] if( hasRight( $auth->{'accrights'}, 'validate' ) );
 	push @list, [ 'Profile', 'profile' ] if defined $auth->{'authid'};
 	push @list, [ 'Notifications', 'notifications' ] if defined $auth->{'authid'};
-	genCustomMenu( $address, $args, \@list );
+	genCustomMenu( $req, $address, $args, \@list );
 }
 
 sub genTableHead( $$$ ) {
@@ -120,15 +120,15 @@ sub HTTPRedirect( $$ ) {
 	return HTTP_SEE_OTHER;
 }
 
-sub genPath( $$ ) {
-	my( $address, $printAddr ) = @_;
+sub genPath( $$$ ) {
+	my( $req, $address, $printAddr ) = @_;
 	my $path = $address->path();
-	push @{$path}, $address if( $printAddr );
+	unshift @{$path}, $address if( $printAddr );
 	print "<div class='navigation'><ul>\n";
 	foreach my $addr ( @{$path} ) {
-		print "  <li><a href='/read/".$addr->get()."/'>".encode( $addr->pretty() )."</a>\n";
+		print "  <li><a href='http://".$req->hostname()."/read/".$addr->get()."/'>".encode( $addr->pretty() )."</a>\n";
 	}
-	print "<li><a href='/index.html'>Main page</a>\n";
+	print "<li><a href='http://".$req->hostname()."/index.html'>Main page</a>\n";
 	print "</div>\n";
 }
 
