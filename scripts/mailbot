@@ -37,7 +37,7 @@ my $hasAuth = $tables->dbh()->prepare( 'SELECT id FROM users WHERE email = ?' );
 my $addAuth = $tables->dbh()->prepare( "INSERT INTO users (email, passwd) VALUES(?, '')" );
 my $hasItem = $tables->dbh()->prepare( "SELECT 1 FROM locations WHERE id = ?" );
 my $addItem = $tables->dbh()->prepare( "INSERT INTO locations (id, parent) VALUES (?, ?)" );
-my $addComment = $tables->dbh()->prepare( "INSERT INTO history (owner, location, text, nodename, nodedescription) VALUES (?, ?, ?, ?, ?)" );
+my $addComment = $tables->dbh()->prepare( "INSERT INTO history (owner, location, discussion, nodename, nodenote) VALUES (?, ?, ?, ?, ?)" );
 
 sub getAuthor( $ ) {
 	my( $mail ) = @_;

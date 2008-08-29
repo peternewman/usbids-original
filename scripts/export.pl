@@ -9,7 +9,7 @@ use PciIds::Db;
 use PciIds::DBQAny;
 
 my $db = PciIds::DBQAny::new( connectDb(), {
-	'list' => 'SELECT id, name, description FROM locations WHERE name IS NOT NULL ORDER BY id'
+	'list' => 'SELECT id, name, note FROM locations WHERE name IS NOT NULL ORDER BY id'
 } );
 
 foreach( @{$db->query( 'list', [] )} ) {

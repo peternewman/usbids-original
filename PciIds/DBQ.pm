@@ -5,8 +5,8 @@ use base 'PciIds::DBQAny';
 
 sub new( $ ) {
 	my( $dbh ) = @_;
-	my $node = 'SELECT id, name, description, maincomment FROM locations WHERE parent = ? ORDER BY ';
-	my $noder = 'SELECT id, name, description, maincomment FROM locations WHERE parent = ? AND id LIKE ? ORDER BY ';
+	my $node = 'SELECT id, name, note, mainhistory FROM locations WHERE parent = ? ORDER BY ';
+	my $noder = 'SELECT id, name, note, mainhistory FROM locations WHERE parent = ? AND id LIKE ? ORDER BY ';
 	return bless PciIds::DBQAny::new( $dbh, {
 		'nodes-id' => $node.'id',
 		'nodes-name' => $node.'name',
@@ -16,7 +16,7 @@ sub new( $ ) {
 		'nodes-name-r' => $noder.'name',
 		'nodes-rid-r' => $noder.'id DESC',
 		'nodes-rname-r' => $noder.'name DESC',
-		'item' => 'SELECT parent, name, description, maincomment FROM locations WHERE id = ?',
+		'item' => 'SELECT parent, name, note, mainhistory FROM locations WHERE id = ?',
 		'login' => 'SELECT id FROM users WHERE login = ?',
 		'email' => 'SELECT id FROM users WHERE email = ?',
 		'adduser' => 'INSERT INTO users (login, email, passwd) VALUES(?, ?, ?)',
@@ -28,25 +28,25 @@ sub new( $ ) {
 		'setlastlog' => 'UPDATE users SET logtime = now(), lastlog = ? WHERE id = ?',
 		'rights' => 'SELECT rightId FROM rights WHERE userId = ?',
 		'newitem' => 'INSERT INTO locations (id, parent) VALUES(?, ?)',
-		'newcomment' => 'INSERT INTO history (location, owner, text, nodename, nodedescription) VALUES(?, ?, ?, ?, ?)',
-		'history' => 'SELECT history.id, history.text, history.time, history.nodename, history.nodedescription, history.seen, users.login FROM history LEFT OUTER JOIN users ON history.owner = users.id WHERE history.location = ? ORDER BY history.time',
+		'newcomment' => 'INSERT INTO history (location, owner, discussion, nodename, nodenote) VALUES(?, ?, ?, ?, ?)',
+		'history' => 'SELECT history.id, history.discussion, history.time, history.nodename, history.nodenote, history.seen, users.login FROM history LEFT OUTER JOIN users ON history.owner = users.id WHERE history.location = ? ORDER BY history.time',
 		'admindump' => 'SELECT
-			locations.id, locations.name, locations.description, locations.maincomment, musers.login, main.text,
-			history.id, history.text, history.nodename, history.nodedescription, users.login
+			locations.id, locations.name, locations.note, locations.mainhistory, musers.login, main.discussion,
+			history.id, history.discussion, history.nodename, history.nodenote, users.login
 		FROM
 			locations INNER JOIN history ON history.location = locations.id
 			LEFT OUTER JOIN users ON history.owner = users.id
-			LEFT OUTER JOIN history AS main ON locations.maincomment = main.id
+			LEFT OUTER JOIN history AS main ON locations.mainhistory = main.id
 			LEFT OUTER JOIN users AS musers ON main.owner = musers.id WHERE history.seen = "0"
 		ORDER BY locations.id, history.id
-		LIMIT 15',#Dumps all new comments with their senders and corresponding main comments and names
+		LIMIT 15',#Dumps new comments with their senders and corresponding main comments and names
 		'delete-hist' => 'DELETE FROM history WHERE id = ?',
 		'mark-checked' => 'UPDATE history SET seen = 1 WHERE id = ?',
 		'delete-item' => 'DELETE FROM locations WHERE id = ?',
 		'set-maincomment' => 'UPDATE locations SET
-				maincomment = ?,
+				mainhistory = ?,
 				name = ( SELECT nodename FROM history WHERE id = ? ),
-				description = ( SELECT nodedescription FROM history WHERE id = ? )
+				note = ( SELECT nodenote FROM history WHERE id = ? )
 			WHERE
 				id = ?',
 		'profiledata' => 'SELECT email, xmpp, login, mailgather, xmppgather FROM users WHERE id = ?',
@@ -56,17 +56,17 @@ sub new( $ ) {
 		'notifdata' => 'SELECT recursive, type, notification FROM notifications WHERE user = ? AND location = ?',
 		'drop-notif' => 'DELETE FROM notifications WHERE user = ? AND location = ?',
 		'new-notif' => 'INSERT INTO notifications (user, location, recursive, type, notification) VALUES (?, ?, ?, ?, ?)',
-		'notify' => 'INSERT INTO pending (user, comment, notification, reason) SELECT DISTINCT user, ?, ?, ? FROM notifications WHERE ( notification = 2 OR notification = ? ) AND type <= ? AND ( location = ? OR ( SUBSTR( ?, 1, LENGTH( location ) ) = location ) )',
+		'notify' => 'INSERT INTO pending (user, history, notification, reason) SELECT DISTINCT user, ?, ?, ? FROM notifications WHERE ( notification = 2 OR notification = ? ) AND type <= ? AND ( location = ? OR ( SUBSTR( ?, 1, LENGTH( location ) ) = location ) )',
 		'newtime-mail' => 'UPDATE users SET nextmail = FROM_UNIXTIME( UNIX_TIMESTAMP( NOW() ) + 60 * mailgather ) WHERE nextmail < NOW() AND EXISTS ( SELECT 1 FROM notifications WHERE ( notification = 0 OR notification = 2 ) AND type <= ? AND ( location = ? OR ( SUBSTR( ?, 1, LENGTH( location ) ) = location ) ) )',
 		'newtime-xmpp' => 'UPDATE users SET nextxmpp = FROM_UNIXTIME( UNIX_TIMESTAMP( NOW() ) + 60 * xmppgather ) WHERE nextxmpp < NOW() AND EXISTS ( SELECT 1 FROM notifications WHERE ( notification = 1 OR notification = 2 ) AND type <= ? AND ( location = ? OR ( SUBSTR( ?, 1, LENGTH( location ) ) = location ) ) )',
 		'mailout' => 'SELECT
 				pending.user, users.email,
-				pending.reason, history.text, history.nodename, history.nodedescription, history.time,
-				auth.login, history.location, locations.name, locations.description
+				pending.reason, history.discussion, history.nodename, history.nodenote, history.time,
+				auth.login, history.location, locations.name, locations.note
 			FROM
 				pending
 				INNER JOIN users ON users.id = pending.user
-				INNER JOIN history ON history.id = pending.comment
+				INNER JOIN history ON history.id = pending.history
 				INNER JOIN locations ON history.location = locations.id
 				INNER JOIN users AS auth ON auth.id = history.owner
 			WHERE
@@ -76,12 +76,12 @@ sub new( $ ) {
 				pending.user, pending.reason, history.time, history.location',
 		'xmppout' => 'SELECT
 				pending.user, users.xmpp,
-				pending.reason, history.text, history.nodename, history.nodedescription, history.time,
-				auth.login, history.location, locations.name, locations.description
+				pending.reason, history.discussion, history.nodename, history.nodenote, history.time,
+				auth.login, history.location, locations.name, locations.note
 			FROM
 				pending
 				INNER JOIN users ON users.id = pending.user
-				INNER JOIN history ON history.id = pending.comment
+				INNER JOIN history ON history.id = pending.history
 				INNER JOIN locations ON history.location = locations.id
 				INNER JOIN users AS auth ON auth.id = history.owner
 			WHERE

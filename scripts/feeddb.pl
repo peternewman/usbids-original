@@ -9,9 +9,9 @@ use PciIds::Db;
 use DBI;
 
 my $dbh = connectDb();
-my $query = $dbh->prepare( "INSERT INTO locations (id, name, description, parent) VALUES(?, ?, ?, ?);" ) or die "Could not create the query (".DBI->errstr.")\n";
-my $comment = $dbh->prepare( "INSERT INTO history (location, nodename, nodedescription, seen) VALUES(?, ?, ?, '1')" ) or die "Could not create query (".DBI->errstr.")\n";
-my $update = $dbh->prepare( "UPDATE locations SET maincomment = ? WHERE id = ?" ) or die "Could not create query (".DBI->errstr.")\n";
+my $query = $dbh->prepare( "INSERT INTO locations (id, name, note, parent) VALUES(?, ?, ?, ?);" ) or die "Could not create the query (".DBI->errstr.")\n";
+my $comment = $dbh->prepare( "INSERT INTO history (location, nodename, nodenote, seen) VALUES(?, ?, ?, '1')" ) or die "Could not create query (".DBI->errstr.")\n";
+my $update = $dbh->prepare( "UPDATE locations SET mainhistory = ? WHERE id = ?" ) or die "Could not create query (".DBI->errstr.")\n";
 my( $vendor, $type, $sub, $description, $name );
 
 $query->execute( "PC", undef, undef, undef ) or die "Could not add toplevel node\n";

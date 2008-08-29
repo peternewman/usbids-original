@@ -32,11 +32,11 @@ print "Submiting items from database\n";
 
 my $itemq = $olddb->prepare( "SELECT id, name, comment, author, status, type FROM ids ORDER BY LENGTH(id), id" );
 my $itemp = $newdb->prepare( "INSERT INTO locations (id, parent) VALUES (?, ?)" );
-my $comp = $newdb->prepare( "INSERT INTO history (owner, location, nodename, nodedescription, seen, time) VALUES (?, ?, ?, ?, ?, '2000-01-01 00:00:00')" );
+my $comp = $newdb->prepare( "INSERT INTO history (owner, location, nodename, nodenote, seen, time) VALUES (?, ?, ?, ?, ?, '2000-01-01 00:00:00')" );
 my $setMain = $newdb->prepare( 'UPDATE locations SET
-				maincomment = ?,
+				mainhistory = ?,
 				name = ( SELECT nodename FROM history WHERE id = ? ),
-				description = ( SELECT nodedescription FROM history WHERE id = ? )
+				note = ( SELECT nodenote FROM history WHERE id = ? )
 			WHERE
 				id = ?' );
 

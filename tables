@@ -28,9 +28,9 @@ nextxmpp TIMESTAMP#When do we send pending xmpp notifications?
 #
 id VARCHAR(50) <<CHARSET>> NOT NULL UNIQUE PRIMARY KEY,#The name of the location, must be just node, no / at the end
 parent VARCHAR(50) <<CHARSET>>,#To allow selecting of all node's children
-maincomment INT UNSIGNED,#Reference for the main comment
-name TINYTEXT <<CHARSET>>,#Should match the one of main comment, if any (if no main comment, name can be set too)
-description TEXT <<CHARSET>>,#Should match the one of main comment (if no main comment, can be set too)
+mainhistory INT UNSIGNED,#Reference for the main history
+name TINYTEXT <<CHARSET>>,#Should match the one of main history, if any (if no main history, name can be set too)
+note TEXT <<CHARSET>>,#Should match the one of main history (if no main history, can be set too)
 CONSTRAINT parent_ref FOREIGN KEY (parent) REFERENCES locations(id) ON DELETE CASCADE
 
 @rights
@@ -42,14 +42,14 @@ CONSTRAINT right_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCAD
 PRIMARY KEY (userId, rightId)
 
 @history
-#Contains the comments in the discussion
+#Contains the discussion and history of items
 id INT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE PRIMARY KEY,
 owner INT UNSIGNED,#Who posted it?
 location VARCHAR(50) <<CHARSET>> NOT NULL,#Where it belongs
-text TEXT <<CHARSET>>,
+discussion TEXT <<CHARSET>>,
 time TIMESTAMP NOT NULL DEFAULT NOW(),#When this was added
 nodename TINYTEXT <<CHARSET>>,#Modification of the location name
-nodedescription TEXT <<CHARSET>>,#Modification of the location comment
+nodenote TEXT <<CHARSET>>,#Modification of the location note
 seen BOOLEAN NOT NULL DEFAULT '0', #Did some admin see this, or is it still unseen?
 CONSTRAINT history_location FOREIGN KEY (location) REFERENCES locations(id) ON DELETE CASCADE,
 CONSTRAINT history_owner FOREIGN KEY (owner) REFERENCES users(id) ON DELETE SET NULL
@@ -60,9 +60,9 @@ user INT UNSIGNED NOT NULL,#Who wants it
 location VARCHAR(50) <<CHARSET>> NOT NULL,#Where
 recursive BOOLEAN NOT NULL DEFAULT '0',
 type SMALLINT NOT NULL,#When to send
-#0: Comment -- When a new comment is posted
-#1: Description -- Name or comment changed
-#2: MainComment -- The main comment changed
+#0: History -- When a new discussion is posted
+#1: Description -- Name or note changed
+#2: MainHistory -- The main history changed
 #All contains the less common events
 notification SMALLINT NOT NULL,
 #0: mail only
@@ -75,14 +75,14 @@ PRIMARY KEY (user, location)
 @pending
 #Contains the pending notifications
 user INT UNSIGNED NOT NULL,
-comment INT UNSIGNED NOT NULL,
+history INT UNSIGNED NOT NULL,
 notification SMALLINT NOT NULL,
 #0: mail
 #1: xmpp
 #If a notification generates both, it splits to 2 of them
 reason SMALLINT NOT NULL,
 #0: New item
-#1: New comment
+#1: New history
 #2: Changed main article
-CONSTRAINT pending_comment FOREIGN KEY (comment) REFERENCES history(id) ON DELETE CASCADE,
+CONSTRAINT pending_history FOREIGN KEY (history) REFERENCES history(id) ON DELETE CASCADE,
 CONSTRAINT pending_user FOREIGN KEY (user) REFERENCES users(id) ON DELETE CASCADE

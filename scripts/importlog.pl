@@ -17,13 +17,13 @@ sub translateLoc( $ ) {
 my $dbh = connectDb();
 my $clearHist = $dbh->prepare( 'DELETE FROM history WHERE location = ?' );
 my %coms;
-my $com = $dbh->prepare( 'INSERT INTO history (owner, location, time, nodename, nodedescription) VALUES (?, ?, FROM_UNIXTIME(?), ?, ?)' );
+my $com = $dbh->prepare( 'INSERT INTO history (owner, location, time, nodename, nodenote) VALUES (?, ?, FROM_UNIXTIME(?), ?, ?)' );
 my $user = $dbh->prepare( 'SELECT id FROM users WHERE email = ?' );
 my $delHis = $dbh->prepare( 'DELETE FROM history WHERE id = ?' );
 my $markMain = $dbh->prepare( 'UPDATE locations SET
-				maincomment = ?,
+				mainhistory = ?,
 				name = ( SELECT nodename FROM history WHERE id = ? ),
-				description = ( SELECT nodedescription FROM history WHERE id = ? )
+				note = ( SELECT nodenote FROM history WHERE id = ? )
 			WHERE
 				id = ?' );
 my $markSeen = $dbh->prepare( "UPDATE history SET seen = '1' WHERE id = ?" );
