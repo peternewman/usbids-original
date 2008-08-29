@@ -46,6 +46,7 @@ sub insertId( $ ) {
 
 sub getUser( $ ) {
 	my( $email ) = @_;
+	$email = "" unless defined $email;
 	$email =~ s/.*<([^<>]*)>.*/$1/;
 	my( $mailCheck ) = emailCheck( $email, undef );
 	if( defined $mailCheck ) {
@@ -88,6 +89,7 @@ sub setMain( $ ) {
 print "Importing\n";
 
 while( defined( $_ = <> ) ) {
+	chomp;
 	if( my( $lid ) = /^### ([0-9a-f]+) ###$/ ) {
 		%ids = ();
 		@toMark = ();
