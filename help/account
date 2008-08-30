@@ -20,7 +20,7 @@ It is created if you submit something using email.
 And we created accounts for all submits imported from previous version of this site.
 In that case, you need to <a href='$AC_URL$respass'>reset your password</a> (because exists no password for you).
 <p>
-If you do not have an account, go to <a href='$AC_URL$register'>Register</a> item in menu (you can find it, when you visit <a href='$AC_URL$login'>Log in</a> page) and fill your email address.
+If you do not have an account, go to <a href='$AC_URL$register'>register</a> item in menu (you can find it, when you visit <a href='$AC_URL$login'>Log in</a> page) and fill your email address.
 A message containing confirmation link will be sent to it.
 After you follow the link and fill in the rest, your account is ready for use.
 
