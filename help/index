@@ -1,0 +1,21 @@
+Help index
+<h2>Read only operations<h2>
+<ul class='navigation'>
+	<li><a href='$HELP_URL$list'>Browsing</a>
+</ul>
+<h2>Account based operations</h2>
+<ul class='navigation'>
+	<li><a href='$HELP_URL$account'>Account creation &amp; login</a>
+	<li><a href='$HELP_URL$notifications'>Notifications</a>
+	<li><a href='$HELP_URL$profile'>Profile</a>
+</ul>
+<h2>Editing database</h2>
+<ul class='navigation'>
+	<li><a href='$HELP_URL$newitem'>Submitting new item</a>
+	<li><a href='$HELP_URL$newhistory'>Discussion</a>
+</ul>
+<h2>Information about ID types</h2>
+<ul class='navigation'>
+	<li><a href='$HELP_URL$pci'>PCI devices</a>
+	<li><a href='$HELP_URL$pci_class'>PCI device classes</a>
+</ul>

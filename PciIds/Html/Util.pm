@@ -41,7 +41,12 @@ sub item( $$ ) {
 
 sub genCustomMenu( $$$$ ) {
 	my( $req, $address, $args, $list ) = @_;
-	my $url = '/'.$address->get().buildExcept( 'action', $args ).'?action=';
+	my $url;
+	if( defined $address ) {
+		$url = '/'.$address->get().buildExcept( 'action', $args ).'?action=';
+	} else {
+		$url = '/read/?action=';
+	}
 	print "<div class='menu'>\n<ul>\n";
 	foreach( @{$list} ) {
 		my( $label, $action, $param ) = @{$_};
@@ -66,8 +71,10 @@ sub logItem( $ ) {
 sub genMenu( $$$$$ ) {
 	my( $req, $address, $args, $auth, $help ) = @_;
 	my @list = ( logItem( $auth ) );
-	push @list, [ 'Add item', 'newitem' ] if( $address->canAddItem() );
-	push @list, [ 'Discuss', 'newhistory' ] if( $address->canDiscuss() );
+	if( defined $address ) {
+		push @list, [ 'Add item', 'newitem' ] if( $address->canAddItem() );
+		push @list, [ 'Discuss', 'newhistory' ] if( $address->canDiscuss() );
+	}
 	push @list, [ 'Administrate', 'admin' ] if( hasRight( $auth->{'accrights'}, 'validate' ) );
 	push @list, [ 'Profile', 'profile' ] if defined $auth->{'authid'};
 	push @list, [ 'Notifications', 'notifications' ] if defined $auth->{'authid'};
@@ -129,8 +136,13 @@ sub HTTPRedirect( $$ ) {
 
 sub genPath( $$$ ) {
 	my( $req, $address, $printAddr ) = @_;
-	my $path = $address->path();
-	unshift @{$path}, $address if( $printAddr );
+	my $path;
+	if( defined $address ) {
+		$path = $address->path();
+		unshift @{$path}, $address if( $printAddr );
+	} else {
+		$path = [];
+	}
 	print "<div class='navigation'><ul>\n";
 	foreach my $addr ( @{$path} ) {
 		print "  <li><a href='http://".$req->hostname()."/read/".$addr->get()."/'>".encode( $addr->pretty() )."</a>\n";

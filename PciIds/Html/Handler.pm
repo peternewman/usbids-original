@@ -58,9 +58,9 @@ my %handlers = (
 
 sub handler( $$ ) {
 	my( $req, $hasSSL ) = @_;
-	return HTTPRedirect( $req, $req->uri()."index.html" ) if( $req->uri() eq '/' );
-	return DECLINED if( $req->uri() =~ /^\/((static)\/|robots.txt|index.html)/ );
 	my $args = parseArgs( $req->args() );
+	return HTTPRedirect( $req, $req->uri()."index.html" ) if( $req->uri() eq '/' && ( !defined $args->{'action'} || $args->{'action'} ne 'help' ) );
+	return DECLINED if( $req->uri() =~ /^\/((static)\/|robots.txt|index.html)/ );
 	my $action = $args->{'action'};
 	$action = '' unless( defined $action );
 	my $method = $handlers{$req->method()};
