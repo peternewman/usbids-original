@@ -1,0 +1,22 @@
+Notifications
+<p>
+If you are interested in any changes in some item, you can set up a notification to get informed.
+Browse to the item and click <a href='$AC_URL$notifications'>notifications</a> link (it is visible only when you are <a href='$HELP_URL$account'>logged in</a>.
+You can set these things:
+<ul>
+	<li><strong>Effect range</strong> ‒ which IDs are considered by this notification. If the notification is not recursive, only the current ID is taken into account. Recursive notifications work on the given ID and its whole subtree (sub-items, their sub-items, …).
+	<li><strong>Notification level</strong> ‒ how serious even needs to happen to trigger the notification. None means the notification never happens (it does not exist, you can delete it by setting it to it), main comment means whenever admin approves change of a name, sub-item is when someone submits new item with this one as a parent, suggestion is when someone suggests a new name for the item (but is not yet approved) and discussion is whenever someone writes anything.
+	All the more common notifications contain the less common (when you check discussion and an admin approves a name change, it is triggered too, but not the other way around).
+	<li><strong>Notification way</strong> ‒ the way the notification gets to you.
+</ul>
+
+<h2>Existing notifications</h2>
+<p>
+There is a list of currently existing notifications at the bottom of page.
+You can switch to them by clicking on them.
+
+<h2>See also</h2>
+<p>
+This is all your own configuration. You can <a href='$HELP_URL$account'>get an account</a> so you can set it up.
+<p>
+You can set up various things (like address, where the notifications are sent) in your <a href='$HELP_URL$profile'>profile</a>.
