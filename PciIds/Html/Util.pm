@@ -69,7 +69,7 @@ sub logItem( $ ) {
 }
 
 sub genMenu( $$$$$ ) {
-	my( $req, $address, $args, $auth, $help ) = @_;
+	my( $req, $address, $args, $auth, $append ) = @_;
 	my @list = ( logItem( $auth ) );
 	if( defined $address ) {
 		push @list, [ 'Add item', 'newitem' ] if( $address->canAddItem() );
@@ -78,7 +78,7 @@ sub genMenu( $$$$$ ) {
 	push @list, [ 'Administrate', 'admin' ] if( hasRight( $auth->{'accrights'}, 'validate' ) );
 	push @list, [ 'Profile', 'profile' ] if defined $auth->{'authid'};
 	push @list, [ 'Notifications', 'notifications' ] if defined $auth->{'authid'};
-	push @list, [ 'Help', 'help', $help ] if defined $help;
+	push @list, @{$append} if defined $append;
 	genCustomMenu( $req, $address, $args, \@list );
 }
 

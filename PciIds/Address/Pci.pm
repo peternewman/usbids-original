@@ -60,4 +60,8 @@ sub path( $ ) {
 	return $result;
 }
 
+sub helpName( $ ) {
+	return 'pci';
+}
+
 1;

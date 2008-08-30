@@ -73,4 +73,13 @@ sub parent( $ ) {
 	return undef;
 }
 
+sub helpName( $ ) {
+	my( $self ) = @_;
+	if( $self->{'value'} =~ /^PC/ ) {
+		return 'pci';
+	} else {
+		return 'pci_class';
+	}
+}
+
 1;

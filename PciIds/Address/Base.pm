@@ -45,4 +45,8 @@ sub path( $ ) {
 	return \@result;
 }
 
+sub helpName( $ ) {
+	return undef;
+}
+
 1;

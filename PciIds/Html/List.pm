@@ -25,7 +25,7 @@ sub list( $$$$ ) {
 	my $id = $address->pretty();
 	genHtmlHead( $req, $id, undef );
 	print '<h1>'.encode( $id ).'</h1>';
-	genMenu( $req, $address, $args, $auth, 'list' );
+	genMenu( $req, $address, $args, $auth, [ [ 'Help', 'help', 'list' ], $address->helpName() ? [ 'ID syntax', 'help', $address->helpName() ] : () ] );
 	genPath( $req, $address, 0 );
 	print htmlDiv( 'name', '<p>'.encode( $name ) ) if( defined( $name ) );
 	print htmlDiv( 'note', '<p>'.encode( $note ) ) if( defined( $note ) );

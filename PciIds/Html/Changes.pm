@@ -16,7 +16,7 @@ sub genNewItemForm( $$$$$$ ) {
 	my $prettyAddr = encode( $address->pretty() );
 	genHtmlHead( $req, "$prettyAddr - add new item", undef );
 	print "<h1>$prettyAddr - add new item</h1>\n";
-	genLocMenu( $req, $args, [ logItem( $auth ), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Notifications', 'notifications' ], [ 'Help', 'help', 'newitem' ] ] );
+	genLocMenu( $req, $args, [ logItem( $auth ), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Notifications', 'notifications' ], [ 'Help', 'help', 'newitem' ], [ 'ID syntax', 'help', $address->helpName() ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newitem' id='newitem' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'input', 'Id:', 'text', 'id', 'maxlength="50"' ],

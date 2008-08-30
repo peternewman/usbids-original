@@ -44,4 +44,8 @@ sub append( $$ ) {
 	return ( PciIds::Address::new( $self->{'value'} . ( ( $self->{'value'} =~ /\/$/ ) ? '' : '/' ) . $suffix ), undef );
 }
 
+sub helpName( $ ) {
+	return 'pci_class';
+}
+
 1;
