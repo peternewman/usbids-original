@@ -29,12 +29,12 @@ sub pretty( $ ) {
 
 sub restrictRex( $$ ) {
 	my( $self, $restrict ) = @_;
-	my( $result ) = ( $restrict =~ /^([a-f0-9]{1,4})/ );#TODO every time?
+	my( $result ) = ( $restrict =~ /^([a-f0-9]{1,2})/ );#TODO every time?
 	return $result;
 }
 
 sub leaf( $ ) {
-	#TODO
+	return shift->get() =~ /\/.*\/.*\//;
 }
 
 sub append( $$ ) {

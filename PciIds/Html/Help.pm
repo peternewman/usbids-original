@@ -18,7 +18,7 @@ sub getHelp( $$ ) {
 	chomp $head;
 	genHtmlHead( $req, $head, undef );
 	my $addr = PciIds::Address::new( $req->uri() );
-	print "<h1>$head".( defined $addr ? "(".$addr->pretty().")" : "" )."</h1>\n";
+	print "<h1>$head".( defined $addr ? " (".$addr->pretty().")" : "" )."</h1>\n";
 	genMenu( $req, $addr, $args, $auth, undef );
 	genPath( $req, $addr, 1 );
 	my $url = setAddrPrefix( $req->uri(), 'read' ).buildExcept( 'help', $args ).'?help=';

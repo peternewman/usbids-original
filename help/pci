@@ -1,0 +1,20 @@
+PCI devices
+<h2>Vendors</h2>
+<p>
+The top level of hierarchy is a vendor list.
+Each vendor has a 2-byte long id, stored in database as 4 hexadecimal digits (with lowercase letters).
+They can be browsed <a href='/read/PC'>here</a>.
+
+<h2>Devices</h2>
+<p>
+Each vendor contains a list of its devices.
+Each device in the list has a 2-byte long id, stored the same way as vendor id (4 hexadecimal letters).
+
+<h2>Sub-systems</h2>
+A device can consist of more sub-systems.
+Each sub-system has 4-byte long id, stored as 8 hexadecimal letters, split in the middle by a space (for example <tt>1234 abcd</tt> could be a sub-system id).
+The first quad of digits is considered a vendor id (from the same list of vendors). The vendor of the sub-system can be different than vendor of the device.
+
+<h2>See also</h2>
+<p>
+You can have a look at <a href='$HELP_URL$pci_class'>PCI device classes</a>.
