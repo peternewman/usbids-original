@@ -27,7 +27,7 @@ sub list( $$$$ ) {
 	print '<h1>'.encode( $id ).'</h1>';
 	genMenu( $req, $address, $args, $auth, [ [ 'Help', 'help', 'list' ], $address->helpName() ? [ 'ID syntax', 'help', $address->helpName() ] : () ] );
 	genPath( $req, $address, 0 );
-	print htmlDiv( 'name', '<p>'.encode( $name ) ) if( defined( $name ) );
+	print htmlDiv( 'name', '<p>'.encode( $name ) ) if defined( $name );
 	print htmlDiv( 'note', '<p>'.encode( $note ) ) if( defined( $note ) );
 	my $diss = 0;
 	my $history;
@@ -41,6 +41,7 @@ sub list( $$$$ ) {
 		$type = 'main-history' if( defined( $mid ) && ( $id == $mid ) );
 		print "<div class='$type'>\n";
 		print "<p class='itemname'>Name: ".encode( $name )."\n" if( defined( $name ) && ( $name ne '' ) );
+		print "<p class='itemname'>Deletion request\n" if( defined $name && $name eq '' );
 		print "<p class='itemnote'>Note: ".encode( $note )."\n" if( defined( $note ) && ( $note ne '' ) );
 		if( defined( $text ) && ( $text ne '' ) ) {
 			$text = encode( $text );

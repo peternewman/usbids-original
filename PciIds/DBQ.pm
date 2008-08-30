@@ -199,7 +199,12 @@ sub submitItem( $$$ ) {
 
 sub submitHistory( $$$$ ) {
 	my( $self, $data, $auth, $address ) = @_;
-	$self->command( 'newhistory', [ $address->get(), $auth->{'authid'}, $data->{'text'}, $data->{'name'}, $data->{'note'} ], 1 );
+	if( $data->{'delete'} ) {
+		$self->command( 'newhistory', [ $address->get(), $auth->{'authid'}, $data->{'text'}, '', $data->{'note'} ], 1 );
+	} else {
+		$data->{'name'} = undef if defined $data->{'name'} && $data->{'name'} eq '';
+		$self->command( 'newhistory', [ $address->get(), $auth->{'authid'}, $data->{'text'}, $data->{'name'}, $data->{'note'} ], 1 );
+	}
 	return $self->last();
 }
 

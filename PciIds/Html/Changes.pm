@@ -93,12 +93,11 @@ sub genNewHistoryForm( $$$$$$ ) {
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newhistory' id='newhistory' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'textarea', 'Text:', undef, 'text', 'rows="5" cols="50"' ],
-		[ 'input', 'Name*:', 'text', 'name', 'maxlength="200"' ],
-		[ 'input', 'Note*:', 'text', 'note', 'maxlength="1024"' ],
+		[ 'input', 'Request deletion', 'checkbox', 'delete', 'value="delete"' ],
+		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],
+		[ 'input', 'Note:', 'text', 'note', 'maxlength="1024"' ],
 		[ 'input', '', 'submit', 'submit', 'value="Submit"' ] ], $values );
 	print '</table></form>';
-	print '<p>Items marked with * are optional, use them only if you want to change the name and note.';
-	print '<p>If you specify note, you must include name too.';
 	genHtmlTail();
 	return OK;
 }
@@ -123,10 +122,22 @@ sub newHistorySubmit( $$$$ ) {
 			'text' => sub {
 				my( $expl ) = @_;
 				return 'Text can not be longer than 1024 characters' if ( length $expl > 1024 );
-				return 'You must provide the text of comment' unless( length $expl );
+				return undef;
+			},
+			'delete' => sub {
+				my( $delete ) = @_;
+				return ( undef, '0' ) unless defined $delete;
+				return undef if $delete eq 'delete';
+				return 'Invalid form value';
 				return undef;
 			}
 		}, [ sub { my( $data ) = @_;
+			return 'You must provide either name, text or request a deletion' if( ! length $data->{'name'} && ! length $data->{'text'} && ! $data->{'delete'} );
+			return undef;
+		}, sub { my( $data ) = @_;
+			return 'You can not set name and request deletion at the same time' if( length $data->{'name'} && $data->{'delete'} );
+			return undef;
+		}, sub { my( $data ) = @_;
 			return 'You must provide name too' if( ( length $data->{'note'} ) && ( ! length $data->{'name'} ) );
 			return undef;
 		}, sub { return $address->canDiscuss() ? undef : 'You can not discuss this item'; } ] );
