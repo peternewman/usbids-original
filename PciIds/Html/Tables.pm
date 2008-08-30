@@ -20,7 +20,10 @@ sub nodes( $$$ ) {
 	my $restrict = $args->{'restrict'};
 	$restrict = '' unless( defined $restrict );
 	$restrict = PciIds::Address::new( $parent )->restrictRex( $restrict );#How do I know if the restrict is OK?
-	htmlFormatTable( PciIds::DBQ::nodes( $self, $parent, $args, $restrict ), 3, [], [ \&formatLink ], sub { 1; }, sub { return ' class="'.( defined( shift->[ 3 ] ) ? 'item' : 'unnamedItem' ).'"'; } );
+	htmlFormatTable( PciIds::DBQ::nodes( $self, $parent, $args, $restrict ), 3, [], [ \&formatLink ], sub { 1; }, sub {
+		my $name = shift->[ 1 ];
+		return ' class="'.( defined $name && $name ne '' ? 'item' : 'unnamedItem' ).'"';
+	} );
 }
 
 1;

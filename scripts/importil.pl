@@ -65,7 +65,7 @@ sub getUser( $ ) {
 sub addComment( $$$$$ ) {
 	my( $email, $time, $name, $comment, $discussion ) = @_;
 	my $user = getUser( $email );
-	$name = undef if( ( defined $name ) && $name !~ /\S/ );
+	$name = undef if( ( defined $name ) && $name !~ /\S/ && $name ne '' );
 	$comment = undef if( ( defined $comment ) && $comment !~ /\S/ );
 	$discussion = undef if( ( defined $discussion ) && $discussion !~ /\S/ );
 	$newcomment->execute( $user, $addr->get(), $time, $name, $comment, $discussion );
