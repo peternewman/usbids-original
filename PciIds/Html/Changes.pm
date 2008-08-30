@@ -6,15 +6,17 @@ use PciIds::Html::Util;
 use PciIds::Html::Forms;
 use PciIds::Notifications;
 use PciIds::Log;
+use PciIds::Address;
 use Apache2::Const qw(:common :http);
 
-sub genNewItemForm( $$$$$ ) {
-	my( $req, $args, $tables, $error, $values ) = @_;
+sub genNewItemForm( $$$$$$ ) {
+	my( $req, $args, $auth, $tables, $error, $values ) = @_;
 	my( $ok, $parent, $name, $note, $address ) = loadItem( $tables, $req->uri() );
 	return NOT_FOUND unless( $ok );
 	my $prettyAddr = encode( $address->pretty() );
 	genHtmlHead( $req, "$prettyAddr - add new item", undef );
 	print "<h1>$prettyAddr - add new item</h1>\n";
+	genLocMenu( $req, $args, [ logItem( $auth ), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Notifications', 'notifications' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newitem' id='newitem' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'input', 'Id:', 'text', 'id', 'maxlength="50"' ],
@@ -31,7 +33,7 @@ sub genNewItemForm( $$$$$ ) {
 sub newItemForm( $$$$ ) {
 	my( $req, $args, $tables, $auth ) = @_;
 	if( defined $auth->{'authid'} ) {#Logged in alright
-		return genNewItemForm( $req, $args, $tables, undef, {} );
+		return genNewItemForm( $req, $args, $auth, $tables, undef, {} );
 	} else {
 		return notLoggedComplaint( $req, $args, $auth );
 	}
@@ -58,12 +60,15 @@ sub newItemSubmit( $$$$ ) {
 			( $data->{'address'}, $errstr ) = $paddress->append( $data->{'id'} );
 			return $errstr;
 		}, sub { return $paddress->canAddItem() ? undef : 'Can not add items here'; } ] );
-		return genNewItemForm( $req, $args, $tables, $error, $data ) if( defined $error );
+		return genNewItemForm( $req, $args, $auth, $tables, $error, $data ) if( defined $error );
 		my( $result, $comName ) = $tables->submitItem( $data, $auth );
 		if( $result eq 'exists' ) {
 			genHtmlHead( $req, 'ID collision', undef );
 			print '<h1>ID collision</h1>';
-			print '<p>This ID already exists. Have a look <a href="/read/'.$data->{'address'}->get().'?action=list">at it</a>';
+			my $addr = PciIds::Address::new( $req->uri() );
+			genCustomMenu( $req, $addr, $args, [ logItem( $auth ), [ 'Add other item', 'newitem' ], $addr->canDiscuss() ? [ 'Discuss', 'newhistory' ] : () ] );
+			genPath( $req, $data->{'address'}, 1 );
+			print '<p>Sorry, this ID already exists.';
 			genHtmlTail();
 			return OK;
 		} elsif( $result ) {
@@ -77,13 +82,14 @@ sub newItemSubmit( $$$$ ) {
 	}
 }
 
-sub genNewHistoryForm( $$$$$ ) {
-	my( $req, $args, $tables, $error, $values ) = @_;
+sub genNewHistoryForm( $$$$$$ ) {
+	my( $req, $args, $tables, $auth, $error, $values ) = @_;
 	my( $ok, $parent, $name, $note, $address ) = loadItem( $tables, $req->uri() );
 	return NOT_FOUND unless( $ok );
 	my $prettyAddr = encode( $address->pretty() );
 	genHtmlHead( $req, "$prettyAddr - discuss", undef );
 	print "<h1>$prettyAddr - discuss</h1>\n";
+	genLocMenu( $req, $args, [ logItem( $auth ), $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), [ 'Notifications', 'notifications' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newhistory' id='newhistory' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'textarea', 'Text:', undef, 'text', 'rows="5" cols="50"' ],
@@ -100,7 +106,7 @@ sub genNewHistoryForm( $$$$$ ) {
 sub newHistoryForm( $$$$ ) {
 	my( $req, $args, $tables, $auth ) = @_;
 	if( defined $auth->{'authid'} ) {
-		return genNewHistoryForm( $req, $args, $tables, undef, {} );
+		return genNewHistoryForm( $req, $args, $tables, $auth, undef, {} );
 	} else {
 		return notLoggedComplaint( $req, $args, $auth );
 	}
@@ -124,7 +130,7 @@ sub newHistorySubmit( $$$$ ) {
 			return 'You must provide name too' if( ( length $data->{'note'} ) && ( ! length $data->{'name'} ) );
 			return undef;
 		}, sub { return $address->canDiscuss() ? undef : 'You can not discuss this item'; } ] );
-		return genNewHistoryForm( $req, $args, $tables, $error, $data ) if( defined $error );
+		return genNewHistoryForm( $req, $args, $tables, $auth, $error, $data ) if( defined $error );
 		my $hid = $tables->submitHistory( $data, $auth, $address );
 		tulog( $auth->{'authid'}, "Discussion created $hid ".$address->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'description'} )." ".logEscape( $data->{'text'} ) );
 		notify( $tables, $address->get(), $hid, ( defined $name && ( $name ne '' ) ) ? 1 : 0, 1 );

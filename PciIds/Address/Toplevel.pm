@@ -38,7 +38,7 @@ sub append( $$ ) {
 	} else {#PCI Device Class
 		return ( undef, "Invalid ID syntax" ) unless ( $suffix =~ /^[0-9a-f]{2,2}$/ );
 	}
-	return ( PciIds::Address::Base::new( $self->{'value'} . ( ( $self->{'value'} =~ /\/$/ ) ? '' : '/' ) . $suffix ), undef );
+	return ( PciIds::Address::new( $self->{'value'} . ( ( $self->{'value'} =~ /\/$/ ) ? '' : '/' ) . $suffix ), undef );
 }
 
 sub canDiscuss( $ ) { return 0; }

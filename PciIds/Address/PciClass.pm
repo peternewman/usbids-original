@@ -41,7 +41,7 @@ sub append( $$ ) {
 	my( $self, $suffix ) = @_;
 	return ( undef, 'You can not add to leaf node' ) if( $self->leaf() );
 	return ( undef, "Invalid ID syntax" ) unless ( $suffix =~ /^[0-9a-f]{2,2}$/ );
-	return ( PciIds::Address::Base::new( $self->{'value'} . ( ( $self->{'value'} =~ /\/$/ ) ? '' : '/' ) . $suffix ), undef );
+	return ( PciIds::Address::new( $self->{'value'} . ( ( $self->{'value'} =~ /\/$/ ) ? '' : '/' ) . $suffix ), undef );
 }
 
 1;
