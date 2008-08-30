@@ -1,0 +1,57 @@
+Your account
+<p>
+If you want to edit something or just receive notifications about changes, you need an account.
+If you want to only view and browse information here, you do not need one.
+<p>
+The account contains your email address and password.
+If you want, you can provide a login name and xmpp address as well.
+<p>
+Email and xmpp addresses will be used to send you notifications about changes (if you request them).
+Email address can be used to reset your password, if you forget it.
+Neither your email nor your xmpp address will be showed to anybody but you and admins.
+<p>
+Login name is used for your convenience during login (you can log in by either email or login name) and
+it is showed with discussion submits you wrote.
+
+<h2>Obtaining an account</h2>
+<p>
+It is possible you account has been created already.
+It is created if you submit something using email.
+And we created accounts for all submits imported from previous version of this site.
+In that case, you need to <a href='$AC_URL$respass'>reset your password</a> (because exists no password for you).
+<p>
+If you do not have an account, go to <a href='$AC_URL$register'>Register</a> item in menu (you can find it, when you visit <a href='$AC_URL$login'>Log in</a> page) and fill your email address.
+A message containing confirmation link will be sent to it.
+After you follow the link and fill in the rest, your account is ready for use.
+
+<h2>Reseting password</h2>
+<p>
+If your account was created automatically or you forget your password, you need to reset it.
+Enter your email address into the <a href='$AC_URL$respass'>reset password</a> page.
+A message with confirmation link will be sent to you.
+When you follow it, you will be provided with a form where you can change the password.
+
+<h2>Logging in</h2>
+<p>
+When you want to edit some information here or alter your own settings, you need to be logged in.
+Fill the form on the <a href='$AC_URL$login'>log in</a> page.
+You can provide either your email address or your login name, they both work.
+<p>
+After successful login, you can see a page with your last login (so you can check nobody is misusing your account).
+<p>
+You can log out again by <a href='$AC_URL$logout'>log out</a> menu item.
+You will be logged out automatically if you do not do anything in a long time (approx. 30 minutes) or close your browser.
+
+<h2>Actions requiring login</h2>
+<ul class='navigation'>
+	<li><a href='$HELP_URL$profile'>Configuring your profile</a>
+	<li><a href='$HELP_URL$notifications'>Editing your notifications</a>
+	<li><a href='$HELP_URL$newitem'>Submitting a new item</a>
+	<li><a href='$HELP_URL$newhistory'>Entering a discussion</a>
+</ul>
+
+<h2>Accounts with additional rights</h2>
+<p>
+There are accounts with additional rights, like deleting whole items or approving history comments.
+If you have one, you probably know it already.
+If you think you should have one, contact owners of this site.

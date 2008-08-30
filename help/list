@@ -6,7 +6,7 @@ The IDs are organized into a tree.
 <p>
 Page is divided into parts:
 <ul>
-	<li><strong>Menu</strong> ‒ you can perform actions, both in connection with current item (like <a href='$CUR_LINK$newitem'>adding a new sub-item</a>) and global (<a href='$CUR_LINK$profile'>editing your profile</a>).
+	<li><strong>Menu</strong> ‒ you can perform actions, both in connection with current item (like <a href='$HELP_URL$newitem'>adding a new sub-item</a>) and global (<a href='$CUR_URL$profile'>editing your profile</a>).
 	<li><strong>Hierarchy</strong> ‒ lists all parental items.
 	<li><strong>Discussion</strong> ‒ contains history of suggested names, notes and general talk about current item.
 	<li><strong>List of sub-items</strong> ‒ all direct sub-items are listed here and you can browse into them.
@@ -24,12 +24,12 @@ Colors are used both in discussion and list of sub-items to mark status of discu
 <div class='help-example'>
 <h1>ID 0000</h1>
 <div class='menu'><ul>
-	<li><a href='$CUR_LINK$account'>Log in</a>
-	<li><a href='$CUR_LINK$newitem'>Add item</a>
-	<li><a href='$CUR_LINK$newhistory'>Discuss</a>
+	<li><a href='$HELP_URL$account'>Log in</a>
+	<li><a href='$HELP_URL$newitem'>Add item</a>
+	<li><a href='$HELP_URL$newhistory'>Discuss</a>
 </ul></div>
 <div class='navigation'><ul>
-	<li><a href='$CUR_LINK$index'>Parent</a>
+	<li><a href='$HELP_URL$index'>Parent</a>
 </div>
 <div class='name'><p>ID name</div>
 <div class='discussion'><h2>Discussion</h2>

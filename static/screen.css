@@ -45,7 +45,8 @@ body
 	padding-right: 5px;
 }
 .menu ul,
-.navigation ul
+.navigation ul,
+ul.navigation
 {
 	list-style-type: none;
 }

@@ -21,10 +21,12 @@ sub getHelp( $$ ) {
 	print "<h1>$head (".$addr->pretty().")</h1>\n";
 	genMenu( $req, $addr, $args, $auth, undef );
 	genPath( $req, $addr, 1 );
-	my $url = '/read'.$req->uri().buildExcept( 'help', $args ).'?help=';
-	print "<div class='navigation'><ul><li><a href='$url=index'>Help index</a></ul></div>\n" if( $helpname ne 'index' );
+	my $url = setAddrPrefix( $req->uri(), 'read' ).buildExcept( 'help', $args ).'?help=';
+	delete $args->{'help'};
+	my %repls = ( 'HELP_URL' => $url, 'AC_URL' => setAddrPrefix( $req->uri(), 'mods' ).buildExcept( 'action', $args ).'?action=' );
+	print "<div class='navigation'><ul><li><a href='${url}index'>Help index</a></ul></div>\n" if( $helpname ne 'index' );
 	while( defined( my $line = <HELP> ) ) {
-		$line =~ s/\$CUR_LINK\$/$url/g;
+		$line =~ s/\$(\w+_URL)\$/$repls{$1}/g;
 		print $line;
 	}
 	close HELP;
