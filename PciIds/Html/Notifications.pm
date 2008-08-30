@@ -12,6 +12,7 @@ sub genNotifForm( $$$$$$ ) {
 	my $addr = PciIds::Address::new( $req->uri() );
 	genHtmlHead( $req, $addr->pretty().' - notifications', undef );
 	print "<h1>".$addr->pretty()." - notifications</h1>\n";
+	genLocMenu( $req, $args, [ logItem( $auth ), $addr->canAddItem() ? [ 'New item', 'newitem' ] : (), $addr->canDiscuss ? [ 'Discuss', 'newhistory' ] : (), [ 'Profile', 'profile' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	my $uri = $addr->get();
 	my $notifs = $tables->notificationsUser( $auth->{'authid'} );
@@ -28,6 +29,7 @@ sub genNotifForm( $$$$$$ ) {
 	}
 	print "</ul></div>\n" if( $started );
 	print "<form name='notifications' id='notifications' method='POST' action=''>\n";
+	print "<h3>Effect range</h3>\n";
 	print "<p><input type='checkbox' value='recursive' name='recursive'".( $data->{'recursive'} ? " checked='checked'" : "" )."> Recursive\n";
 	print "<h3>Notification level</h3>\n";
 	print "<p>\n";
@@ -45,7 +47,6 @@ sub genNotifForm( $$$$$$ ) {
 		}
 		print "</ul></div>\n";
 	}
-	print "<a class='navigation' href='".setAddrPrefix( $req->uri(), 'read' ).buildExcept( 'action', $args )."?action=list'>Back to browsing</a>\n";
 	genHtmlTail();
 	return OK;
 }
