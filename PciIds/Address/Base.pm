@@ -49,4 +49,8 @@ sub helpName( $ ) {
 	return undef;
 }
 
+sub addressDeps( $ ) {
+	return [];
+}
+
 1;

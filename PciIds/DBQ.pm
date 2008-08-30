@@ -184,11 +184,14 @@ sub history( $$ ) {
 sub submitItem( $$$ ) {
 	my( $self, $data, $auth ) = @_;
 	my( $addr ) = ( $data->{'address'} );
+	foreach( @{$addr->addressDeps()} ) {
+		my( $dep, $error ) = @{$_};
+		return ( $error, undef ) unless defined $self->item( $dep->get(), 0 );
+	}
 	return( 'exists', undef ) if( defined( $self->item( $addr->get(), 0 ) ) );
 	eval {
 		$self->command( 'newitem', [ $addr->get(), $addr->parent()->get() ] );
 		$self->command( 'newhistory', [ $addr->get(), $auth->{'authid'}, $data->{'discussion'}, $data->{'name'}, $data->{'note'} ] );
-
 	};
 	if( $@ ) {
 		$self->rollback();

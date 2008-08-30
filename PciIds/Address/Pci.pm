@@ -18,7 +18,7 @@ sub pretty( $ ) {
 	s/([0-9a-f]{4})([0-9a-f]{4})/$1 $2/g;
 	my $prefix = '';
 	if( /:.*:/ ) {
-		$prefix = 'Subsystem';
+		$prefix = 'Sub-system';
 	} elsif( /:/ ) {
 		$prefix = 'Device';
 	} else {
@@ -62,6 +62,12 @@ sub path( $ ) {
 
 sub helpName( $ ) {
 	return 'pci';
+}
+
+sub addressDeps( $ ) {
+	my( $addr ) = ( shift->get() =~ /^PC\/....\/....\/(....)/ );
+	return [] unless defined $addr;
+	return [ [ PciIds::Address::new( "PC/$addr" ), "Sub-system vendor $addr does not exist" ] ];
 }
 
 1;

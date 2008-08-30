@@ -72,7 +72,7 @@ sub newItemSubmit( $$$$ ) {
 			genHtmlTail();
 			return OK;
 		} elsif( $result ) {
-			die "Failed to submit new item: $result\n";
+			return genNewItemForm( $req, $args, $auth, $tables, $result, $data );
 		}
 		notify( $tables, $data->{'address'}->get(), $comName, 2, 0 );
 		tulog( $auth->{'authid'}, "Item created ".$data->{'address'}->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'note'} )." ".logEscape( $data->{'discussion'} )." $comName" );
