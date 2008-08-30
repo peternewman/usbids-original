@@ -16,7 +16,7 @@ sub genNewItemForm( $$$$$$ ) {
 	my $prettyAddr = encode( $address->pretty() );
 	genHtmlHead( $req, "$prettyAddr - add new item", undef );
 	print "<h1>$prettyAddr - add new item</h1>\n";
-	genLocMenu( $req, $args, [ logItem( $auth ), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Notifications', 'notifications' ] ] );
+	genLocMenu( $req, $args, [ logItem( $auth ), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Notifications', 'notifications' ], [ 'Help', 'help', 'newitem' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newitem' id='newitem' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'input', 'Id:', 'text', 'id', 'maxlength="50"' ],
@@ -89,7 +89,7 @@ sub genNewHistoryForm( $$$$$$ ) {
 	my $prettyAddr = encode( $address->pretty() );
 	genHtmlHead( $req, "$prettyAddr - discuss", undef );
 	print "<h1>$prettyAddr - discuss</h1>\n";
-	genLocMenu( $req, $args, [ logItem( $auth ), $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), [ 'Notifications', 'notifications' ] ] );
+	genLocMenu( $req, $args, [ logItem( $auth ), $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), [ 'Notifications', 'notifications' ], [ 'Help', 'help', 'newhistory' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newhistory' id='newhistory' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'textarea', 'Text:', undef, 'text', 'rows="5" cols="50"' ],

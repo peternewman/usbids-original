@@ -1,0 +1,35 @@
+Add a new item
+<p>
+If you know about an ID not present here, you can submit it.
+Browse to the item which should contain it and click <a href='$AC_URL$newitem'>add item</a> link.
+<p>
+You need to fill in the ID and its name.
+The ID is just the last part (without parent part, for example if you have PCI device <tt>1234:5678</tt> and the vendor <tt>1234</tt> already exists, you enter only <tt>5678</tt>).
+If you know chip name, it is preferred over marketing name.
+<p>
+You can add some note to the name, for example, if the ID is not really owned by the company using it.
+You can add a discussion comment to it (why you think it is correct).
+The difference between note and discussion is that note is additional information to name, while discussion is administrative.
+Also, note is sometimes distributed, while discussion isn't.
+<p>
+Both note and discussion is optional.
+<p>
+After you submit it, it will wait approval of an admin.
+
+<h2>Approval</h2>
+<p>
+Each item is checked and approved by an admin.
+It is because not all submissions are correct.
+<p>
+If you want to it to get approved, please check you enter valid information into correct place (eg. not an USB ID into PCI devices, Device into its vendor).
+You should check help specific for each tree:
+<ul class='navigation'>
+	<li><a href='$HELP_URL$pci'>PCI devices</a>
+	<li><a href='$HELP_URL$pci_class'>PCI device classes</a>
+</ul>
+
+<h2>See also</h2>
+<p>
+Once item is submitted, it is not sealed for ever. You can <a href='$HELP_URL$newhistory'>discuss</a> existing items and suggest them new names.
+<p>
+If you are interested in changes in some item (or its whole subtree), you can let the system send you <a href='$HELP_URL$notifications'>notifications</a>.
