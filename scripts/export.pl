@@ -21,11 +21,12 @@ foreach( @{$db->query( 'list', [] )} ) {
 	s/\//\t/g;
 	my $tabs = $_;
 	$id =~ s/.*\///;
+	$id =~ s/([0-9a-f]{4})([0-9a-f]{4})/$1 $2/;
 	print "$tabs$prefix$id  $name\n";
 	if( defined( $description ) && ( $description ne '' ) ) {
 		chomp $description;
 		$description =~ s/\n/\n$tabs#/g;
-		print "$tabs#$description\n";
+		print "$tabs# $description\n";
 	}
 }
 
