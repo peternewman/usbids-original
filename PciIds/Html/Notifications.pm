@@ -29,18 +29,18 @@ sub genNotifForm( $$$$$$ ) {
 	}
 	print "</ul></div>\n" if( $started );
 	print "<form name='notifications' id='notifications' method='POST' action=''>\n";
-	print "<h3>Effect range</h3>\n";
+	print "<h2>Effect range</h2>\n";
 	print "<p><input type='checkbox' value='recursive' name='recursive'".( $data->{'recursive'} ? " checked='checked'" : "" )."> Recursive\n";
-	print "<h3>Notification level</h3>\n";
+	print "<h2>Notification level</h2>\n";
 	print "<p>\n";
 	genRadios( [ [ 'None', '3' ], [ 'Main comment &amp; new subitem', '2' ], [ 'Description', '1' ], [ 'Comment', '0' ] ], 'notification', ( defined $data->{'notification'} ) ? $data->{'notification'} : '3' );
-	print "<h3>Notification way</h3>\n";
+	print "<h2>Notification way</h2>\n";
 	print "<p>\n";
 	genRadios( [ [ 'Email', '0' ], [ 'Xmpp', '1' ], [ 'Both', '2' ] ], 'way', ( defined $data->{'way'} ) ? $data->{'way'} : '0' );
 	print "<p><input type='submit' value='Submit' name='submit'>\n";
 	print "</form>\n";
 	if( @{$notifs} ) {
-		print "<div class='navigation'><h3>All notifications</h3><ul>\n";
+		print "<div class='navigation'><h2>All notifications</h2><ul>\n";
 		foreach( @{$notifs} ) {
 			my( $location ) = @{$_};
 			print "<li><a href='/$location".buildArgs( $args )."'>".PciIds::Address::new( $location )->pretty()."</a>\n";

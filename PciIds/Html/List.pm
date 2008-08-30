@@ -25,10 +25,10 @@ sub list( $$$$ ) {
 	my $id = $address->pretty();
 	genHtmlHead( $req, $id, undef );
 	print '<h1>'.encode( $id ).'</h1>';
-	genMenu( $req, $address, $args, $auth );
+	genMenu( $req, $address, $args, $auth, 'list' );
+	genPath( $req, $address, 0 );
 	print htmlDiv( 'name', '<p>'.encode( $name ) ) if( defined( $name ) );
 	print htmlDiv( 'note', '<p>'.encode( $note ) ) if( defined( $note ) );
-	genPath( $req, $address, 0 );
 	my $diss = 0;
 	my $history;
 	foreach $history ( @{$tables->history( $address->get() )} ) {
@@ -53,7 +53,7 @@ sub list( $$$$ ) {
 	}
 	print "</div>\n" if( $diss );
 	unless( $address->leaf() ) {
-		print "<h2>Subitems</h2>\n";
+		print "<h2>Sub-items</h2>\n";
 		my $restricts = $address->defaultRestrictList();
 		if( scalar @{$restricts} ) {
 			print "<p>";

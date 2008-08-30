@@ -15,6 +15,11 @@ body
 {
 	background: #DDFFDD;
 }
+.help-example
+{
+	background: #BBBBFF;
+	padding: 0.3em;
+}
 .itemname, .name
 {
 	font-weight: bold;

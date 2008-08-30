@@ -39,7 +39,8 @@ my %handlers = (
 		#Some debug
 		'test' => \&PciIds::Html::Debug::test,
 		#Notifications
-		'notifications' => \&PciIds::Html::Notifications::notifForm
+		'notifications' => \&PciIds::Html::Notifications::notifForm,
+		'help' => \&PciIds::Html::Help::getHelp
 	},
 	'POST' => {
 		'newitem' => \&PciIds::Html::Changes::newItemSubmit,
@@ -59,7 +60,6 @@ sub handler( $$ ) {
 	my( $req, $hasSSL ) = @_;
 	return HTTPRedirect( $req, $req->uri()."index.html" ) if( $req->uri() eq '/' );
 	return DECLINED if( $req->uri() =~ /^\/((static)\/|robots.txt|index.html)/ );
-	return getHelp( $req ) if( $req->uri() =~ /^\/help/ );
 	my $args = parseArgs( $req->args() );
 	my $action = $args->{'action'};
 	$action = '' unless( defined $action );

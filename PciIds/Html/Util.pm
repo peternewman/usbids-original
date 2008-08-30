@@ -34,9 +34,9 @@ sub htmlDiv( $$ ) {
 	return '<div class="'.$class.'">'.$text.'</div>';
 }
 
-sub item( $$$ ) {
-	my( $url, $label, $action ) = @_;
-	print "  <li><a href='".$url.$action."'>$label</a>\n";
+sub item( $$ ) {
+	my( $url, $label ) = @_;
+	print "  <li><a href='".$url."'>$label</a>\n";
 }
 
 sub genCustomMenu( $$$$ ) {
@@ -44,10 +44,12 @@ sub genCustomMenu( $$$$ ) {
 	my $url = '/'.$address->get().buildExcept( 'action', $args ).'?action=';
 	print "<div class='menu'>\n<ul>\n";
 	foreach( @{$list} ) {
-		my( $label, $action ) = @{$_};
+		my( $label, $action, $param ) = @{$_};
 		my $prefix = '/mods';
-		$prefix = '/read' if( !defined( $action ) or ( $action eq 'list' ) or ( $action eq '' ) );
-		item( 'http://'.$req->hostname().$prefix.$url, $label, $action );
+		$prefix = '/read' if( !defined( $action ) or ( $action eq 'list' ) or ( $action eq '' ) or ( $action eq 'help' ) );
+		my $suffix = '';
+		$suffix = '?help='.$param if( $action eq 'help' );
+		item( 'http://'.$req->hostname().$prefix.$url.$action.$suffix, $label );
 	}
 	print "</ul></div>\n";
 }
@@ -61,14 +63,15 @@ sub logItem( $ ) {
 	}
 }
 
-sub genMenu( $$$$ ) {
-	my( $req, $address, $args, $auth ) = @_;
+sub genMenu( $$$$$ ) {
+	my( $req, $address, $args, $auth, $help ) = @_;
 	my @list = ( logItem( $auth ) );
 	push @list, [ 'Add item', 'newitem' ] if( $address->canAddItem() );
 	push @list, [ 'Discuss', 'newhistory' ] if( $address->canDiscuss() );
 	push @list, [ 'Administrate', 'admin' ] if( hasRight( $auth->{'accrights'}, 'validate' ) );
 	push @list, [ 'Profile', 'profile' ] if defined $auth->{'authid'};
 	push @list, [ 'Notifications', 'notifications' ] if defined $auth->{'authid'};
+	push @list, [ 'Help', 'help', $help ] if defined $help;
 	genCustomMenu( $req, $address, $args, \@list );
 }
 

@@ -1,0 +1,48 @@
+Browsing ID list
+<p>
+You can examine the current list of IDs.
+The IDs are organized into a tree.
+<h2>Page anatomy</h2>
+<p>
+Page is divided into parts:
+<ul>
+	<li><strong>Menu</strong> ‒ you can perform actions, both in connection with current item (like <a href='$CUR_LINK$newitem'>adding a new sub-item</a>) and global (<a href='$CUR_LINK$profile'>editing your profile</a>).
+	<li><strong>Hierarchy</strong> ‒ lists all parental items.
+	<li><strong>Discussion</strong> ‒ contains history of suggested names, notes and general talk about current item.
+	<li><strong>List of sub-items</strong> ‒ all direct sub-items are listed here and you can browse into them.
+</ul>
+
+You can find menu and hierarchy in most other pages and they have the same function.
+
+<h2>Colors</h2>
+Colors are used both in discussion and list of sub-items to mark status of discussion comments and sub-items respectively.
+<span class='main-history'>Green entries</span> are discussion comments which provide current item name.
+<span class='unseen-history'>Grey ones</span> are entries with some problem. They are either items without any assigned name (discussion about non-existing item, new item which was not yet approved by an admin) or discussion comments not yet seen by an admin.
+<span class='history'>White ones</span> are the rest, usual discussion and valid items.
+
+<h2>Example</h2>
+<div class='help-example'>
+<h1>ID 0000</h1>
+<div class='menu'><ul>
+	<li><a href='$CUR_LINK$account'>Log in</a>
+	<li><a href='$CUR_LINK$newitem'>Add item</a>
+	<li><a href='$CUR_LINK$newhistory'>Discuss</a>
+</ul></div>
+<div class='navigation'><ul>
+	<li><a href='$CUR_LINK$index'>Parent</a>
+</div>
+<div class='name'><p>ID name</div>
+<div class='discussion'><h2>Discussion</h2>
+<div class='main-history'>
+	<p class='itemname'>Name: ID name
+	<p class='discussion-text'>This item is here just as an example.
+	<p class='author'>Author
+	<p class='time'>1900-01-01 00:00
+</div>
+</div>
+<h2>Sub-items</h2>
+<table class='subnodes'><col class='id-col'><col class='name-col'><col class='note-col'>
+<th>Id<th>Name<th>Note
+<tr class='item'><td>1234<td>Sub-item<td>This is just example
+</table>
+</div>
