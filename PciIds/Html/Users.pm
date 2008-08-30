@@ -374,7 +374,7 @@ sub genProfileForm( $$$$$$ ) {
 	delete $data->{'confirm_password'};
 	delete $data->{'password'};
 	print "<h1>User profile</h1>\n";
-	genLocMenu( $req, $args, [ logItem( $auth ), [ 'Notifications', 'notifications' ] ] );
+	genLocMenu( $req, $args, [ logItem( $auth ), [ 'Notifications', 'notifications' ], [ 'Help', 'help', 'profile' ] ] );
 	print '<div class="error"><p>'.$error.'</div>' if defined $error;
 	print "<div class='info'><p>$info</div>\n" if defined $info;
 	print '<form name="profile" id="profile" method="POST" action=""><table>';

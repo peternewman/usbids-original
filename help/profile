@@ -1,0 +1,25 @@
+User profile
+<p>
+When you are logged in, you can find a <a href='$AC_URL$profile'>profile</a> link.
+You can set various information about your account.
+<ul>
+	<li><strong>Email</strong> ‒ this is the address email notifications about changes in database will be sent.
+	It is used for resetting password and you can log in using it.
+	<li><strong>Login</strong> ‒ you can log in using this one instead of your email address.
+	Furthermore, it is showed with discussion comments you wrote.
+	<li><strong>Xmpp</strong> ‒ you can get notifications using xmpp (aka jabber) as well as email.
+	<li><strong>Password</strong> ‒ if you want to set new password, fill in both new password and confirm password boxes.
+	<li><strong>Batch times</strong> ‒ if you want to group notifications together, so you receive less messages.
+	This is the time in minutes, for how long the system will gather notifications before it sends them by email or xmpp respectively.
+</ul>
+
+<h2>Password protected values</h2>
+<p>
+Email, login and new password are protected by the old password.
+If you want to change any of these, you must provide the old password to unlock them.
+
+<h2>See also</h2>
+<p>
+You can get a profile by <a href='$HELP_URL$account'>registering it</a>.
+<p>
+To receive any notifications, you need to <a href='$HELP_URL$notifications'>set them up</a>.
