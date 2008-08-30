@@ -41,7 +41,7 @@ sub append( $$ ) {
 	return ( PciIds::Address::Base::new( $self->{'value'} . ( ( $self->{'value'} =~ /\/$/ ) ? '' : '/' ) . $suffix ), undef );
 }
 
-sub canAddDiscuss( $ ) { return 0; }
+sub canDiscuss( $ ) { return 0; }
 
 sub defaultRestrict( $ ) {
 	my( $self ) = @_;
