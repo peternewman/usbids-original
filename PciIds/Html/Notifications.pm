@@ -12,7 +12,7 @@ sub genNotifForm( $$$$$$ ) {
 	my $addr = PciIds::Address::new( $req->uri() );
 	genHtmlHead( $req, $addr->pretty().' - notifications', undef );
 	print "<h1>".$addr->pretty()." - notifications</h1>\n";
-	genLocMenu( $req, $args, [ logItem( $auth ), $addr->canAddItem() ? [ 'New item', 'newitem' ] : (), $addr->canDiscuss ? [ 'Discuss', 'newhistory' ] : (), [ 'Profile', 'profile' ] ] );
+	genLocMenu( $req, $args, [ logItem( $auth ), $addr->canAddItem() ? [ 'New item', 'newitem' ] : (), $addr->canDiscuss ? [ 'Discuss', 'newhistory' ] : (), [ 'Profile', 'profile' ], [ 'Help', 'help', 'notifications' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	my $uri = $addr->get();
 	my $notifs = $tables->notificationsUser( $auth->{'authid'} );
@@ -33,7 +33,7 @@ sub genNotifForm( $$$$$$ ) {
 	print "<p><input type='checkbox' value='recursive' name='recursive'".( $data->{'recursive'} ? " checked='checked'" : "" )."> Recursive\n";
 	print "<h2>Notification level</h2>\n";
 	print "<p>\n";
-	genRadios( [ [ 'None', '3' ], [ 'Main comment &amp; new subitem', '2' ], [ 'Description', '1' ], [ 'Comment', '0' ] ], 'notification', ( defined $data->{'notification'} ) ? $data->{'notification'} : '3' );
+	genRadios( [ [ 'None', '3' ], [ 'Main comment &amp; new sub-item', '2' ], [ 'Suggestion', '1' ], [ 'Discussion', '0' ] ], 'notification', ( defined $data->{'notification'} ) ? $data->{'notification'} : '3' );
 	print "<h2>Notification way</h2>\n";
 	print "<p>\n";
 	genRadios( [ [ 'Email', '0' ], [ 'Xmpp', '1' ], [ 'Both', '2' ] ], 'way', ( defined $data->{'way'} ) ? $data->{'way'} : '0' );
