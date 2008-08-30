@@ -7,7 +7,7 @@ use PciIds::Users;
 use Apache2::Const qw(:common :http);
 use APR::Table;
 
-our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem);
+our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem &genLocMenu);
 
 sub encode( $ ) {
 	return encode_entities( shift, "\"'&<>" );
@@ -134,6 +134,13 @@ sub genPath( $$$ ) {
 	}
 	print "<li><a href='http://".$req->hostname()."/index.html'>Main page</a>\n";
 	print "</div>\n";
+}
+
+sub genLocMenu( $$$ ) {
+	my( $req, $args, $actions ) = @_;
+	my $addr = PciIds::Address::new( $req->uri() );
+	genCustomMenu( $req, $addr, $args, $actions );
+	genPath( $req, $addr, 1 );
 }
 
 1;
