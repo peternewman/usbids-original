@@ -64,8 +64,8 @@ sub changePasswd( $$$$ ) {
 	$tables->changePasswd( $id, $salted );
 }
 
-sub genAuthToken( $$$$ ) {
-	my( $tables, $id, $req, $rights ) = @_;
+sub genAuthToken( $$$$$ ) {
+	my( $tables, $id, $req, $rights, $name ) = @_;
 	unless( defined $rights ) {#Just logged in
 		my $from = $req->connection()->remote_ip();
 		$tables->setLastLog( $id, $from );
@@ -74,13 +74,13 @@ sub genAuthToken( $$$$ ) {
 	my $haveRights = scalar @{$rights};
 	my $time = time;
 	my $ip = $req->connection()->remote_ip();
-	return "$id:$haveRights:$time:".md5_hex( "$id:$time:$ip:".$config{'authsalt'} );
+	return "$id:$haveRights:$time:".md5_hex( "$id:$time:$ip:".$config{'authsalt'} ).":$name";
 }
 
 sub checkAuthToken( $$$ ) {
 	my( $tables, $req, $token ) = @_;
-	my( $id, $haveRights, $time, $hex ) = defined( $token ) ? split( /:/, $token ) : ();
-	return ( 0, 0, 0, [], "Not logged in" ) unless( defined $hex );
+	my( $id, $haveRights, $time, $hex, $name ) = defined( $token ) ? split( /:/, $token ) : ();
+	return ( 0, 0, 0, [], "Not logged in", undef ) unless( defined $hex );
 	my $ip = $req->connection()->remote_ip();
 	my $expected = md5_hex( "$id:$time:$ip:".$config{'authsalt'} );
 	my $actTime = time;
@@ -96,7 +96,7 @@ sub checkAuthToken( $$$ ) {
 			push @{$rights}, \%r;
 		}
 	}
-	return ( $authed, $id, $regen, $rights, $authed ? undef : ( $tokOk ? "Login timed out" : "Not logged in x" ) );
+	return ( $authed, $id, $regen, $rights, $authed ? undef : ( $tokOk ? "Login timed out" : "Not logged in" ), $name );
 }
 
 sub hasRight( $$ ) {

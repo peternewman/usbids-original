@@ -216,7 +216,7 @@ sub loginSubmit( $$$ ) {
 		$logged = $salted eq $passwd;
 	}
 	if( $logged ) {
-		$req->headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, undef ) ) );
+		$req->headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, undef, $email ) ) );
 		$args->{'action'} = ( defined $args->{'redirectaction'} ) ? $args->{'redirectaction'} : 'list';
 		my $prefix = ( !defined( $args->{'action'} ) or ( $args->{'action'} eq '' ) or ( $args->{'action'} eq 'list' ) ) ? 'read' : 'mods';
 		my $url = "http://".$req->hostname().setAddrPrefix( $req->uri(), $prefix ).buildExcept( 'redirectaction', $args );
@@ -241,12 +241,12 @@ sub logout( $$ ) {
 sub checkLogin( $$ ) {
 	my( $req, $tables ) = @_;
 	my $cookies = fetch CGI::Cookie;
-	my( $authed, $id, $regen, $rights, $error ) = checkAuthToken( $tables, $req, defined( $cookies->{'auth'} ) ? $cookies->{'auth'}->value : undef );
+	my( $authed, $id, $regen, $rights, $error, $name ) = checkAuthToken( $tables, $req, defined( $cookies->{'auth'} ) ? $cookies->{'auth'}->value : undef );
 	if( $regen ) {
-		$req->headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, $rights ) ) );
+		$req->headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, $rights, $name ) ) );
 	}
 	my $hterror = $authed ? '' : '<div class="error"><p>'.$error.'</div>';
-	return { 'authid' => $authed ? $id : undef, 'accrights' => $rights, 'logerror' => $hterror };
+	return { 'authid' => $authed ? $id : undef, 'accrights' => $rights, 'logerror' => $hterror, 'name' => $authed ? $name : undef };
 }
 
 sub notLoggedComplaint( $$$ ) {
@@ -374,14 +374,14 @@ sub resetPasswdConfirmFormSubmit( $$$ ) {
 	}
 }
 
-sub genProfileForm( $$$$$ ) {
-	my( $req, $args, $error, $data, $info ) = @_;
+sub genProfileForm( $$$$$$ ) {
+	my( $req, $args, $auth, $error, $data, $info ) = @_;
 	genHtmlHead( $req, 'User profile', undef );
 	delete $data->{'current_password'};
 	delete $data->{'confirm_password'};
 	delete $data->{'password'};
 	print "<h1>User profile</h1>\n";
-	genLocMenu( $req, $args, [ [ 'Log out', 'logout' ], [ 'Notifications', 'notifications' ] ] );
+	genLocMenu( $req, $args, [ logItem( $auth ), [ 'Notifications', 'notifications' ] ] );
 	print '<div class="error"><p>'.$error.'</div>' if defined $error;
 	print "<div class='info'><p>$info</div>\n" if defined $info;
 	print '<form name="profile" id="profile" method="POST" action=""><table>';
@@ -403,7 +403,7 @@ sub profileForm( $$$$ ) {
 	my( $req, $args, $tables, $auth ) = @_;
 	return notLoggedComplaint( $req, $args, $auth ) unless defined $auth->{'authid'};
 	return HTTPRedirect( $req, 'https://'.$req->hostname().$req->uri().buildArgs( $args ) ) unless $auth->{'ssl'};
-	return genProfileForm( $req, $args, undef, $tables->profileData( $auth->{'authid'} ), undef );
+	return genProfileForm( $req, $args, $auth, undef, $tables->profileData( $auth->{'authid'} ), undef );
 }
 
 sub checkNum( $$ ) {
@@ -470,9 +470,9 @@ sub profileFormSubmit( $$$$ ) {
 		return "You need to provide correct current password to change email, login or password" unless $logged;
 		return undef;
 	} ] );
-	return genProfileForm( $req, $args, $error, $data, undef ) if defined $error;
+	return genProfileForm( $req, $args, $auth, $error, $data, undef ) if defined $error;
 	pushProfile( $tables, $auth->{'authid'}, $oldData, $data );
-	return genProfileForm( $req, $args, undef, $data, "Profile updated." );
+	return genProfileForm( $req, $args, $auth, undef, $data, "Profile updated." );
 }
 
 1;

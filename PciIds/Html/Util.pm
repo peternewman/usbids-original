@@ -7,7 +7,7 @@ use PciIds::Users;
 use Apache2::Const qw(:common :http);
 use APR::Table;
 
-our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath);
+our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem);
 
 sub encode( $ ) {
 	return encode_entities( shift, "\"'&<>" );
@@ -52,14 +52,18 @@ sub genCustomMenu( $$$$ ) {
 	print "</ul></div>\n";
 }
 
+sub logItem( $ ) {
+	my( $auth ) = @_;
+	if( defined( $auth->{'authid'} ) ) {
+		return [ 'Log out ('.encode( $auth->{'name'} ).')', 'logout' ];
+	} else {
+		return [ 'Log in', 'login' ];
+	}
+}
+
 sub genMenu( $$$$ ) {
 	my( $req, $address, $args, $auth ) = @_;
-	my @list;
-	if( defined( $auth->{'authid'} ) ) {
-		push @list, [ 'Log out', 'logout' ];
-	} else {
-		push @list, [ 'Log in', 'login' ];
-	}
+	my @list = ( logItem( $auth ) );
 	push @list, [ 'Add item', 'newitem' ] if( $address->canAddItem() );
 	push @list, [ 'Discuss', 'newhistory' ] if( $address->canDiscuss() );
 	push @list, [ 'Administrate', 'admin' ] if( hasRight( $auth->{'accrights'}, 'validate' ) );
