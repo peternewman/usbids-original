@@ -25,9 +25,10 @@
 	border-bottom: dotted;
 	border-bottom-width: 1px;
 }
+form table,
 table.subnodes
 {
-	width: 99%;
+	width: 100%;
 	table-layout: fixed;
 }
 col.id-col
@@ -37,4 +38,19 @@ col.id-col
 col.name-col
 {
 	width: 60%;
+}
+form table
+col.label
+{
+	width: 15%;
+}
+col.edit
+{
+	width: 85%;
+}
+input.text,
+input.password,
+textarea
+{
+	width: 100%;
 }

@@ -9,10 +9,11 @@ our @EXPORT = qw(&genForm &getForm &genFormEx &getFormValue &genRadios);
 
 sub genFormEx( $$ ) {
 	my( $inputs, $values ) = @_;
+	print "<col class='label'><col class='edit'>\n";
 	foreach( @{$inputs} ) {
 		my( $kind, $label, $type, $name, $other ) = @{$_};
 		$other = '' unless( defined $other );
-		print '<tr><td>'.$label.'<td><'.$kind.( ( defined $type ) ? ' type="'.$type.'"' : '' ).' name="'.$name.'" '.$other.( defined( $values->{$name} && ( $label ne 'textarea' ) ) ? 'value="'.encode_entities( $values->{$name} ).'" ' : '' ).">\n";
+		print '<tr><td>'.$label.'<td><'.$kind.( ( defined $type ) ? " type='$type' class='$type'" : '' ).' name="'.$name.'" '.$other.( defined( $values->{$name} && ( $label ne 'textarea' ) ) ? 'value="'.encode_entities( $values->{$name} ).'" ' : '' ).">\n";
 		if( $kind eq 'textarea' ) {
 			print encode_entities( $values->{$name} ) if( defined( $values->{$name} ) );
 			print "</$kind>\n";
