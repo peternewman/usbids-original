@@ -148,7 +148,7 @@ sub genPath( $$$ ) {
 		print "  <li><a href='http://".$req->hostname()."/read/".$addr->get()."/'>".encode( $addr->pretty() )."</a>\n";
 	}
 	print "<li><a href='http://".$req->hostname()."/index.html'>Main page</a>\n";
-	print "</div>\n";
+	print "</ul></div>\n";
 }
 
 sub genLocMenu( $$$ ) {
