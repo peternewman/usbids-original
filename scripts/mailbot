@@ -59,11 +59,17 @@ sub submitItem( $$$$$ ) {
 	$id =~ s/(.{8})(.+)/$1\/$2/;
 	$id =~ s/(.{4})(.+)/$1\/$2/;
 	$id = "PC/$id";
+	if( length $id > 12 ) {
+		my( $vendor ) = ( $id =~ /^PC\/....\/....\/(....)/ );
+		$vendor = "PC/$vendor";
+		$hasItem->execute( $vendor );
+		error( "Missing subsystem vendor" ) unless( $hasItem->fetchrow_array );
+	}
 	$hasItem->execute( $id );
 	unless( $hasItem->fetchrow_array ) {
 		tlog( "mailbot: Item created (empty) $id" );
 		my $parent = $id;
-		$parent =~ s/\/[^\/]*//;
+		$parent =~ s/\/[^\/]*$//;
 		$addItem->execute( $id, $parent );
 		$created = 1;
 	}
