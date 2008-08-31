@@ -144,12 +144,12 @@ sub genPath( $$$ ) {
 	} else {
 		$path = [];
 	}
-	print "<div class='navigation-menu'><ul>\n";
-	foreach my $addr ( @{$path} ) {
-		print "  <li><a href='http://".$req->hostname()."/read/".$addr->get()."/'>".encode( $addr->pretty() )."</a>\n";
+	print "<div class='path'>\n";
+	print "<p><a href='http://".$req->hostname()."/index.html'>Main page</a>";
+	foreach my $addr ( reverse @{$path} ) {
+		print "&nbsp;-&gt;&nbsp;<a href='http://".$req->hostname()."/read/".$addr->get()."'>".encode( $addr->pretty() )."</a>";
 	}
-	print "<li><a href='http://".$req->hostname()."/index.html'>Main page</a>\n";
-	print "</ul></div>\n";
+	print "</div>\n";
 }
 
 sub genLocMenu( $$$ ) {
