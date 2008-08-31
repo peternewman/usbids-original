@@ -6,7 +6,7 @@ The IDs are organized into a tree.
 <p>
 Page is divided into parts:
 <ul>
-	<li><strong>Menu</strong> ‒ you can perform actions, both in connection with current item (like <a href='$HELP_URL$newitem'>adding a new sub-item</a>) and global (<a href='$CUR_URL$profile'>editing your profile</a>). Placed in the top left corner.
+	<li><strong>Menu</strong> ‒ you can perform actions, both in connection with current item (like <a href='$HELP_URL$newitem'>adding a new sub-item</a>) and global (<a href='$HELP_URL$profile'>editing your profile</a>). Placed in the top left corner.
 	<li><strong>Hierarchy</strong> ‒ lists all parental items. Placed in the top right corner.
 	<li><strong>Discussion</strong> ‒ contains history of suggested names, notes and general talk about current item.
 	<li><strong>List of sub-items</strong> ‒ all direct sub-items are listed here and you can browse into them.
