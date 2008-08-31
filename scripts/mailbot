@@ -47,7 +47,7 @@ sub getAuthor( $ ) {
 	} else {
 		tlog( "mailbot: Creating user $mail" );
 		$addAuth->execute( $mail );
-		my $nid = $dbh->last_insert_id( undef, undef, undef, undef );
+		my $nid = $tables->dbh->last_insert_id( undef, undef, undef, undef );
 		tlog( "mailbot: User ($mail) id: $nid" );
 		return $nid;
 	}
@@ -56,8 +56,8 @@ sub getAuthor( $ ) {
 sub submitItem( $$$$$ ) {
 	my( $id, $name, $description, $text, $author ) = @_;
 	my $created;
-	$id =~ s/(.{8})(.*)/$1\\$2/;
-	$id =~ s/(.{4})(.*)/$1\\$2/;
+	$id =~ s/(.{8})(.+)/$1\/$2/;
+	$id =~ s/(.{4})(.+)/$1\/$2/;
 	$id = "PC/$id";
 	$hasItem->execute( $id );
 	unless( $hasItem->fetchrow_array ) {
@@ -69,7 +69,7 @@ sub submitItem( $$$$$ ) {
 	}
 	$addComment->execute( $author, $id, $text, $name, $description );
 	my $hid = $tables->last();
-	tlog( "mailbot: Comment created $hid $id ".logEscape( $name )." ".logEscape( $description )." ".logEscape( $text ) );
+	tlog( "mailbot: History created $hid $id ".logEscape( $name )." ".logEscape( $description )." ".logEscape( $text ) );
 	notify( $tables, $id, $hid, $created ? 2 : 1, $created ? 0 : 1 );
 }
 
@@ -105,7 +105,7 @@ if (!$patch) {
 }
 
 $tprefix = "tmp/mbot-$$";
-$home = "../..";
+$home = "~/";
 mkdir("tmp", 0777);
 mkdir($tprefix, 0777) || error("Cannot create tmpdir");
 chdir($tprefix) || error("Cannot chdir to tmpdir");
@@ -193,11 +193,11 @@ sub process
 		} else {
 			print LOG "Patch succeeded.\n";
 			print LOG "Parsing patched file.\n";
-			print LOG `$home/tools/ids_to_dbdump <$orig 2>&1 >orig.db.unsorted`;
+			print LOG `$home/bin/ids_to_dbdump <$orig 2>&1 >orig.db.unsorted`;
 			$? && error("Error parsing original ID database");
 			print LOG `sort +1 <orig.db.unsorted >orig.db`;
 			$? && error("Error sorting original ID database");
-			print LOG `$home/tools/ids_to_dbdump <pci.ids 2>&1 >new.db.unsorted`;
+			print LOG `$home/bin/ids_to_dbdump <pci.ids 2>&1 >new.db.unsorted`;
 			$? && error("Error parsing the patched pci.ids file");
 			print LOG `sort +1 <new.db.unsorted >new.db`;
 			$? && error("Error sorting the patched pci.ids file");
@@ -223,11 +223,11 @@ sub process
 				print LOG "$id\t$name\t$cmt\n";
 				submitItem( $id, $name, $cmt, $subject, $authorId ) if $live;
 			}
-			$dbh->commit();
+			$tables->dbh->commit();
 			close DIFF;
 			$time = localtime;
-			`echo >>$home/log/mailbot.log "## $time $reply"`;
-			`cat result >>$home/log/mailbot.log`;
+			`echo >>$home/mailbot.log "## $time $reply"`;
+			`cat result >>$home/mailbot.log`;
 			print LOG "Done.\n";
 			mail_reply("OK");
 			cleanup();
@@ -239,7 +239,7 @@ sub process
 sub mail_reply
 {
 	my $reason = shift @_;
-	my $sendmail_opts = "-fmj+iderr\@ucw.cz '$reply_plain' mj+idecho\@ucw.cz";
+	my $sendmail_opts = "-fvorner+iderr\@ucw.cz '$reply_plain' vorner+idecho\@ucw.cz";
 	if ($debug || $reply eq "") {
 		print "$reason\n";
 		return;
@@ -251,7 +251,7 @@ sub mail_reply
 		print LOG "Unable to ask mailer for replying!!!\n";
 		exit 1;
 	}
-	print MAIL "From: The PCI ID Robot <mj+iderr\@ucw.cz>\n";
+	print MAIL "From: The PCI ID Robot <vorner+iderr\@ucw.cz>\n";
 	print MAIL "To: $reply\n";
 	print MAIL "Subject: IDbot: $reason\n";
 	print MAIL "In-Reply-To: $msgid\n" if $msgid ne "";
