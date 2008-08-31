@@ -18,7 +18,7 @@ sub genNewItemForm( $$$$$$ ) {
 	genCustomHead( $req, $args, $address, "$prettyAddr - add new item", [ $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'newitem' ], [ 'ID syntax', 'help', $address->helpName() ] ], [ logItem( $auth ), [ 'Notifications', 'notifications' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newitem' id='newitem' method='POST' action='".( $args->{'full_links'} ? 'http://'.$req->hostname().$req->uri().buildExcept( 'action', $args ).'?action=newitem' : '' )."'>\n<table>";
-	genFormEx( [ [ 'input', 'Id:', 'text', 'id', 'maxlength="50"' ],
+	genFormEx( [ [ 'input', 'Id:', 'text', 'id', 'maxlength="'.$address->subIdSize().'"' ],
 		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],
 		[ 'input', 'Note*:', 'text', 'note', 'maxlength="1024"' ],
 		[ 'textarea', 'Discussion*:', undef, 'discussion', 'rows="5" cols="50"' ],
