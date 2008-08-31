@@ -7,7 +7,7 @@ use PciIds::Users;
 use Apache2::Const qw(:common :http);
 use APR::Table;
 
-our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem &genLocMenu);
+our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem &genLocMenu &genCustomHead);
 
 sub encode( $ ) {
 	return encode_entities( shift, "\"'&<>" );
@@ -47,7 +47,7 @@ sub genCustomMenu( $$$$ ) {
 	} else {
 		$url = '/read/?action=';
 	}
-	print "<div class='menu'>\n<ul>\n";
+	print "<ul>\n";
 	foreach( @{$list} ) {
 		my( $label, $action, $param ) = @{$_};
 		my $prefix = '/mods';
@@ -56,7 +56,7 @@ sub genCustomMenu( $$$$ ) {
 		$suffix = '?help='.$param if( $action eq 'help' );
 		item( 'http://'.$req->hostname().$prefix.$url.$action.$suffix, $label );
 	}
-	print "</ul></div>\n";
+	print "</ul>\n";
 }
 
 sub logItem( $ ) {
@@ -70,16 +70,24 @@ sub logItem( $ ) {
 
 sub genMenu( $$$$$ ) {
 	my( $req, $address, $args, $auth, $append ) = @_;
-	my @list = ( logItem( $auth ) );
+	my @list;
 	if( defined $address ) {
 		push @list, [ 'Add item', 'newitem' ] if( $address->canAddItem() );
 		push @list, [ 'Discuss', 'newhistory' ] if( $address->canDiscuss() );
 	}
 	push @list, [ 'Administrate', 'admin' ] if( hasRight( $auth->{'accrights'}, 'validate' ) );
+	push @list, @{$append} if defined $append;
+	if( @list ) {
+		print "<div class='lmenu'>\n";
+		genCustomMenu( $req, $address, $args, \@list );
+		print "</div>\n";
+	}
+	@list = ( logItem( $auth ) );
 	push @list, [ 'Profile', 'profile' ] if defined $auth->{'authid'};
 	push @list, [ 'Notifications', 'notifications' ] if defined $auth->{'authid'};
-	push @list, @{$append} if defined $append;
+	print "<div class='rmenu'>\n";
 	genCustomMenu( $req, $address, $args, \@list );
+	print "</div>\n";
 }
 
 sub genTableHead( $$$ ) {
@@ -152,10 +160,21 @@ sub genPath( $$$ ) {
 	print "</div>\n";
 }
 
-sub genLocMenu( $$$ ) {
-	my( $req, $args, $actions ) = @_;
-	my $addr = PciIds::Address::new( $req->uri() );
-	genCustomMenu( $req, $addr, $args, $actions );
+sub genLocMenu( $$$$$ ) {
+	my( $req, $args, $addr, $lactions, $ractions ) = @_;
+	print "<div class='lmenu'>\n";
+	genCustomMenu( $req, $addr, $args, $lactions );
+	print "</div>\n<div class='rmenu'>\n";
+	genCustomMenu( $req, $addr, $args, $ractions );
+	print "</div>\n";
+}
+
+sub genCustomHead( $$$$$$ ) {
+	my( $req, $args, $addr, $caption, $lactions, $ractions ) = @_;
+	print "<div class='top'>\n";
+	print "<h1>$caption</h1>\n";
+	genLocMenu( $req, $args, $addr, $lactions, $ractions );
+	print "<div class='clear'></div></div>\n";
 	genPath( $req, $addr, 1 );
 }
 
