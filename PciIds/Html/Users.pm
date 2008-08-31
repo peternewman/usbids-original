@@ -6,7 +6,6 @@ use PciIds::Html::Forms;
 use PciIds::Email;
 use PciIds::Users;
 use PciIds::Address;
-use PciIds::Html::Handler;
 use CGI;
 use CGI::Cookie;
 use Apache2::Const qw(:common);
@@ -222,39 +221,31 @@ sub loginSubmit( $$$ ) {
 		$logged = $salted eq $passwd;
 	}
 	if( $logged ) {
-		my $cookie = new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, undef, $email ) );
-		$req->headers_out->add( 'Set-Cookie' => $cookie );
-		$args->{'action'} = ( defined $args->{'redirectaction'} ) ? $args->{'redirectaction'} : 'list';
-		delete $args->{'redirectaction'};
-		$args->{'full_links'} = 1;
-		my $auth = checkLoginInternal( $req, $tables, $cookie );
-		return PciIds::Html::Handler::callHandler( $req, $args, $tables, $auth, 1, 'GET' );
+		$req->err_headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, undef, $email ) ) );
+		$args->{'action'} = ( defined $args->{'redirectaction'} && $args->{'redirectaction'} ne '' ) ? $args->{'redirectaction'} : 'list';
+		my $url = 'http://'.$req->hostname().setAddrPrefix( $req->uri(), $args->{'action'} eq 'list' ? 'read' : 'mods' ).buildExcept( 'redirectaction', $args );
+		return HTTPRedirect( $req, $url );
 	} else {
 		return genLoginForm( $req, $args, 'Invalid login credetials', $data );
 	}
 }
 
 sub logout( $$ ) {
-	my( $req, $args, $tables, $auth ) = @_;
-	$req->headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => '0' ) );
-	return PciIds::Html::List::list( $req, $args, $tables, {} );
-}
-
-sub checkLoginInternal( $$$ ) {
-	my( $req, $tables, $cookie ) = @_;
-	my( $authed, $id, $regen, $rights, $error, $name ) = checkAuthToken( $tables, $req, defined( $cookie ) ? $cookie->value : undef );
-	if( $regen ) {
-		$req->headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, $rights, $name ) ) );
-	}
-	my $hterror = $authed ? '' : '<div class="error"><p>'.$error.'</div>';
-	return { 'authid' => $authed ? $id : undef, 'accrights' => $rights, 'logerror' => $hterror, 'name' => $authed ? $name : undef };
+	my( $req, $args ) = @_;
+	$req->err_headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => '0' ) );
+	return HTTPRedirect( $req, 'http://'.$req->hostname().setAddrPrefix( $req->uri(), 'read' ).buildExcept( 'action', $args ) );
 }
 
 sub checkLogin( $$ ) {
 	my( $req, $tables ) = @_;
 	my $cookies = fetch CGI::Cookie;
 	my $cookie = $cookies->{'auth'};
-	return checkLoginInternal( $req, $tables, $cookie );
+	my( $authed, $id, $regen, $rights, $error, $name ) = checkAuthToken( $tables, $req, defined( $cookie ) ? $cookie->value : undef );
+	if( $regen ) {
+		$req->headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, $rights, $name ) ) );
+	}
+	my $hterror = $authed ? '' : '<div class="error"><p>'.$error.'</div>';
+	return { 'authid' => $authed ? $id : undef, 'accrights' => $rights, 'logerror' => $hterror, 'name' => $authed ? $name : undef };
 }
 
 sub notLoggedComplaint( $$$ ) {
