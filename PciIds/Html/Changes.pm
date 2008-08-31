@@ -18,13 +18,22 @@ sub genNewItemForm( $$$$$$ ) {
 	genCustomHead( $req, $args, $address, "$prettyAddr - add new item", [ $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'newitem' ], [ 'ID syntax', 'help', $address->helpName() ] ], [ logItem( $auth ), [ 'Notifications', 'notifications' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newitem' id='newitem' method='POST' action='".( $args->{'full_links'} ? 'http://'.$req->hostname().$req->uri().buildExcept( 'action', $args ).'?action=newitem' : '' )."'>\n<table>";
-	genFormEx( [ [ 'input', 'Id:', 'text', 'id', 'maxlength="'.$address->subIdSize().'"' ],
+	genFormEx( [ [ 'input', 'ID:', 'text', 'id', 'maxlength="'.$address->subIdSize().'"' ],
 		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],
-		[ 'input', 'Note*:', 'text', 'note', 'maxlength="1024"' ],
-		[ 'textarea', 'Discussion*:', undef, 'discussion', 'rows="5" cols="50"' ],
+		[ 'input', 'Note:', 'text', 'note', 'maxlength="1024"' ],
+		[ 'textarea', 'Discussion:', undef, 'discussion', 'rows="5" cols="50"' ],
 		[ 'input', '', 'submit', 'submit', 'value="Submit"' ] ], $values );
 	print '</table></form>';
-	print '<p>Items marked with * are optional.';
+	print '
+<p>
+	Please enter only accurate information. Descriptions like "Unknown modem device" are only of a little use to anybody.
+	Real chip names and numbers are preferred over marketing names. In case you know both, enclose the marketing name in square brackets like in
+	"3c595 100BaseTX [Vortex]". Do not include names of superitems in the name (like vendor name in device name).
+	Check information specific to this <a href="'.buildExcept( 'action', $args ).'?action=help?help='.$address->helpName().'">ID type</a>.
+<p>
+	If you there is something you want to clarify about the item, you can use note (like the ID does not belong to people using it).
+	Discussion is for things more relevant to history of the item than the real device (like information source).
+	Both note and discussion is optional.';
 	genHtmlTail();
 	return OK;
 }
