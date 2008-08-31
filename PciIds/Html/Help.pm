@@ -18,13 +18,14 @@ sub getHelp( $$ ) {
 	chomp $head;
 	genHtmlHead( $req, $head, undef );
 	my $addr = PciIds::Address::new( $req->uri() );
+	print "<div class='top'>\n";
 	print "<h1>$head".( defined $addr ? " (".$addr->pretty().")" : "" )."</h1>\n";
-	genMenu( $req, $addr, $args, $auth, undef );
+	genMenu( $req, $addr, $args, $auth, [ [ 'Help index', 'help', 'index' ] ] );
 	genPath( $req, $addr, 1 );
+	print "<div class='clear'></div></div>\n";
 	my $url = setAddrPrefix( $req->uri(), 'read' ).buildExcept( 'help', $args ).'?help=';
 	delete $args->{'help'};
 	my %repls = ( 'HELP_URL' => $url, 'AC_URL' => setAddrPrefix( $req->uri(), 'mods' ).buildExcept( 'action', $args ).'?action=' );
-	print "<div class='navigation'><ul><li><a href='${url}index'>Help index</a></ul></div>\n" if( $helpname ne 'index' );
 	while( defined( my $line = <HELP> ) ) {
 		$line =~ s/\$(\w+_URL)\$/$repls{$1}/g;
 		print $line;

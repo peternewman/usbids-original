@@ -11,8 +11,10 @@ sub genNotifForm( $$$$$$ ) {
 	my( $req, $args, $tables, $auth, $error, $data ) = @_;
 	my $addr = PciIds::Address::new( $req->uri() );
 	genHtmlHead( $req, $addr->pretty().' - notifications', undef );
+	print "<div class='top'>\n";
 	print "<h1>".$addr->pretty()." - notifications</h1>\n";
 	genLocMenu( $req, $args, [ logItem( $auth ), $addr->canAddItem() ? [ 'New item', 'newitem' ] : (), $addr->canDiscuss ? [ 'Discuss', 'newhistory' ] : (), [ 'Profile', 'profile' ], [ 'Help', 'help', 'notifications' ] ] );
+	print "<div class='clear'></div></div>\n";
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	my $uri = $addr->get();
 	my $notifs = $tables->notificationsUser( $auth->{'authid'} );

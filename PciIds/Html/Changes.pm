@@ -15,8 +15,10 @@ sub genNewItemForm( $$$$$$ ) {
 	return NOT_FOUND unless( $ok );
 	my $prettyAddr = encode( $address->pretty() );
 	genHtmlHead( $req, "$prettyAddr - add new item", undef );
+	print "<div class='top'>\n";
 	print "<h1>$prettyAddr - add new item</h1>\n";
 	genLocMenu( $req, $args, [ logItem( $auth ), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Notifications', 'notifications' ], [ 'Help', 'help', 'newitem' ], [ 'ID syntax', 'help', $address->helpName() ] ] );
+	print "<div class='clear'></div></div>\n";
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newitem' id='newitem' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'input', 'Id:', 'text', 'id', 'maxlength="50"' ],
@@ -64,10 +66,12 @@ sub newItemSubmit( $$$$ ) {
 		my( $result, $comName ) = $tables->submitItem( $data, $auth );
 		if( $result eq 'exists' ) {
 			genHtmlHead( $req, 'ID collision', undef );
+			print "<div class='top'>\n";
 			print '<h1>ID collision</h1>';
 			my $addr = PciIds::Address::new( $req->uri() );
 			genCustomMenu( $req, $addr, $args, [ logItem( $auth ), [ 'Add other item', 'newitem' ], $addr->canDiscuss() ? [ 'Discuss', 'newhistory' ] : () ] );
 			genPath( $req, $data->{'address'}, 1 );
+			print "<div class='clear'></div></div>\n";
 			print '<p>Sorry, this ID already exists.';
 			genHtmlTail();
 			return OK;
@@ -88,8 +92,10 @@ sub genNewHistoryForm( $$$$$$ ) {
 	return NOT_FOUND unless( $ok );
 	my $prettyAddr = encode( $address->pretty() );
 	genHtmlHead( $req, "$prettyAddr - discuss", undef );
+	print "<div class='top'>\n";
 	print "<h1>$prettyAddr - discuss</h1>\n";
 	genLocMenu( $req, $args, [ logItem( $auth ), $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), [ 'Notifications', 'notifications' ], [ 'Help', 'help', 'newhistory' ] ] );
+	print "<div class='clear'></div></div>\n";
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newhistory' id='newhistory' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'textarea', 'Text:', undef, 'text', 'rows="5" cols="50"' ],

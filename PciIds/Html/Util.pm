@@ -143,7 +143,7 @@ sub genPath( $$$ ) {
 	} else {
 		$path = [];
 	}
-	print "<div class='navigation'><ul>\n";
+	print "<div class='navigation-menu'><ul>\n";
 	foreach my $addr ( @{$path} ) {
 		print "  <li><a href='http://".$req->hostname()."/read/".$addr->get()."/'>".encode( $addr->pretty() )."</a>\n";
 	}

@@ -24,9 +24,12 @@ sub list( $$$$ ) {
 	return NOT_FOUND unless( $ok );
 	my $id = $address->pretty();
 	genHtmlHead( $req, $id, undef );
+	print "<div class='top'>\n";
 	print '<h1>'.encode( $id ).'</h1>';
 	genMenu( $req, $address, $args, $auth, [ [ 'Help', 'help', 'list' ], $address->helpName() ? [ 'ID syntax', 'help', $address->helpName() ] : () ] );
 	genPath( $req, $address, 0 );
+	print "<div class='clear'></div>\n";
+	print "</div\n>";
 	print htmlDiv( 'name', '<p>'.encode( $name ) ) if defined( $name );
 	print htmlDiv( 'note', '<p>'.encode( $note ) ) if( defined( $note ) );
 	my $diss = 0;
