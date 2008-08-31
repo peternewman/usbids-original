@@ -80,6 +80,7 @@ sub list( $$$$ ) {
 		$args->{'restrict'} = $address->defaultRestrict() unless( defined( $args->{'restrict'} ) );
 		$tables->nodes( $address->get(), $args );
 		genTableTail();
+		print "<p><a href='".buildExcept( 'action', $args )."?action=newitem'>Add item</a>\n";
 	}
 	genHtmlTail();
 	return OK;
