@@ -45,7 +45,7 @@ sub canDiscuss( $ ) { return 0; }
 
 sub defaultRestrict( $ ) {
 	my( $self ) = @_;
-	if( $self->get() =~ /PC/ ) {
+	if( $self->get() =~ /^PC/ ) {
 		return "0";
 	} else {
 		return "";
@@ -54,7 +54,7 @@ sub defaultRestrict( $ ) {
 
 sub defaultRestrictList( $ ) {
 	my( $self ) = @_;
-	if( $self->get() =~ /PC/ ) {
+	if( $self->get() =~ /^PC/ ) {
 		my @result;
 		for(my $i = '0'; $i < '10'; ++ $i ) {
 			push @result, $i;
@@ -79,6 +79,15 @@ sub helpName( $ ) {
 		return 'pci';
 	} else {
 		return 'pci_class';
+	}
+}
+
+sub subName( $ ) {
+	my( $self ) = @_;
+	if( $self->get() =~ /^PC/ ) {
+		return 'Vendors';
+	} else {
+		return 'Device classes';
 	}
 }
 

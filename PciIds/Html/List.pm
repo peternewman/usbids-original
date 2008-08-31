@@ -64,7 +64,7 @@ sub list( $$$$ ) {
 		print "</div>\n" if( $diss );
 	}
 	unless( $address->leaf() ) {
-		print "<h2>Sub-items</h2>\n";
+		print "<h2>".encode( $address->subName() )."</h2>\n";
 		my $restricts = $address->defaultRestrictList();
 		if( scalar @{$restricts} ) {
 			print "<p>";

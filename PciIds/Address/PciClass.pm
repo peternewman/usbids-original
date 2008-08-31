@@ -23,7 +23,6 @@ sub pretty( $ ) {
 	} else {
 		$prefix = 'Device class';
 	}
-	#TODO Other levels? Are the names OK?
 	return $prefix.' '.$_;
 }
 
@@ -46,6 +45,13 @@ sub append( $$ ) {
 
 sub helpName( $ ) {
 	return 'pci_class';
+}
+
+sub subName( $ ) {
+	my( $self ) = @_;
+	return 'Program interfaces' if $self->get() =~ /PD\/..\/../;
+	return 'Device subclasses' if $self->get() =~ /PD\/../;
+	die "Can not happen\n";
 }
 
 1;

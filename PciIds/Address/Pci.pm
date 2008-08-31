@@ -70,4 +70,11 @@ sub addressDeps( $ ) {
 	return [ [ PciIds::Address::new( "PC/$addr" ), "Subsystem vendor $addr does not exist" ] ];
 }
 
+sub subName( $ ) {
+	my( $self ) = @_;
+	return 'Subsystems' if $self->get() =~ /^PC\/....\/..../;
+	return 'Devices' if $self->get() =~ /^PC\/..../;
+	die "Can not happend\n";
+}
+
 1;
