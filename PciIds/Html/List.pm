@@ -23,7 +23,7 @@ sub list( $$$$ ) {
 	my( $ok, $parent, $name, $note, $address, $mid ) = loadItem( $tables, $req->uri() );
 	return NOT_FOUND unless( $ok );
 	my $id = $address->pretty();
-	genHtmlHead( $req, $id, undef );
+	genHtmlHead( $req, $id, "<style type='text/css' media='screen,print'>col.id-col { width: ".$address->subIdSize()*1.25."ex; }</style>\n" );
 	print "<div class='top'>\n";
 	print '<h1>'.encode( $id ).'</h1>';
 	genMenu( $req, $address, $args, $auth, [ [ 'Help', 'help', 'list' ], $address->helpName() ? [ 'ID syntax', 'help', $address->helpName() ] : () ] );

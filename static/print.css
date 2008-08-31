@@ -31,10 +31,6 @@ table.subnodes
 	width: 100%;
 	table-layout: fixed;
 }
-col.id-col
-{
-	width: 3em;
-}
 col.name-col
 {
 	width: 60%;

@@ -91,4 +91,13 @@ sub subName( $ ) {
 	}
 }
 
+sub subIdSize( $ ) {
+	my( $self ) = @_;
+	if( $self->get() =~ /^PC/ ) {
+		return 4;
+	} else {
+		return 2;
+	}
+}
+
 1;

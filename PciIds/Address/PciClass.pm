@@ -54,4 +54,9 @@ sub subName( $ ) {
 	die "Can not happen\n";
 }
 
+sub subIdSize( $ ) {
+	my( $self ) = @_;
+	return 2;
+}
+
 1;

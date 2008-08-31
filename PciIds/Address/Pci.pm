@@ -77,4 +77,11 @@ sub subName( $ ) {
 	die "Can not happend\n";
 }
 
+sub subIdSize( $ ) {
+	my( $self ) = @_;
+	return 9 if $self->get() =~ /^PC\/....\/..../;
+	return 4 if $self->get() =~ /^PC\/..../;
+	die "Can not happen\n";
+}
+
 1;
