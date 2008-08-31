@@ -37,7 +37,7 @@ When you want to edit some information here or alter your own settings, you need
 Fill the form on the <a href='$AC_URL$login'>log in</a> page.
 You can provide either your email address or your login name, they both work.
 <p>
-After successful login, you can see a page with your last login (so you can check nobody is misusing your account).
+After successful login, you will be redirected either to <a href='$HELP_URL$list'>ID browsing</a> or to any action you tried to perform and it required login.
 <p>
 You can log out again by <a href='$AC_URL$logout'>log out</a> menu item.
 You will be logged out automatically if you do not do anything in a long time (approx. 30 minutes) or close your browser.
