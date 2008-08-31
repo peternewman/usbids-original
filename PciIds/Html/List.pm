@@ -39,7 +39,7 @@ sub list( $$$$ ) {
 			print "<div class='discussion'>\n<h2>Discussion</h2>";
 			$diss = 1;
 		}
-		my( $id, $text, $time, $name, $note, $seen, $user ) = @{$history};
+		my( $id, $text, $time, $name, $note, $seen, $user, $email ) = @{$history};
 		my $type = $seen ? 'history' : 'unseen-history';
 		$type = 'main-history' if( defined( $mid ) && ( $id == $mid ) );
 		print "<div class='$type'>\n";
@@ -51,6 +51,7 @@ sub list( $$$$ ) {
 			$text =~ s/\n/<br>/g;
 			print "<p class='discussion-text'>$text\n";
 		}
+		( $user ) = ( $email =~ /^(.*)@/ ) if defined $email && !defined $user;
 		print "<p class='author'>".encode( $user )."\n" if( defined( $user ) );
 		print "<p class='time'>".encode( $time )."\n";
 		print "</div>\n";

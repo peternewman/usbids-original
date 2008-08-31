@@ -29,7 +29,7 @@ sub new( $ ) {
 		'rights' => 'SELECT rightId FROM rights WHERE userId = ?',
 		'newitem' => 'INSERT INTO locations (id, parent) VALUES(?, ?)',
 		'newhistory' => 'INSERT INTO history (location, owner, discussion, nodename, nodenote) VALUES(?, ?, ?, ?, ?)',
-		'history' => 'SELECT history.id, history.discussion, history.time, history.nodename, history.nodenote, history.seen, users.login FROM history LEFT OUTER JOIN users ON history.owner = users.id WHERE history.location = ? ORDER BY history.time',
+		'history' => 'SELECT history.id, history.discussion, history.time, history.nodename, history.nodenote, history.seen, users.login, users.email FROM history LEFT OUTER JOIN users ON history.owner = users.id WHERE history.location = ? ORDER BY history.time',
 		'admindump' => 'SELECT
 			locations.id, locations.name, locations.note, locations.mainhistory, musers.login, main.discussion,
 			history.id, history.discussion, history.nodename, history.nodenote, users.login
