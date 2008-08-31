@@ -6,8 +6,9 @@ The IDs are organized into a tree.
 <p>
 Page is divided into parts:
 <ul>
-	<li><strong>Menu</strong> ‒ you can perform actions, both in connection with current item (like <a href='$HELP_URL$newitem'>adding a new sub-item</a>) and global (<a href='$HELP_URL$profile'>editing your profile</a>). Placed in the top left corner.
-	<li><strong>Hierarchy</strong> ‒ lists all parental items. Placed in the top right corner.
+	<li><strong>Menu</strong> ‒ you can perform actions, both in connection with current item (like <a href='$HELP_URL$newitem'>adding a new sub-item</a>, in top left corner) and global (<a href='$HELP_URL$profile'>editing your profile</a>, in top right corner).
+	<li><strong>Hierarchy</strong> ‒ lists all parental items.
+	<li><strong>Item status</strong> ‒ contains current name and comment.
 	<li><strong>Discussion</strong> ‒ contains history of suggested names, notes and general talk about current item.
 	<li><strong>List of sub-items</strong> ‒ all direct sub-items are listed here and you can browse into them.
 </ul>
@@ -24,16 +25,17 @@ Colors are used both in discussion and list of sub-items to mark status of discu
 <div class='help-example'>
 <div class='top'>
 <h1>ID 0000</h1>
-<div class='menu'><ul>
-	<li><a href='$HELP_URL$account'>Log in</a>
+<div class='lmenu'><ul>
 	<li><a href='$HELP_URL$newitem'>Add item</a>
 	<li><a href='$HELP_URL$newhistory'>Discuss</a>
 </ul></div>
-<div class='navigation-menu'><ul>
-	<li><a href='$HELP_URL$index'>Parent</a>
-</div>
+<div class='rmenu'><ul>
+	<li><a href='$HELP_URL$account'>Log in</a>
+</ul></div>
 <div class='clear'></div></div>
-<div class='name'><p>ID name</div>
+<div class='path'><p><a href='$HELP_URL$index'>Main page</a>&nbsp;-&gt;&nbsp<a href='$HELP_URL$index'>Parent</a></div>
+<h2>ID 0000</h2>
+<div class='name'><p>Name: ID name</div>
 <div class='discussion'><h2>Discussion</h2>
 <div class='main-history'>
 	<p class='itemname'>Name: ID name
