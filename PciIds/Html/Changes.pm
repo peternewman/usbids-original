@@ -20,7 +20,7 @@ sub genNewItemForm( $$$$$$ ) {
 	genLocMenu( $req, $args, [ logItem( $auth ), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Notifications', 'notifications' ], [ 'Help', 'help', 'newitem' ], [ 'ID syntax', 'help', $address->helpName() ] ] );
 	print "<div class='clear'></div></div>\n";
 	print "<div class='error'>$error</div>\n" if( defined $error );
-	print "<form name='newitem' id='newitem' method='POST' action=''>\n<table>";
+	print "<form name='newitem' id='newitem' method='POST' action='".( $args->{'full_links'} ? 'http://'.$req->hostname().$req->uri().buildExcept( 'action', $args ).'?action=newitem' : '' )."'>\n<table>";
 	genFormEx( [ [ 'input', 'Id:', 'text', 'id', 'maxlength="50"' ],
 		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],
 		[ 'input', 'Note*:', 'text', 'note', 'maxlength="1024"' ],
@@ -97,7 +97,7 @@ sub genNewHistoryForm( $$$$$$ ) {
 	genLocMenu( $req, $args, [ logItem( $auth ), $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), [ 'Notifications', 'notifications' ], [ 'Help', 'help', 'newhistory' ] ] );
 	print "<div class='clear'></div></div>\n";
 	print "<div class='error'>$error</div>\n" if( defined $error );
-	print "<form name='newhistory' id='newhistory' method='POST' action=''>\n<table>";
+	print "<form name='newhistory' id='newhistory' method='POST' action='".( $args->{'full_links'} ? 'http://'.$req->hostname().$req->uri().buildExcept( 'action', $args ).'?action=newhistory' : '' )."'>\n<table>";
 	genFormEx( [ [ 'textarea', 'Text:', undef, 'text', 'rows="5" cols="50"' ],
 		[ 'input', 'Request deletion', 'checkbox', 'delete', 'value="delete"' ],
 		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],

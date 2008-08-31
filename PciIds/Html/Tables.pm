@@ -10,17 +10,20 @@ sub new( $ ) {
 	return bless PciIds::DBQ::new( $dbh );
 }
 
-sub formatLink( $ ) {
+sub formatLink( $$ ) {
 	my $address = PciIds::Address::new( shift );
-	return '<a href="/read/'.$address->get().'">'.$address->tail().'</a>';
+	my $url_prefix = shift;
+	return '<a href="'.$url_prefix.'/read/'.$address->get().'">'.$address->tail().'</a>';
 }
 
-sub nodes( $$$ ) {
-	my( $self, $parent, $args ) = @_;
+sub nodes( $$$$ ) {
+	my( $self, $parent, $args, $url_prefix ) = @_;
 	my $restrict = $args->{'restrict'};
 	$restrict = '' unless( defined $restrict );
 	$restrict = PciIds::Address::new( $parent )->restrictRex( $restrict );#How do I know if the restrict is OK?
-	htmlFormatTable( PciIds::DBQ::nodes( $self, $parent, $args, $restrict ), 3, [], [ \&formatLink ], sub { 1; }, sub {
+	htmlFormatTable( PciIds::DBQ::nodes( $self, $parent, $args, $restrict ), 3, [], [ sub {
+		return formatLink( shift, $url_prefix );
+	}, ], sub { 1; }, sub {
 		my $name = shift->[ 1 ];
 		return ' class="'.( defined $name && $name ne '' ? 'item' : 'unnamedItem' ).'"';
 	} );

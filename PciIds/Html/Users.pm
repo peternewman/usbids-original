@@ -6,6 +6,7 @@ use PciIds::Html::Forms;
 use PciIds::Email;
 use PciIds::Users;
 use PciIds::Address;
+use PciIds::Html::Handler;
 use CGI;
 use CGI::Cookie;
 use Apache2::Const qw(:common);
@@ -221,19 +222,13 @@ sub loginSubmit( $$$ ) {
 		$logged = $salted eq $passwd;
 	}
 	if( $logged ) {
-		$req->headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, undef, $email ) ) );
+		my $cookie = new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, undef, $email ) );
+		$req->headers_out->add( 'Set-Cookie' => $cookie );
 		$args->{'action'} = ( defined $args->{'redirectaction'} ) ? $args->{'redirectaction'} : 'list';
-		my $prefix = ( !defined( $args->{'action'} ) or ( $args->{'action'} eq '' ) or ( $args->{'action'} eq 'list' ) ) ? 'read' : 'mods';
-		my $url = "http://".$req->hostname().setAddrPrefix( $req->uri(), $prefix ).buildExcept( 'redirectaction', $args );
-		genHtmlHead( $req, 'Logged in', undef );
-		print "<div class='top'>\n";
-		print '<h1>Logged in</h1>';
-		genPath( $req, PciIds::Address::new( $req->uri() ), 1 );
-		print "<div class='clear'></div></div>\n";
-		print "<p>You are logged in" . ( defined $args->{'redirectaction'} ? ", continue with your <a href='$url'>action</a>.\n" : ".\n" );
-		print '<div class="lastlog"><p>'.encode( $last ).'</div>' if( defined( $last ) );
-		genHtmlTail();
-		return OK;
+		delete $args->{'redirectaction'};
+		$args->{'full_links'} = 1;
+		my $auth = checkLoginInternal( $req, $tables, $cookie );
+		return PciIds::Html::Handler::callHandler( $req, $args, $tables, $auth, 1, 'GET' );
 	} else {
 		return genLoginForm( $req, $args, 'Invalid login credetials', $data );
 	}
@@ -245,15 +240,21 @@ sub logout( $$ ) {
 	return PciIds::Html::List::list( $req, $args, $tables, {} );
 }
 
-sub checkLogin( $$ ) {
-	my( $req, $tables ) = @_;
-	my $cookies = fetch CGI::Cookie;
-	my( $authed, $id, $regen, $rights, $error, $name ) = checkAuthToken( $tables, $req, defined( $cookies->{'auth'} ) ? $cookies->{'auth'}->value : undef );
+sub checkLoginInternal( $$$ ) {
+	my( $req, $tables, $cookie ) = @_;
+	my( $authed, $id, $regen, $rights, $error, $name ) = checkAuthToken( $tables, $req, defined( $cookie ) ? $cookie->value : undef );
 	if( $regen ) {
 		$req->headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, $rights, $name ) ) );
 	}
 	my $hterror = $authed ? '' : '<div class="error"><p>'.$error.'</div>';
 	return { 'authid' => $authed ? $id : undef, 'accrights' => $rights, 'logerror' => $hterror, 'name' => $authed ? $name : undef };
+}
+
+sub checkLogin( $$ ) {
+	my( $req, $tables ) = @_;
+	my $cookies = fetch CGI::Cookie;
+	my $cookie = $cookies->{'auth'};
+	return checkLoginInternal( $req, $tables, $cookie );
 }
 
 sub notLoggedComplaint( $$$ ) {

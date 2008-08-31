@@ -56,6 +56,7 @@ sub list( $$$$ ) {
 		print "</div>\n";
 	}
 	print "</div>\n" if( $diss );
+	my $url_prefix = $args->{'full_links'} ? 'http://'.$req->hostname() : '';
 	unless( $address->leaf() ) {
 		print "<h2>Sub-items</h2>\n";
 		my $restricts = $address->defaultRestrictList();
@@ -63,15 +64,15 @@ sub list( $$$$ ) {
 			print "<p>";
 			my $url = '/read/'.$address->get().buildExcept( 'restrict', $args ).'?restrict=';
 			foreach( @{$restricts} ) {
-				print "<a href='".$url.$_->[0]."'>".$_->[1]."</a> ";
+				print "<a href='".$url_prefix.$url.$_->[0]."'>".$_->[1]."</a> ";
 			}
 		}
 		my $url = '/read/'.$address->get().buildExcept( 'sort', $args );
 		my $sort = ( $args->{'sort'} or 'id' );
 		my( $sort_id, $sort_name ) = ( ( $sort eq 'id' ? 'rid' : 'id' ), ( $sort eq 'name' ? 'rname' : 'name' ) );
-		genTableHead( 'subnodes', [ '<a href="'.$url.'?sort='.$sort_id.'">Id</a>', '<a href="'.$url.'?sort='.$sort_name.'">Name</a>', 'Note' ], [ 'id-col', 'name-col', 'note-col' ] );
+		genTableHead( 'subnodes', [ '<a href="'.$url_prefix.$url.'?sort='.$sort_id.'">Id</a>', '<a href="'.$url_prefix.$url.'?sort='.$sort_name.'">Name</a>', 'Note' ], [ 'id-col', 'name-col', 'note-col' ] );
 		$args->{'restrict'} = $address->defaultRestrict() unless( defined( $args->{'restrict'} ) );
-		$tables->nodes( $address->get(), $args );
+		$tables->nodes( $address->get(), $args, $url_prefix );
 		genTableTail();
 	}
 	genHtmlTail();
