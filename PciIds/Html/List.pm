@@ -59,7 +59,10 @@ sub list( $$$$ ) {
 		print "<p class='time'>".encode( $time )."\n";
 		print "</div>\n";
 	}
-	print "</div>\n" if( $diss );
+	if( $diss ) {
+		print "<p><a href='".buildExcept( 'action', $args )."?action=newhistory'>Discuss</a>\n";
+		print "</div>\n" if( $diss );
+	}
 	my $url_prefix = $args->{'full_links'} ? 'http://'.$req->hostname() : '';
 	unless( $address->leaf() ) {
 		print "<h2>Sub-items</h2>\n";
