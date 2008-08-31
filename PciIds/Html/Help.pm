@@ -21,8 +21,8 @@ sub getHelp( $$ ) {
 	print "<div class='top'>\n";
 	print "<h1>$head".( defined $addr ? " (".$addr->pretty().")" : "" )."</h1>\n";
 	genMenu( $req, $addr, $args, $auth, [ [ 'Help index', 'help', 'index' ] ] );
-	genPath( $req, $addr, 1 );
 	print "<div class='clear'></div></div>\n";
+	genPath( $req, $addr, 1 );
 	my $url = setAddrPrefix( $req->uri(), 'read' ).buildExcept( 'help', $args ).'?help=';
 	delete $args->{'help'};
 	my %repls = ( 'HELP_URL' => $url, 'AC_URL' => setAddrPrefix( $req->uri(), 'mods' ).buildExcept( 'action', $args ).'?action=' );
