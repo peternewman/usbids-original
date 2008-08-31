@@ -30,8 +30,8 @@ sub list( $$$$ ) {
 	print "<div class='clear'></div>\n";
 	print "</div\n>";
 	genPath( $req, $address, 0 );
-	print htmlDiv( 'name', '<p>'.encode( $name ) ) if defined( $name );
-	print htmlDiv( 'note', '<p>'.encode( $note ) ) if( defined( $note ) );
+	print htmlDiv( 'name', '<p>Name: '.encode( $name ) ) if defined( $name );
+	print htmlDiv( 'note', '<p>Note: '.encode( $note ) ) if defined( $note );
 	my $diss = 0;
 	my $history;
 	foreach $history ( @{$tables->history( $address->get() )} ) {
