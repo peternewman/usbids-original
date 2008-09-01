@@ -43,12 +43,13 @@ sub getAuthor( $ ) {
 	my( $mail ) = @_;
 	$hasAuth->execute( $mail );
 	if( my( $id ) = $hasAuth->fetchrow_array ) {
+		tlog( "mailbot: Active user ($mail) id: $nid" );
 		return $id;
 	} else {
 		tlog( "mailbot: Creating user $mail" );
 		$addAuth->execute( $mail );
 		my $nid = $tables->dbh->last_insert_id( undef, undef, undef, undef );
-		tlog( "mailbot: User ($mail) id: $nid" );
+		tlog( "mailbot: Active user ($mail) id: $nid" );
 		return $nid;
 	}
 }
