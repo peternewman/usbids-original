@@ -17,7 +17,7 @@ sub genNewAdminForm( $$$$ ) {
 	$prefix = '' if( $args->{'global'} );
 	my $caption = 'Administration ‒ pending events '.( $args->{'global'} ? '(Global)' : '('.encode( $address->pretty() ).')' );
 	genHtmlHead( $req, $caption, undef );
-	genCustomHead( $req, $args, $address, $caption, [ $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'admin' ] ], [ [ 'Log out', 'logout' ] ] );
+	genCustomHead( $req, $args, $address, $caption, [ $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'admin' ], [ '', 'jump' ] ], [ [ 'Log out', 'logout' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='admin' id='admin' class='admin' method='POST' action=''>\n";
 	my $lastId;
