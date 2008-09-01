@@ -54,7 +54,8 @@ my %handlers = (
 		'profile' => \&PciIds::Html::Users::profileFormSubmit,
 		'admin' => \&PciIds::Html::Admin::submitAdminForm,
 		'notifications' => \&PciIds::Html::Notifications::notifFormSubmit,
-		'jump' => \&PciIds::Html::Jump::jump
+		'jump' => \&PciIds::Html::Jump::jump,
+		'help' => \&PciIds::Html::Help::getHelp
 	}
 );
 

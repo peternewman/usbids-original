@@ -28,6 +28,7 @@ Colors are used both in discussion and list of sub-items to mark status of discu
 <div class='lmenu'><ul>
 	<li><a href='$HELP_URL$newitem'>Add item</a>
 	<li><a href='$HELP_URL$newhistory'>Discuss</a>
+	<li><form class='jump' method='POST' action='$HELP_URL$jump'><p><input type='text' class='jump' disabled='disabled'><input type='submit' value='Jump'></form>
 </ul></div>
 <div class='rmenu'><ul>
 	<li><a href='$HELP_URL$account'>Log in</a>
