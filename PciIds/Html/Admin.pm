@@ -6,21 +6,26 @@ use PciIds::Html::Util;
 use PciIds::Html::Users;
 use PciIds::Html::Forms;
 use PciIds::Notifications;
+use PciIds::Address;
 use PciIds::Log;
 use Apache2::Const qw(:common :http);
 
 sub genNewAdminForm( $$$$ ) {
 	my( $req, $args, $tables, $error ) = @_;
-	genHtmlHead( $req, 'Administration ‒ pending events', undef );
-	print "<h1>Administration ‒ pending events</h1>\n";
-	print "<div class='error'>".$error."</div>\n" if( defined $error );
+	my $address = PciIds::Address::new( $req->uri() );
+	my $prefix = $address->get();
+	$prefix = '' if( $args->{'global'} );
+	my $caption = 'Administration ‒ pending events '.( $args->{'global'} ? '(Global)' : '('.encode( $address->pretty() ).')' );
+	genHtmlHead( $req, $caption, undef );
+	genCustomHead( $req, $args, $address, $caption, [ $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'admin' ] ], [ [ 'Log out', 'logout' ] ] );
+	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='admin' id='admin' class='admin' method='POST' action=''>\n";
 	my $lastId;
 	my $started = 0;
 	my $cnt = 0;
 	my $hiscnt = 0;
 	my $subcnt;
-	foreach( @{$tables->adminDump()} ) {
+	foreach( @{$tables->adminDump( $prefix )} ) {
 		my( $locId, $actName, $actNote, $actHist, $actUser, $actDisc,
 			$hist, $disc, $name, $note, $user ) = @{$_};
 		if( !defined( $lastId ) || ( $lastId ne $locId ) ) {

@@ -37,9 +37,10 @@ sub new( $ ) {
 			locations INNER JOIN history ON history.location = locations.id
 			LEFT OUTER JOIN users ON history.owner = users.id
 			LEFT OUTER JOIN history AS main ON locations.mainhistory = main.id
-			LEFT OUTER JOIN users AS musers ON main.owner = musers.id WHERE history.seen = "0"
+			LEFT OUTER JOIN users AS musers ON main.owner = musers.id
+		WHERE history.seen = "0" AND locations.id LIKE ?
 		ORDER BY locations.id, history.id
-		LIMIT 15',#Dumps new discussion submits with their senders and corresponding main history and names
+		LIMIT 1000',#Dumps new discussion submits with their senders and corresponding main history and names
 		'delete-hist' => 'DELETE FROM history WHERE id = ?',
 		'mark-checked' => 'UPDATE history SET seen = 1 WHERE id = ?',
 		'delete-item' => 'DELETE FROM locations WHERE id = ?',
@@ -212,8 +213,9 @@ sub submitHistory( $$$$ ) {
 	return $self->last();
 }
 
-sub adminDump( $ ) {
-	return shift->query( 'admindump', [] );
+sub adminDump( $$ ) {
+	my( $self, $prefix ) = @_;
+	return $self->query( 'admindump', [ "$prefix%" ] );
 }
 
 sub deleteHistory( $$ ) {
