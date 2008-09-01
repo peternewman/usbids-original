@@ -152,12 +152,10 @@ sub submitAdminForm( $$$$ ) {
 		#Do the deletes and approves
 		foreach my $del ( keys %deleted ) {
 			$tables->deleteHistory( $del );
-			#TODO notify
 			tulog( $authid, "Discussion deleted $del" );
 		}
 		foreach my $appr ( keys %approved ) {
 			$tables->markChecked( $appr );
-			#TODO notify
 			tulog( $authid, "Discussion checked $appr" );
 		}
 		#Handle the items
@@ -169,7 +167,6 @@ sub submitAdminForm( $$$$ ) {
 			my $del = getFormValue( "loc-$i-del", '' );
 			if( defined $del && $del eq 'del' && ( hasRight( $auth->{'accrights'}, 'prune' ) || ( !$tables->hasChildren( $addr->get() ) && !$tables->hasMain( $addr->get() ) ) ) ) {
 				$tables->deleteItem( $addr->get() );
-				#TODO notify
 				tulog( $authid, "Item deleted (recursive) ".$addr->get() );
 				next;
 			}
@@ -197,13 +194,13 @@ sub submitAdminForm( $$$$ ) {
 				$select = $histId if defined $name || $delete;
 				tulog( $authid, "Discussion submited (admin) $histId ".$addr->get()." ".logEscape( $name )." ".logEscape( $note )." ".logEscape( $discussion ) );
 				$action = 1;
-				#TODO notify
+				notify( $tables, $addr->get(), $histId, defined $name ? 1 : 0, 1 );
 			}
 			if( defined $select && select ne '' ) {
 				$tables->setMainHistory( $addr->get(), $select );
 				tulog( $authid, "Item main history changed ".$addr->get()." $select" );
 				$action = 1;
-				#TODO Notify
+				notify( $tables, $addr->get(), $select, 2, 2 );
 			}
 			if( $action && $defaultSeen ) {#Approve anything in this item
 				my $subcnt = getFormValue( "loc-$i-subcnt", 0 );
