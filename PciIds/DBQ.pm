@@ -57,9 +57,9 @@ sub new( $ ) {
 		'notifdata' => 'SELECT recursive, type, notification FROM notifications WHERE user = ? AND location = ?',
 		'drop-notif' => 'DELETE FROM notifications WHERE user = ? AND location = ?',
 		'new-notif' => 'INSERT INTO notifications (user, location, recursive, type, notification) VALUES (?, ?, ?, ?, ?)',
-		'notify' => 'INSERT INTO pending (user, history, notification, reason) SELECT DISTINCT user, ?, ?, ? FROM notifications WHERE ( notification = 2 OR notification = ? ) AND type <= ? AND ( location = ? OR ( SUBSTR( ?, 1, LENGTH( location ) ) = location ) )',
-		'newtime-mail' => 'UPDATE users SET nextmail = FROM_UNIXTIME( UNIX_TIMESTAMP( NOW() ) + 60 * mailgather ) WHERE nextmail < NOW() AND EXISTS ( SELECT 1 FROM notifications WHERE ( notification = 0 OR notification = 2 ) AND type <= ? AND ( location = ? OR ( SUBSTR( ?, 1, LENGTH( location ) ) = location ) ) )',
-		'newtime-xmpp' => 'UPDATE users SET nextxmpp = FROM_UNIXTIME( UNIX_TIMESTAMP( NOW() ) + 60 * xmppgather ) WHERE nextxmpp < NOW() AND EXISTS ( SELECT 1 FROM notifications WHERE ( notification = 1 OR notification = 2 ) AND type <= ? AND ( location = ? OR ( SUBSTR( ?, 1, LENGTH( location ) ) = location ) ) )',
+		'notify' => 'INSERT INTO pending (user, history, notification, reason) SELECT DISTINCT user, ?, ?, ? FROM notifications WHERE ( notification = 2 OR notification = ? ) AND type <= ? AND ( location = ? OR ( recursive = 1 AND SUBSTR( ?, 1, LENGTH( location ) ) = location ) )',
+		'newtime-mail' => 'UPDATE users SET nextmail = FROM_UNIXTIME( UNIX_TIMESTAMP( NOW() ) + 60 * mailgather ) WHERE nextmail < NOW() AND EXISTS ( SELECT 1 FROM notifications WHERE ( notification = 0 OR notification = 2 ) AND type <= ? AND ( location = ? OR ( recursive = 1 AND SUBSTR( ?, 1, LENGTH( location ) ) = location ) ) )',
+		'newtime-xmpp' => 'UPDATE users SET nextxmpp = FROM_UNIXTIME( UNIX_TIMESTAMP( NOW() ) + 60 * xmppgather ) WHERE nextxmpp < NOW() AND EXISTS ( SELECT 1 FROM notifications WHERE ( notification = 1 OR notification = 2 ) AND type <= ? AND ( location = ? OR ( recursive = 1 SUBSTR( ?, 1, LENGTH( location ) ) = location ) ) )',
 		'mailout' => 'SELECT
 				pending.user, users.email,
 				pending.reason, history.discussion, history.nodename, history.nodenote, history.time,
