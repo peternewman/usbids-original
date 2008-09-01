@@ -81,7 +81,7 @@ sub genMenu( $$$$$ ) {
 		push @list, [ 'Add item', 'newitem' ] if( $address->canAddItem() );
 		push @list, [ 'Discuss', 'newhistory' ] if( $address->canDiscuss() );
 	}
-	push @list, [ 'Administrate', 'admin' ] if( hasRight( $auth->{'accrights'}, 'validate' ) );
+	push @list, [ 'Administer', 'admin' ] if( hasRight( $auth->{'accrights'}, 'validate' ) );
 	push @list, @{$append} if defined $append;
 	if( @list ) {
 		print "<div class='lmenu'>\n";
