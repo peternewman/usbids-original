@@ -80,7 +80,7 @@ sub newItemSubmit( $$$$ ) {
 		} elsif( $result ) {
 			return genNewItemForm( $req, $args, $auth, $tables, $result, $data );
 		}
-		notify( $tables, $data->{'address'}->get(), $comName, 2, 0 );
+		notify( $tables, $data->{'address'}->parent()->get(), $comName, 2, 0 );#Notify the parent (parent gets new items)
 		tulog( $auth->{'authid'}, "Item created ".$data->{'address'}->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'note'} )." ".logEscape( $data->{'discussion'} )." $comName" );
 		return HTTPRedirect( $req, '/read/'.$data->{'address'}->get().'?action=list' );
 	} else {
