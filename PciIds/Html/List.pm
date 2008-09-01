@@ -34,7 +34,7 @@ sub list( $$$$ ) {
 		print '<h2>'.encode( $id ).'</h2>';
 		print htmlDiv( 'name', '<p>Name: '.encode( $name ) );
 	}
-	print htmlDiv( 'note', '<p>Note: '.encode( $note ) ) if defined( $note );
+	print htmlDiv( 'note', '<p>Note: '.encode( $note ) ) if defined $note && $note ne '';
 	my $diss = 0;
 	my $history;
 	foreach $history ( @{$tables->history( $address->get() )} ) {

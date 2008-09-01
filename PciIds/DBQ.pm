@@ -95,16 +95,22 @@ sub new( $ ) {
 		'time' => 'SELECT NOW()',
 		'searchname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? ORDER BY l.id',
 		'searchlocalname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? AND l.id LIKE ? ORDER BY l.id',
-		'hasChildren' => 'SELECT 1 FROM locations WHERE parent = ?'
+		'hasChildren' => 'SELECT DISTINCT 1 FROM locations WHERE parent = ?',
+		'hasMain' => 'SELECT DISTINCT 1 FROM locations WHERE id = ? AND mainhistory IS NOT NULL'
 	} );
 }
-
-my %sorts = ( 'id' => 1, 'rid' => 1, 'name' => 1, 'rname' => 1 );
 
 sub hasChildren( $$ ) {
 	my( $self, $parent ) = @_;
 	return scalar @{$self->query( 'hasChildren', [ $parent ] )};
 }
+
+sub hasMain( $$ ) {
+	my( $self, $id ) = @_;
+	return scalar @{$self->query( 'hasMain', [ $id ] )};
+}
+
+my %sorts = ( 'id' => 1, 'rid' => 1, 'name' => 1, 'rname' => 1 );
 
 sub nodes( $$$$ ) {
 	my( $self, $parent, $args, $restrict ) = @_;
