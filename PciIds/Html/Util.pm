@@ -4,7 +4,6 @@ use warnings;
 use HTML::Entities;
 use base 'Exporter';
 use PciIds::Users;
-use PciIds::Html::Jump;
 use Apache2::Const qw(:common :http);
 use APR::Table;
 
@@ -53,7 +52,8 @@ sub genCustomMenu( $$$$ ) {
 		my( $label, $action, $param ) = @{$_};
 		if( $action eq 'jump' ) {
 			print "<li>\n";
-			jumpWindow( $req, $args );
+			require PciIds::Html::Jump;
+			PciIds::Html::Jump::jumpWindow( $req, $args );
 		} else {
 			my $prefix = '/mods';
 			$prefix = '/read' if( !defined( $action ) or ( $action eq 'list' ) or ( $action eq '' ) or ( $action eq 'help' ) );
@@ -125,7 +125,9 @@ sub parseArgs( $ ) {
 sub buildArgs( $ ) {
 	my( $args ) = @_;
 	my $result = '';
-	$result .= "?$_=".$args->{$_} foreach( keys %{$args} );
+	foreach( keys %{$args} ) {
+		$result .= "?$_=".$args->{$_} if( defined $args->{$_} );
+	}
 	return $result;
 }
 

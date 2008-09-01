@@ -11,6 +11,7 @@ use PciIds::Html::Changes;
 use PciIds::Html::Admin;
 use PciIds::Html::Notifications;
 use PciIds::Html::Help;
+use PciIds::Html::Jump;
 use Apache2::Const qw(:common :http);
 
 $ENV{'PATH'} = '';
@@ -52,7 +53,8 @@ my %handlers = (
 		'respass-confirm' => \&PciIds::Html::Users::resetPasswdConfirmFormSubmit,
 		'profile' => \&PciIds::Html::Users::profileFormSubmit,
 		'admin' => \&PciIds::Html::Admin::submitAdminForm,
-		'notifications' => \&PciIds::Html::Notifications::notifFormSubmit
+		'notifications' => \&PciIds::Html::Notifications::notifFormSubmit,
+		'jump' => \&PciIds::Html::Jump::jump
 	}
 );
 
