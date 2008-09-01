@@ -12,9 +12,6 @@ use PciIds::Html::Admin;
 use PciIds::Html::Notifications;
 use PciIds::Html::Help;
 use Apache2::Const qw(:common :http);
-use base 'Exporter';
-
-our @EXPORT = qw(&callHandler);
 
 $ENV{'PATH'} = '';
 my $dbh = connectDb();
@@ -59,27 +56,22 @@ my %handlers = (
 	}
 );
 
-sub callHandler( $$$$$$ ) {
-	my( $req, $args, $tables, $auth, $hasSSL, $meth ) = @_;
-	my $action = $args->{'action'};
-	$action = '' unless( defined $action );
-	my $method = $handlers{$meth};
-	return HTTP_METHOD_NOT_ALLOWED unless( defined $method );#Can't handle this method
-	my $sub = $method->{$action};
-	return HTTP_BAD_REQUEST unless( defined $sub );#I do not know this action for given method
-	$auth = checkLogin( $req, $tables ) unless defined $auth;#Check if logged in
-	$auth->{'ssl'} = $hasSSL;
-	return &{$sub}( $req, $args, $tables, $auth );#Just do the right thing
-}
-
 sub handler( $$ ) {
 	my( $req, $hasSSL ) = @_;
 	my $args = parseArgs( $req->args() );
 	return HTTPRedirect( $req, $req->uri()."index.html" ) if( $req->uri() eq '/' && ( !defined $args->{'action'} || $args->{'action'} ne 'help' ) );
 	return DECLINED if( $req->uri() =~ /^\/((static)\/|robots.txt|index.html)/ );
-	my $result;
+	my $action = $args->{'action'};
+	$action = '' unless( defined $action );
+	my $method = $handlers{$req->method()};
+	return HTTP_METHOD_NOT_ALLOWED unless( defined $method );#Can't handle this method
+	my $sub = $method->{$action};
+	return HTTP_BAD_REQUEST unless( defined $sub );#I do not know this action for given method
+	my $auth = checkLogin( $req, $tables );#Check if logged in
+	$auth->{'ssl'} = $hasSSL;
+	my( $result );
 	eval {
-		$result = callHandler( $req, $args, $tables, undef, $hasSSL, $req->method() );
+		$result = &{$sub}( $req, $args, $tables, $auth );#Just do the right thing
 		$tables->commit();
 	};
 	if( $@ ) {
