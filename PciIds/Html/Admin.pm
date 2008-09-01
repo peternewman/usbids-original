@@ -10,12 +10,24 @@ use PciIds::Address;
 use PciIds::Log;
 use Apache2::Const qw(:common :http);
 
-sub genNewAdminForm( $$$$ ) {
-	my( $req, $args, $tables, $error ) = @_;
+sub safeEncode( $ ) {
+	my( $text ) = @_;
+	return encode( $text ) if defined $text;
+	return '';
+}
+
+sub mailEncode( $ ) {
+	my( $email ) = @_;
+	return '' unless defined $email;
+	return "<a href='mailto:$email'>".encode( $email )."</a>";
+}
+
+sub genNewAdminForm( $$$$$ ) {
+	my( $req, $args, $tables, $error, $auth ) = @_;
 	my $address = PciIds::Address::new( $req->uri() );
 	my $prefix = $address->get();
 	$prefix = '' if( $args->{'global'} );
-	my $caption = 'Administration ‒ pending events '.( $args->{'global'} ? '(Global)' : '('.encode( $address->pretty() ).')' );
+	my $caption = 'Administration '.( $args->{'global'} ? '(Global)' : '('.encode( $address->pretty() ).')' );
 	genHtmlHead( $req, $caption, undef );
 	genCustomHead( $req, $args, $address, $caption, [ $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'admin' ], [ '', 'jump' ] ], [ [ 'Log out', 'logout' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
@@ -25,52 +37,54 @@ sub genNewAdminForm( $$$$ ) {
 	my $cnt = 0;
 	my $hiscnt = 0;
 	my $subcnt;
+	print "<table class='admin'>\n";
+	print "<col class='id-col'><col class='name-col'><col class='note-col'><col class='disc-col'><col class='auth-col'><col class='control-col' span='3'>\n";
+	print "<tr class='head'><th>ID<th>Name<th>Note<th>Discussion<th>Author<th>Ok<th>Sel<th>Del\n";
 	foreach( @{$tables->adminDump( $prefix )} ) {
 		my( $locId, $actName, $actNote, $actHist, $actUser, $actDisc,
 			$hist, $disc, $name, $note, $user ) = @{$_};
 		if( !defined( $lastId ) || ( $lastId ne $locId ) ) {
+			last if( $hiscnt > 80 );
 			$lastId = $locId;
-			print "</div>\n" if( $started );
 			$started = 1;
-			print "<div class='".( defined( $actHist ) ? 'item' : 'unnamedItem' )."'>\n";
 			my $addr = PciIds::Address::new( $locId );
-			print "<h3><a href='/read/".$addr->get()."/'>".encode( $addr->pretty() )."</a></h3>\n";
-			print htmlDiv( 'name', '<p>'.encode( $actName ) ) if( defined( $actName ) );
-			print htmlDiv( 'note', '<p>'.encode( $actNote ) ) if( defined( $actNote ) );
-			print '<p>'.encode( $actDisc ) if( defined( $actDisc ) );
-			print '<p><a class="navigation" href="/read/'.$addr->parent()->get().'/">'.encode( $addr->parent()->pretty() )."</a>" if( defined( $addr->parent() ) );
-			print htmlDiv( 'author', '<p>'.encode( $actUser ) ) if( defined( $actUser ) );
-			print "<input type='hidden' name='subcnt-$cnt' value='$subcnt'>\n" if( defined( $subcnt ) );
+			if( defined( $actHist ) ) {
+				print "<tr class='item'>";
+			} else {
+				print "<tr class='unnamedItem'>";
+			}
+			print "<td><a href='/read/".$addr->get()."'>".encode( $addr->pretty() )."</a><td>".safeEncode( $actName )."<td>".safeEncode( $actNote )."<td>".safeEncode( $actDisc )."<td>".mailEncode( $actUser );
+
 			$subcnt = 0;
 			$cnt++;
 			print "<input type='hidden' name='loc-$cnt' value='".$addr->get()."'>\n";
-			print "<p><input type='radio' name='action-$cnt' value='ignore' checked='checked'> I will decide later.\n";
-			if( defined( $actHist ) ) {
-				print "<br><input type='radio' name='action-$cnt' value='keep'> Keep current name.\n";
+			print "<td class='empty'>";
+			print "<td><input type='radio' name='loc-$cnt-sel' value='curr' checked='checked'>";
+			if( hasRight( $auth->{'accrights'}, 'prune' ) || ( !defined $actHist && !$tables->hasChildren( $addr->get() ) ) ) {
+				print "<td><input type='checkbox' name='loc-$cnt-del' value='del'>\n";
+			} else {
+				print "<td class='empty'>";
 			}
-			print "<br><input type='radio' name='action-$cnt' value='delete'> Delete item.\n";
-			print "<br>Add discussion:\n";
-			print "<br><table>\n";
-			print "<tr><td>Set name:<td><input type='text' name='name-$cnt' maxlength='200'>\n";
-			print "<tr><td>Set note:<td><input type='text' name='note-$cnt' maxlength='1024'>\n";
-			print "<tr><td>Discussion:<td><textarea name='discussion-$cnt' rows='2'></textarea>\n";
-			print "</table>\n";
+			print "<tr class='new'><td>New:<td><input type='text' name='name-$cnt' class='text'><td><input type='text' name='note-$cnt' class='text'><td><textarea name='disc-$cnt'></textarea>\n";
+			print "<td colspan='3'>";
+			genPathBare( $req, $addr, 0, 0 );
+			print "<td><input type='checkbox' name='loc-$cnt-softdel'>\n";
 		}
-		print "<div class='unseen-history'>\n";
-		print "<p class='name'>".encode( $name ) if( defined( $name ) );
-		print "<p class='note'>".encode( $note ) if( defined( $note ) );
-		print '<p>'.encode( $disc ) if( defined( $disc ) );
-		print "<p class='author'>".encode( $user ) if( defined( $user ) );
-		print "<p><input type='radio' name='action-$cnt' value='set-$hist'> Use this one.\n" if( defined( $name ) && ( $name ne "" ) );
+		print "<tr class='unseen-history'><td class='empty'><td>".safeEncode( ( defined $name && $name eq '' ) ? 'Deletion request' : $name )."<td>".safeEncode( $note )."<td>".safeEncode( $disc )."<td>".mailEncode( $user );
 		$hiscnt ++;
-		print "<br><input type='checkbox' name='delete-$hiscnt' value='delete-$hist'> Delete history.\n";
-		print "</div>\n";
 		$subcnt ++;
-		print "<input type='hidden' name='sub-$cnt-$subcnt' value='$hist'>\n";
+		print "<td><input type='checkbox' name='appr-$hiscnt' value='appr-$hist'>";
+		if( defined $name ) {
+			print "<td><input type='radio' name='loc-$cnt-sel' value='$hist'>";
+		} else {
+			print "<td class='empty'>";
+		}
+		print "<td><input type='checkbox' name='del-$hiscnt' value='del-$hist'>";
+		print "<input type='hidden' name='owner-$hist' value='$lastId'>\n";
 	}
+	print "</table>\n";
 	print "<input type='hidden' name='subcnt-$cnt' value='$subcnt'>\n" if( defined( $subcnt ) );
 	if( $started ) {
-		print "</div>\n" if( $started );
 		print "<p><input type='submit' name='submit' value='Submit'>\n";
 		print "<input type='hidden' name='max-cnt' value='$cnt'><input type='hidden' name='max-hiscnt' value='$hiscnt'>\n";
 	} else {
@@ -84,7 +98,7 @@ sub genNewAdminForm( $$$$ ) {
 sub adminForm( $$$$ ) {
 	my( $req, $args, $tables, $auth ) = @_;
 	if( defined( $auth->{'authid'} ) && hasRight( $auth->{'accrights'}, 'validate' ) ) {
-		return genNewAdminForm( $req, $args, $tables, undef );
+		return genNewAdminForm( $req, $args, $tables, undef, $auth );
 	} else {
 		return notLoggedComplaint( $req, $args, $auth );
 	}
@@ -166,7 +180,7 @@ sub submitAdminForm( $$$$ ) {
 				markAllChecked( $tables, $i, \%deleted, $authid );
 			}
 		}
-		return genNewAdminForm( $req, $args, $tables, $errors );
+		return genNewAdminForm( $req, $args, $tables, $errors, $auth );
 	} else {
 		return notLoggedComplaint( $req, $args, $auth );
 	}

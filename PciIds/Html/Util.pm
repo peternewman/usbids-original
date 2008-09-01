@@ -7,7 +7,7 @@ use PciIds::Users;
 use Apache2::Const qw(:common :http);
 use APR::Table;
 
-our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem &genLocMenu &genCustomHead);
+our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem &genLocMenu &genCustomHead &genPathBare);
 
 sub encode( $ ) {
 	return encode_entities( shift, "\"'&<>" );
@@ -150,8 +150,8 @@ sub HTTPRedirect( $$ ) {
 	return HTTP_SEE_OTHER;
 }
 
-sub genPath( $$$ ) {
-	my( $req, $address, $printAddr ) = @_;
+sub genPathBare( $$$$ ) {
+	my( $req, $address, $printAddr, $started ) = @_;
 	my $path;
 	if( defined $address ) {
 		$path = $address->path();
@@ -159,11 +159,21 @@ sub genPath( $$$ ) {
 	} else {
 		$path = [];
 	}
+	foreach my $addr ( reverse @{$path} ) {
+		if( $started ) {
+			print "&nbsp;-&gt;&nbsp;";
+		} else {
+			$started = 1;
+		}
+		print "<a href='http://".$req->hostname()."/read/".$addr->get()."'>".encode( $addr->pretty() )."</a>";
+	}
+}
+
+sub genPath( $$$ ) {
+	my( $req, $address, $printAddr ) = @_;
 	print "<div class='path'>\n";
 	print "<p><a href='http://".$req->hostname()."/index.html'>Main page</a>";
-	foreach my $addr ( reverse @{$path} ) {
-		print "&nbsp;-&gt;&nbsp;<a href='http://".$req->hostname()."/read/".$addr->get()."'>".encode( $addr->pretty() )."</a>";
-	}
+	genPathBare( $req, $address, $printAddr, 1 );
 	print "</div>\n";
 }
 

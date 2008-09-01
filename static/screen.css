@@ -7,13 +7,26 @@ body
 {
 	background: #D5D5D5;
 }
-.item, .history
+.item, .history,
+table.admin .unseen-history
 {
 	background: #F0F0F0;
 }
-.main-history
+.main-history,
+table.admin .item,
+table.admin .new
 {
 	background: #DDFFDD;
+}
+table.admin .empty
+{
+	background: #DDDDFF;
+}
+table.admin .unnamedItem td,
+table.admin .item td
+{
+	padding-top: 1ex;
+	padding-bottom: 1ex;
 }
 .help-example
 {
@@ -111,4 +124,19 @@ input.jump
 form.jump p
 {
 	margin-top: 0px;
+}
+table.admin col.id-col,
+table.admin col.name-col,
+table.admin col.note-col,
+table.admin col.disc-col,
+table.admin col.auth-col
+{
+	width: 18%;
+}
+table.admin col.control-col
+{
+	width: 3%;
+}
+{
+	background: #DDFFDD;
 }

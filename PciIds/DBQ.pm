@@ -31,8 +31,8 @@ sub new( $ ) {
 		'newhistory' => 'INSERT INTO history (location, owner, discussion, nodename, nodenote) VALUES(?, ?, ?, ?, ?)',
 		'history' => 'SELECT history.id, history.discussion, history.time, history.nodename, history.nodenote, history.seen, users.login, users.email FROM history LEFT OUTER JOIN users ON history.owner = users.id WHERE history.location = ? ORDER BY history.time',
 		'admindump' => 'SELECT
-			locations.id, locations.name, locations.note, locations.mainhistory, musers.login, main.discussion,
-			history.id, history.discussion, history.nodename, history.nodenote, users.login
+			locations.id, locations.name, locations.note, locations.mainhistory, musers.email, main.discussion,
+			history.id, history.discussion, history.nodename, history.nodenote, users.email
 		FROM
 			locations INNER JOIN history ON history.location = locations.id
 			LEFT OUTER JOIN users ON history.owner = users.id
@@ -40,7 +40,7 @@ sub new( $ ) {
 			LEFT OUTER JOIN users AS musers ON main.owner = musers.id
 		WHERE history.seen = "0" AND locations.id LIKE ?
 		ORDER BY locations.id, history.id
-		LIMIT 1000',#Dumps new discussion submits with their senders and corresponding main history and names
+		LIMIT 100',#Dumps new discussion submits with their senders and corresponding main history and names
 		'delete-hist' => 'DELETE FROM history WHERE id = ?',
 		'mark-checked' => 'UPDATE history SET seen = 1 WHERE id = ?',
 		'delete-item' => 'DELETE FROM locations WHERE id = ?',
@@ -94,11 +94,17 @@ sub new( $ ) {
 		'dropnotifsmail' => 'DELETE FROM pending WHERE notification = 0 AND EXISTS ( SELECT 1 FROM users WHERE users.id = pending.user AND nextmail <= ? )',
 		'time' => 'SELECT NOW()',
 		'searchname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? ORDER BY l.id',
-		'searchlocalname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? AND l.id LIKE ? ORDER BY l.id'
+		'searchlocalname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? AND l.id LIKE ? ORDER BY l.id',
+		'hasChildren' => 'SELECT 1 FROM locations WHERE parent = ?'
 	} );
 }
 
 my %sorts = ( 'id' => 1, 'rid' => 1, 'name' => 1, 'rname' => 1 );
+
+sub hasChildren( $$ ) {
+	my( $self, $parent ) = @_;
+	return scalar @{$self->query( 'hasChildren', [ $parent ] )};
+}
 
 sub nodes( $$$$ ) {
 	my( $self, $parent, $args, $restrict ) = @_;
