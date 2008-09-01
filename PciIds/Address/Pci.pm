@@ -10,6 +10,20 @@ sub new( $ ) {
 	return bless PciIds::Address::Base::new( $address );
 }
 
+sub fullPretty( $ ) {
+	$_ = shift->get();
+	s/^PC\/?//;
+	s/\//:/g;
+	if( /:.*:/ ) {
+		s/^/PCI subsystem /;
+	} elsif( /:/ ) {
+		s/^/PCI device /;
+	} else {
+		s/^/PCI vendor /;
+	}
+	return $_;
+}
+
 sub pretty( $ ) {
 	my $self = shift;
 	$_ = $self->get();

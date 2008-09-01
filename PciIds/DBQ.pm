@@ -91,8 +91,9 @@ sub new( $ ) {
 				pending.user, pending.reason, history.time, history.location',
 		'dropnotifsxmpp' => 'DELETE FROM pending WHERE notification = 1 AND EXISTS ( SELECT 1 FROM users WHERE users.id = pending.user AND nextxmpp <= ? )',
 		'dropnotifsmail' => 'DELETE FROM pending WHERE notification = 0 AND EXISTS ( SELECT 1 FROM users WHERE users.id = pending.user AND nextmail <= ? )',
-		'time' => 'SELECT NOW()'
-
+		'time' => 'SELECT NOW()',
+		'searchname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? ORDER BY l.id',
+		'searchlocalname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? AND l.id LIKE ? ORDER BY l.id'
 	} );
 }
 
@@ -319,6 +320,12 @@ sub dropNotifs( $$ ) {
 	my( $self, $time ) = @_;
 	$self->command( 'dropnotifsmail', [ $time ] );
 	$self->command( 'dropnotifsxmpp', [ $time ] );
+}
+
+sub searchName( $$$ ) {
+	my( $self, $search, $prefix ) = @_;
+	return $self->query( 'searchlocalname', [ "%$search%", "$prefix/%" ] ) if defined $prefix;
+	return $self->query( 'searchname', [ "%$search%" ] );
 }
 
 1;

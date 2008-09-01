@@ -21,6 +21,10 @@ sub pretty( $ ) {
 	}
 }
 
+sub fullPretty( $ ) {
+	return pretty( shift );
+}
+
 sub restrictRex( $$ ) {
 	my( $self, $restrict ) = @_;
 	return PciIds::Address::new( $self->get().'/0000' )->restrictRex( $restrict );#Nasty trick, get the right address of any subnode and try it there
