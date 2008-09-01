@@ -52,16 +52,22 @@ sub sendOut( $$ ) {
 			$note .= "    Address: http://".$config{'hostname'}."/read/".$addr->get()."\n";
 			$note .= "  Comment:\n";
 			$note .= "    Proposed name: $newname\n" if( defined $newname && ( $newname ne '' ) );
+			$note .= "    Deletion request\n" if defined $newname && $newname eq '';
 			$note .= "    Proposed description: $newdesc\n" if( defined $newdesc && ( $newdesc ne '' ) );
 			$note .= "    Text: $text\n" if( defined $text && ( $text ne '' ) );
 			$note .= "    Author: $author\n" if( defined $author && ( $author ne '' ) );
 			$note .= "    Time: $time\n";
 		} elsif( $reason == 2 ) {
-			$note = "Item name validated.\n  Id:".$addr->pretty()."\n";
-			$note .= "  Name: $newname\n";
-			$note .= "  Description: $newdesc\n" if( defined $newdesc && ( $newdesc ne '' ) );
-			$note .= "  Comment text: $text\n" if( defined $text && ( $text ne '' ) );
-			$note .= "  Address: http://".$config{'hostname'}."/read/".$addr->get()."\n";
+			if( $name ne '' ) {
+				$note = "Item name validated.\n  Id:".$addr->pretty()."\n";
+				$note .= "  Name: $newname\n";
+				$note .= "  Description: $newdesc\n" if( defined $newdesc && ( $newdesc ne '' ) );
+				$note .= "  Comment text: $text\n" if( defined $text && ( $text ne '' ) );
+				$note .= "  Address: http://".$config{'hostname'}."/read/".$addr->get()."\n";
+			} else {
+				$note = "Item deletion validated.\n  Id:".$addr->pretty()."\n";
+				$note .= "  Address: http://".$config{'hostname'}."/read/".$addr->get()."\n";
+			}
 		}
 		$message .= "\n" unless $message eq '';
 		$message .= $note;
