@@ -26,7 +26,7 @@ sub list( $$$$ ) {
 	genHtmlHead( $req, $id, "<style type='text/css' media='screen,print'>col.id-col { width: ".$address->subIdSize()*1.25."ex; }</style>\n" );
 	print "<div class='top'>\n";
 	print '<h1>'.encode( $id ).'</h1>';
-	genMenu( $req, $address, $args, $auth, [ [ 'Help', 'help', 'list' ], $address->helpName() ? [ 'ID syntax', 'help', $address->helpName() ] : () ] );
+	genMenu( $req, $address, $args, $auth, [ [ 'Help', 'help', 'list' ], $address->helpName() ? [ 'ID syntax', 'help', $address->helpName() ] : (), [ '', 'jump' ] ] );
 	print "<div class='clear'></div>\n";
 	print "</div\n>";
 	genPath( $req, $address, 0 );

@@ -15,9 +15,9 @@ sub genNewItemForm( $$$$$$ ) {
 	return NOT_FOUND unless( $ok );
 	my $prettyAddr = encode( $address->pretty() );
 	genHtmlHead( $req, "$prettyAddr - add new item", undef );
-	genCustomHead( $req, $args, $address, "$prettyAddr - add new item", [ $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'newitem' ], [ 'ID syntax', 'help', $address->helpName() ] ], [ logItem( $auth ), [ 'Notifications', 'notifications' ] ] );
+	genCustomHead( $req, $args, $address, "$prettyAddr - add new item", [ $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'newitem' ], [ 'ID syntax', 'help', $address->helpName() ], [ '', 'jump' ] ], [ logItem( $auth ), [ 'Notifications', 'notifications' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
-	print "<form name='newitem' id='newitem' method='POST' action='".( $args->{'full_links'} ? 'http://'.$req->hostname().$req->uri().buildExcept( 'action', $args ).'?action=newitem' : '' )."'>\n<table>";
+	print "<form name='newitem' id='newitem' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'input', 'ID:', 'text', 'id', 'maxlength="'.$address->subIdSize().'"' ],
 		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],
 		[ 'input', 'Note:', 'text', 'note', 'maxlength="1024"' ],
@@ -73,7 +73,7 @@ sub newItemSubmit( $$$$ ) {
 		if( $result eq 'exists' ) {
 			genHtmlHead( $req, 'ID collision', undef );
 			my $addr = PciIds::Address::new( $req->uri() );
-			genCustomHead( $req, $args, $addr, 'ID collision', [ [ 'Add other item', 'newitem' ], $addr->canDiscuss() ? [ 'Discuss', 'newhistory' ] : () ], [ logItem( $auth ) ] );
+			genCustomHead( $req, $args, $addr, 'ID collision', [ [ 'Add other item', 'newitem' ], $addr->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ '', 'jump' ] ], [ logItem( $auth ) ] );
 			print '<p>Sorry, this ID already exists.';
 			genHtmlTail();
 			return OK;
@@ -94,9 +94,9 @@ sub genNewHistoryForm( $$$$$$ ) {
 	return NOT_FOUND unless( $ok );
 	my $prettyAddr = encode( $address->pretty() );
 	genHtmlHead( $req, "$prettyAddr - discuss", undef );
-	genCustomHead( $req, $args, $address, "$prettyAddr - discuss", [ $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), [ 'Help', 'help', 'newhistory' ] ], [ logItem( $auth ),  [ 'Notifications', 'notifications' ] ] );
+	genCustomHead( $req, $args, $address, "$prettyAddr - discuss", [ $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), [ 'Help', 'help', 'newhistory' ], [ '', 'jump' ] ], [ logItem( $auth ),  [ 'Notifications', 'notifications' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
-	print "<form name='newhistory' id='newhistory' method='POST' action='".( $args->{'full_links'} ? 'http://'.$req->hostname().$req->uri().buildExcept( 'action', $args ).'?action=newhistory' : '' )."'>\n<table>";
+	print "<form name='newhistory' id='newhistory' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'textarea', 'Text:', undef, 'text', 'rows="5" cols="50"' ],
 		[ 'input', 'Request deletion', 'checkbox', 'delete', 'value="delete"' ],
 		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],

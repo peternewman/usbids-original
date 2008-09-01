@@ -90,12 +90,11 @@ col.name-col
 {
 	width: 60%;
 }
-form table
-col.label
+form table col.label
 {
 	width: 15%;
 }
-col.edit
+form table col.edit
 {
 	width: 85%;
 }
@@ -104,4 +103,12 @@ input.password,
 textarea
 {
 	width: 100%;
+}
+input.jump
+{
+	width: 8em;
+}
+form.jump p
+{
+	margin-top: 0px;
 }

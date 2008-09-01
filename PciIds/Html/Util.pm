@@ -4,6 +4,7 @@ use warnings;
 use HTML::Entities;
 use base 'Exporter';
 use PciIds::Users;
+use PciIds::Html::Jump;
 use Apache2::Const qw(:common :http);
 use APR::Table;
 
@@ -50,11 +51,16 @@ sub genCustomMenu( $$$$ ) {
 	print "<ul>\n";
 	foreach( @{$list} ) {
 		my( $label, $action, $param ) = @{$_};
-		my $prefix = '/mods';
-		$prefix = '/read' if( !defined( $action ) or ( $action eq 'list' ) or ( $action eq '' ) or ( $action eq 'help' ) );
-		my $suffix = '';
-		$suffix = '?help='.$param if( $action eq 'help' );
-		item( 'http://'.$req->hostname().$prefix.$url.$action.$suffix, $label );
+		if( $action eq 'jump' ) {
+			print "<li>\n";
+			jumpWindow( $req, $args );
+		} else {
+			my $prefix = '/mods';
+			$prefix = '/read' if( !defined( $action ) or ( $action eq 'list' ) or ( $action eq '' ) or ( $action eq 'help' ) );
+			my $suffix = '';
+			$suffix = '?help='.$param if( $action eq 'help' );
+			item( 'http://'.$req->hostname().$prefix.$url.$action.$suffix, $label );
+		}
 	}
 	print "</ul>\n";
 }
