@@ -14,6 +14,7 @@ Help index
 <ul class='navigation'>
 	<li><a href='$HELP_URL$newitem'>Submitting new item</a>
 	<li><a href='$HELP_URL$newhistory'>Discussion</a>
+	<li><a href='$HELP_URL$mailsubmit'>Mail submit</a>
 </ul>
 <h2>Information about ID types</h2>
 <ul class='navigation'>
