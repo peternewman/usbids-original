@@ -31,7 +31,7 @@ sub genNewItemForm( $$$$$$ ) {
 	"3c595 100BaseTX [Vortex]". Do not include names of superitems in the name (like vendor name in device name).
 	Check information specific to this <a href="'.buildExcept( 'action', $args ).'?action=help?help='.$address->helpName().'">ID type</a>.
 <p>
-	If you there is something you want to clarify about the item, you can use note (like the ID does not belong to people using it).
+	If there is something you want to clarify about the item, you can use note (like the ID does not belong to people using it).
 	Discussion is for things more relevant to history of the item than the real device (like information source).
 	Both note and discussion is optional.';
 	genHtmlTail();
@@ -105,6 +105,20 @@ sub genNewHistoryForm( $$$$$$ ) {
 		!$tables->notifExists( $auth->{'authid'}, $address->get() ) ? [ 'input', 'Subscribe:', 'checkbox', 'subscribe', "value='subscribe' checked='checked'" ] : (),
 		[ 'input', '', 'submit', 'submit', 'value="Submit"' ] ], $values );
 	print '</table></form>';
+	print '
+<p>
+	Please enter only accurate information. Descriptions like "Unknown modem device" are only of a little use to anybody.
+	Real chip names and numbers are preferred over marketing names. In case you know both, enclose the marketing name in square brackets like in
+	"3c595 100BaseTX [Vortex]". Do not include names of superitems in the name (like vendor name in device name).
+	Check information specific to this <a href="'.buildExcept( 'action', $args ).'?action=help?help='.$address->helpName().'">ID type</a>.
+<p>
+	You may provide just discussion, request deletion or enter a new name and note.
+	Note is for clarification of the device information, discussion is for reasons, why you change it and like that.
+<p>
+	You may add discussion note to name change or deletion request too.
+	You must provide at last name or discussion or deletion request.
+<p>
+	If you provide note, you must provide name too.';
 	genHtmlTail();
 	return OK;
 }
