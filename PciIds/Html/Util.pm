@@ -189,8 +189,8 @@ sub genLocMenu( $$$$$ ) {
 sub genCustomHead( $$$$$$ ) {
 	my( $req, $args, $addr, $caption, $lactions, $ractions ) = @_;
 	print "<div class='top'>\n";
-	print "<h1>$caption</h1>\n";
 	genLocMenu( $req, $args, $addr, $lactions, $ractions );
+	print "<h1>$caption</h1>\n";
 	print "<div class='clear'></div></div>\n";
 	genPath( $req, $addr, 1 );
 }

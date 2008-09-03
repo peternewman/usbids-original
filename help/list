@@ -24,7 +24,6 @@ Colors are used both in discussion and list of sub-items to mark status of discu
 <h2>Example</h2>
 <div class='help-example'>
 <div class='top'>
-<h1>ID 0000</h1>
 <div class='lmenu'><ul>
 	<li><a href='$HELP_URL$newitem'>Add item</a>
 	<li><a href='$HELP_URL$newhistory'>Discuss</a>
@@ -33,6 +32,7 @@ Colors are used both in discussion and list of sub-items to mark status of discu
 <div class='rmenu'><ul>
 	<li><a href='$HELP_URL$account'>Log in</a>
 </ul></div>
+<h1>ID 0000</h1>
 <div class='clear'></div></div>
 <div class='path'><p><a href='$HELP_URL$index'>Main page</a>&nbsp;-&gt;&nbsp<a href='$HELP_URL$index'>Parent</a></div>
 <h2>ID 0000</h2>

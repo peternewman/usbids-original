@@ -59,13 +59,11 @@ table.admin .item td
 }
 div.lmenu
 {
-	position: relative;
 	float: left;
 	width: 20%;
 }
 div.rmenu
 {
-	position: relative;
 	float: right;
 	text-align: right;
 	width: 20%;
@@ -74,8 +72,11 @@ div.rmenu
 div.top h1
 {
 	text-align: center;
-	height: 0px; /* Hack. Place menu and navigation besides, not below. */
-	margin: 0px;
+	padding-top: 0.5ex;
+}
+div.top ul
+{
+	margin-top: 0px;
 }
 div.clear
 {
