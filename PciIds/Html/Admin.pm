@@ -16,10 +16,38 @@ sub safeEncode( $ ) {
 	return '';
 }
 
-sub mailEncode( $ ) {
-	my( $email ) = @_;
+sub mailEncode( $$ ) {
+	my( $email, $user ) = @_;
 	return '' unless defined $email;
-	return "<a href='mailto:$email'>".encode( $email )."</a>";
+	( $user ) = $email =~ /^(.*)@/ unless( defined $user );
+	return "<a href='mailto:$email'>".encode( $user )."</a>";
+}
+
+sub genHist( $$$$$$$$$$$ ) {
+	my( $class, $email, $login, $time, $name, $note, $disc, $selname, $selvalue, $delname, $delvalue ) = @_;
+	print "<tr class='$class'><td>";
+	print "<span class='author'>".mailEncode( $email, $login )."<br></span>" if( defined $email );
+	print "<span class='time'>".safeEncode( $time )."</span>";
+	print "<td>";
+	if( defined $name ) {
+		if( $name eq '' ) {
+			print "<span class='name'>Deletion request<br></span>";
+		} else {
+			print "<span class='name'>Name: ".encode( $name )."<br></span>";
+		}
+	}
+	print "<span class='note'>Note: ".encode( $note )."<br></span>" if defined $note && $note ne '';
+	print safeEncode( $disc );
+	print "<td class='selects'><input type='radio' name='$selname' 'value='$selvalue'>\n";
+	print "<td class='deletes'><input type='checkbox' name='$delname' value='$delvalue'>\n" if defined $delname
+}
+
+sub genNewForm( $ ) {
+	my( $num ) = @_;
+	print "<tr class='newhistory'><td>TODO combo";
+	print "<td><span class='newname'>Name: <input type='text' name='name-$num'></span><span class='newnote'>Note: <input type='note-$num'></span><br>\n";
+	print "<textarea name='disc-$num'></textarea>\n";
+	print "<td><td class='deletes'><input type='checkbox' name='loc-$num-softdel' value='del'>\n";
 }
 
 sub genNewAdminForm( $$$$$ ) {
@@ -38,59 +66,45 @@ sub genNewAdminForm( $$$$$ ) {
 	my $cnt = 0;
 	my $hiscnt = 0;
 	my $subcnt;
-	print "<p><input type='checkbox' name='default-seen' value='default-seen' checked='checked'> Any action approves all discussion\n";
-	print "<table class='admin'>\n";
-	print "<col class='id-col'><col class='name-col'><col class='note-col'><col class='disc-col'><col class='auth-col'><col class='control-col' span='3'>\n";
-	print "<tr class='head'><th>ID<th>Name<th>Note<th>Discussion<th>Author<th>Ok<th>Sel<th>Del\n";
 	foreach( @{$tables->adminDump( $prefix )} ) {
-		my( $locId, $actName, $actNote, $actHist, $actUser, $actDisc,
-			$hist, $disc, $name, $note, $user ) = @{$_};
+		my( $locId, $actName, $actNote, $actHist, $actEmail, $actLogin, $actDisc, $actTime,
+			$hist, $disc, $name, $note, $email, $login, $time ) = @{$_};
 		if( !defined( $lastId ) || ( $lastId ne $locId ) ) {
 			last if( $hiscnt > 80 );
 			$lastId = $locId;
-			$started = 1;
+			if( $started ) {
+				genNewForm( $cnt );
+				print "</table>\n";
+			} else {
+				$started = 1;
+			}
 			my $addr = PciIds::Address::new( $locId );
 			if( defined( $actHist ) ) {
-				print "<tr class='item'>";
+				print "<table class='item'>\n";
 			} else {
-				print "<tr class='unnamedItem'>";
+				print "<table class='unnamedItem'>\n";
 			}
-			print "<td><a href='/read/".$addr->get()."'>".encode( $addr->pretty() )."</a><td>".safeEncode( $actName )."<td>".safeEncode( $actNote )."<td>".safeEncode( $actDisc )."<td>".mailEncode( $actUser );
-
+			print "<col class='author'><col class='main'><col class='controls' span='2'>\n";
+			print "<tr class='label'><p>\n";
+			print "<td class='path' colspan='2'>";
+			genPathBare( $req, $addr, 0, 0, 0 );
 			print "<input type='hidden' name='loc-$cnt-subcnt' value='$subcnt'>" if( $subcnt );
 			$subcnt = 0;
-			$cnt++;
-			print "<input type='hidden' name='loc-$cnt' value='".$addr->get()."'>\n";
-			print "<td class='empty'>";
-			print "<td><input type='radio' name='loc-$cnt-sel' value='curr' checked='checked'>";
-			if( hasRight( $auth->{'accrights'}, 'prune' ) || ( !defined $actHist && !$tables->hasChildren( $addr->get() ) ) ) {
-				print "<td><input type='checkbox' name='loc-$cnt-del' value='del'>\n";
-			} else {
-				print "<td class='empty'>";
-			}
-			print "<tr class='new'><td>New:<td><input type='text' name='name-$cnt' class='text'><td><input type='text' name='note-$cnt' class='text'><td><textarea name='disc-$cnt'></textarea>\n";
-			print "<td colspan='3'>";
-			genPathBare( $req, $addr, 0, 0, 0 );
-			print "<td><input type='checkbox' name='loc-$cnt-softdel' value='del'>\n";
+			$cnt ++;
+			print "<td class='selects'><input type='radio' name='loc-$cnt-sel' value='curr' checked='checked'>";
+			print "<td class='deletes'><input type='checkbox' name='loc-$cnt-del' value='del'>" if hasRight( $auth->{'accrights'}, 'prune' ) || ( !defined $actHist && !$tables->hasChildren( $addr->get() ) );
+			genHist( 'main-history', $actEmail, $actLogin, $actTime, $actName, $actNote, $actDisc, "loc-$cnt-sel", 'seen', undef, undef ) if( defined $actHist );
 		}
-		print "<tr class='unseen-history'><td class='empty'><td>".safeEncode( ( defined $name && $name eq '' ) ? 'Deletion request' : $name )."<td>".safeEncode( $note )."<td>".safeEncode( $disc )."<td>".mailEncode( $user );
 		$hiscnt ++;
 		$subcnt ++;
-		print "<input type='hidden' name='his-$cnt-$subcnt' value='$hist'>";
-		print "<td><input type='checkbox' name='appr-$hiscnt' value='appr-$hist'>";
-		if( defined $name ) {
-			print "<td><input type='radio' name='loc-$cnt-sel' value='$hist'>";
-		} else {
-			print "<td class='empty'>";
-		}
-		print "<td><input type='checkbox' name='del-$hiscnt' value='del-$hist'>";
-		print "<input type='hidden' name='owner-$hist' value='$lastId'>\n";
+		genHist( 'unseen-history', $email, $login, $time, $name, $note, $disc, "loc-$cnt-sel", $hist, "del-$hiscnt", "del-$hist" );
 	}
-	print "</table>\n";
 	print "<input type='hidden' name='subcnt-$cnt' value='$subcnt'>\n" if( defined( $subcnt ) );
 	if( $started ) {
-		print "<input type='hidden' name='loc-$cnt-subcnt' value='$subcnt'>" if( $subcnt );
+		genNewForm( $cnt );
+		print "</table>\n";
 		print "<p><input type='submit' name='submit' value='Submit'>\n";
+		print "<input type='hidden' name='loc-$cnt-subcnt' value='$subcnt'>" if( $subcnt );
 		print "<input type='hidden' name='max-cnt' value='$cnt'><input type='hidden' name='max-hiscnt' value='$hiscnt'>\n";
 	} else {
 		print "<p>No pending items.\n";

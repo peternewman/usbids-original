@@ -3,30 +3,19 @@ body
 	color: black;
 	background: #DDDDFF;
 }
+form.admin table.unnamedItem tr.label,
 .unnamedItem, .unseen-history
 {
 	background: #D5D5D5;
 }
-.item, .history,
-table.admin .unseen-history
+form.admin table.item tr.label,
+.item, .history
 {
 	background: #F0F0F0;
 }
-.main-history,
-table.admin .item,
-table.admin .new
+.main-history
 {
 	background: #DDFFDD;
-}
-table.admin .empty
-{
-	background: #DDDDFF;
-}
-table.admin .unnamedItem td,
-table.admin .item td
-{
-	padding-top: 1ex;
-	padding-bottom: 1ex;
 }
 .help-example
 {
@@ -126,18 +115,27 @@ form.jump p
 {
 	margin-top: 0px;
 }
-table.admin col.id-col,
-table.admin col.name-col,
-table.admin col.note-col,
-table.admin col.disc-col,
-table.admin col.auth-col
+form.admin col.author
 {
-	width: 18%;
+	width: 20%;
 }
-table.admin col.control-col
+form.admin col.main
+{
+	width: 74%;
+}
+form.admin col.controls
 {
 	width: 3%;
 }
+form.admin table
 {
-	background: #DDFFDD;
+	background: #BBBBFF;
+}
+form.admin tr.label td.deletes
+{
+	background: red;
+}
+form.admin .newhistory
+{
+	background: #FFFFCC;
 }
