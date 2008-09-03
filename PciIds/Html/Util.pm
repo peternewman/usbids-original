@@ -150,30 +150,40 @@ sub HTTPRedirect( $$ ) {
 	return HTTP_SEE_OTHER;
 }
 
-sub genPathBare( $$$$ ) {
+sub genPathBare( $$$$$ ) {
 	my( $req, $address, $printAddr, $started ) = @_;
 	my $path;
 	if( defined $address ) {
 		$path = $address->path();
-		unshift @{$path}, $address if( $printAddr );
 	} else {
 		$path = [];
 	}
-	foreach my $addr ( reverse @{$path} ) {
+	foreach my $item ( reverse @{$path} ) {
+		my( $addr, $exception, $myAddr ) = @{$item};
 		if( $started ) {
-			print "&nbsp;-&gt;&nbsp;";
+			if( $exception ) {
+				print ", ";
+			} else {
+				print " -&gt; ";
+			}
 		} else {
 			$started = 1;
 		}
-		print "<a href='http://".$req->hostname()."/read/".$addr->get()."'>".encode( $addr->pretty() )."</a>";
+		print "(" if( $exception );
+		if( !$printAddr && $myAddr ) {
+			print "<strong>".encode( $addr->pretty() )."</strong>";
+		} else {
+			print "<a href='http://".$req->hostname()."/read/".$addr->get()."'>".encode( $addr->pretty() )."</a>";
+		}
+		print ")" if( $exception );
 	}
 }
 
 sub genPath( $$$ ) {
 	my( $req, $address, $printAddr ) = @_;
 	print "<div class='path'>\n";
-	print "<p><a href='http://".$req->hostname()."/index.html'>Main page</a>";
-	genPathBare( $req, $address, $printAddr, 1 );
+	print "<p><a href='http://".$req->hostname()."/index.html'>Main</a>";
+	genPathBare( $req, $address, $printAddr, 1, 1 );
 	print "</div>\n";
 }
 

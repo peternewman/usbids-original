@@ -40,8 +40,9 @@ sub path( $ ) {
 	my @result;
 	my $address = $self;
 	while( defined( $address = $address->parent() ) ) {
-		push @result, $address;
+		push @result, [ $address, 0 ];
 	}
+	unshift @result, [ $self, 0, 1 ];
 	return \@result;
 }
 

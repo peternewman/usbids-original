@@ -30,10 +30,7 @@ sub list( $$$$ ) {
 	print "<div class='clear'></div>\n";
 	print "</div\n>";
 	genPath( $req, $address, 0 );
-	if( defined $name ) {
-		print '<h2>'.encode( $id ).'</h2>';
-		print htmlDiv( 'name', '<p>Name: '.encode( $name ) );
-	}
+	print htmlDiv( 'name', '<p>Name: '.encode( $name ) ) if defined $name && $name ne '';
 	print htmlDiv( 'note', '<p>Note: '.encode( $note ) ) if defined $note && $note ne '';
 	my $diss = 0;
 	my $history;

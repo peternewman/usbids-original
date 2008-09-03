@@ -70,7 +70,7 @@ sub genNewAdminForm( $$$$$ ) {
 			}
 			print "<tr class='new'><td>New:<td><input type='text' name='name-$cnt' class='text'><td><input type='text' name='note-$cnt' class='text'><td><textarea name='disc-$cnt'></textarea>\n";
 			print "<td colspan='3'>";
-			genPathBare( $req, $addr, 0, 0 );
+			genPathBare( $req, $addr, 0, 0, 0 );
 			print "<td><input type='checkbox' name='loc-$cnt-softdel' value='del'>\n";
 		}
 		print "<tr class='unseen-history'><td class='empty'><td>".safeEncode( ( defined $name && $name eq '' ) ? 'Deletion request' : $name )."<td>".safeEncode( $note )."<td>".safeEncode( $disc )."<td>".mailEncode( $user );

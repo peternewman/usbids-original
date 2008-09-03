@@ -70,7 +70,7 @@ sub path( $ ) {
 	my( $self ) = @_;
 	my $result = PciIds::Address::Base::path( $self );
 	my( $vid ) = ( $self->get() =~ /^PC\/[0-9a-f]{4}\/[0-9a-f]{4}\/([0-9a-f]{4})/ );
-	splice @{$result}, 2, 0, PciIds::Address::new( "PC/$vid" ) if( defined $vid ) && ( $result->[1]->get() ne "PC/$vid" );
+	unshift @{$result}, [ PciIds::Address::new( "PC/$vid" ), 1 ] if( defined $vid );# && ( $result->[1]->[0]->get() ne "PC/$vid" );
 	return $result;
 }
 
