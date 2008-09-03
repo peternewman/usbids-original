@@ -28,6 +28,11 @@ You should check help specific for each tree:
 	<li><a href='$HELP_URL$pci_class'>PCI device classes</a>
 </ul>
 
+<h2>Notification subscription</h2>
+<p>
+If the subscribe checkbox is checked, a notification on the new item will be created for you.
+For more information about notifications look at <a href='$HELP_URL$notifications'>their documentation</a>.
+
 <h2>See also</h2>
 <p>
 Once item is submitted, it is not sealed for ever. You can <a href='$HELP_URL$newhistory'>discuss</a> existing items and suggest them new names.

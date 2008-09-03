@@ -20,6 +20,13 @@ You should check specific help for corresponding ID type:
 	<li><a href='$HELP_URL$pci_class'>PCI device classes</a>
 </ul>
 
+<h2>Notification subscription</h2>
+<p>
+If the subscribe checkbox is checked, a notification on the new item will be created for you.
+For more information about notifications look at <a href='$HELP_URL$notifications'>their documentation</a>.
+<p>
+The checkbox is present only unless you have a notification covering this item already.
+
 <h2>See also</h2>
 <p>
 You can create <a href='$HELP_URL$newitem'>new items</a>.
