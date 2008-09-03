@@ -21,6 +21,7 @@ sub genNewItemForm( $$$$$$ ) {
 		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],
 		[ 'input', 'Note:', 'text', 'note', 'maxlength="1024"' ],
 		[ 'textarea', 'Discussion:', undef, 'discussion', 'rows="5" cols="50"' ],
+		[ 'input', 'Subscribe:', 'checkbox', 'subscribe', 'value="subscribe" checked="checked"' ],
 		[ 'input', '', 'submit', 'submit', 'value="Submit"' ] ], $values );
 	print '</table></form>';
 	print '
@@ -80,6 +81,7 @@ sub newItemSubmit( $$$$ ) {
 			return genNewItemForm( $req, $args, $auth, $tables, $result, $data );
 		}
 		notify( $tables, $data->{'address'}->parent()->get(), $comName, 2, 0 );#Notify the parent (parent gets new items)
+		$tables->submitNotification( $auth->{'authid'}, $data->{'address'}->get(), { 'recursive' => 0, 'notification' => 1, 'way' => 0 } );
 		tulog( $auth->{'authid'}, "Item created ".$data->{'address'}->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'note'} )." ".logEscape( $data->{'discussion'} )." $comName" );
 		return HTTPRedirect( $req, '/read/'.$data->{'address'}->get().'?action=list' );
 	} else {
