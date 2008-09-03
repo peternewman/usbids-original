@@ -22,7 +22,7 @@ sub list( $$$$ ) {
 	my( $req, $args, $tables, $auth ) = @_;
 	my( $ok, $parent, $name, $note, $address, $mid ) = loadItem( $tables, $req->uri() );
 	return NOT_FOUND unless( $ok );
-	my $id = $address->pretty();
+	my $id = $address->top()->pretty();
 	genHtmlHead( $req, $id, "<style type='text/css' media='screen,print'>col.id-col { width: ".$address->subIdSize()*1.25."ex; }</style>\n" );
 	print "<div class='top'>\n";
 	print '<h1>'.encode( $id ).'</h1>';

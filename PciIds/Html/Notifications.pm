@@ -10,8 +10,8 @@ use Apache2::Const qw(:common :http);
 sub genNotifForm( $$$$$$ ) {
 	my( $req, $args, $tables, $auth, $error, $data ) = @_;
 	my $addr = PciIds::Address::new( $req->uri() );
-	genHtmlHead( $req, $addr->pretty().' - notifications', undef );
-	genCustomHead( $req, $args, $addr, $addr->pretty()." - notifications", [ $addr->canAddItem() ? [ 'New item', 'newitem' ] : (), $addr->canDiscuss ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'notifications' ], [ '', 'jump' ] ], [ logItem( $auth ), [ 'Profile', 'profile' ] ] );
+	genHtmlHead( $req, 'Notifications', undef );
+	genCustomHead( $req, $args, $addr, "Notifications", [ $addr->canAddItem() ? [ 'New item', 'newitem' ] : (), $addr->canDiscuss ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'notifications' ], [ '', 'jump' ] ], [ logItem( $auth ), [ 'Profile', 'profile' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	my $uri = $addr->get();
 	my $notifs = $tables->notificationsUser( $auth->{'authid'} );

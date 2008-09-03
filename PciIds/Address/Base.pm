@@ -53,4 +53,9 @@ sub addressDeps( $ ) {
 	return [];
 }
 
+sub top( $ ) {
+	my( $topAd ) = shift->get() =~ /^([^\/]+)/;
+	return PciIds::Address::new( $topAd );
+}
+
 1;

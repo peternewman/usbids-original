@@ -13,9 +13,8 @@ sub genNewItemForm( $$$$$$ ) {
 	my( $req, $args, $auth, $tables, $error, $values ) = @_;
 	my( $ok, $parent, $name, $note, $address ) = loadItem( $tables, $req->uri() );
 	return NOT_FOUND unless( $ok );
-	my $prettyAddr = encode( $address->pretty() );
-	genHtmlHead( $req, "$prettyAddr - add new item", undef );
-	genCustomHead( $req, $args, $address, "$prettyAddr - add new item", [ $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'newitem' ], [ 'ID syntax', 'help', $address->helpName() ], [ '', 'jump' ] ], [ logItem( $auth ), [ 'Notifications', 'notifications' ] ] );
+	genHtmlHead( $req, "Add new item", undef );
+	genCustomHead( $req, $args, $address, "Add new item", [ $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), [ 'Help', 'help', 'newitem' ], [ 'ID syntax', 'help', $address->helpName() ], [ '', 'jump' ] ], [ logItem( $auth ), [ 'Notifications', 'notifications' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newitem' id='newitem' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'input', 'ID:', 'text', 'id', 'maxlength="'.$address->subIdSize().'"' ],
@@ -92,9 +91,8 @@ sub genNewHistoryForm( $$$$$$ ) {
 	my( $req, $args, $tables, $auth, $error, $values ) = @_;
 	my( $ok, $parent, $name, $note, $address ) = loadItem( $tables, $req->uri() );
 	return NOT_FOUND unless( $ok );
-	my $prettyAddr = encode( $address->pretty() );
-	genHtmlHead( $req, "$prettyAddr - discuss", undef );
-	genCustomHead( $req, $args, $address, "$prettyAddr - discuss", [ $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), [ 'Help', 'help', 'newhistory' ], [ '', 'jump' ] ], [ logItem( $auth ),  [ 'Notifications', 'notifications' ] ] );
+	genHtmlHead( $req, "Discuss", undef );
+	genCustomHead( $req, $args, $address, "Discuss", [ $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), [ 'Help', 'help', 'newhistory' ], [ '', 'jump' ] ], [ logItem( $auth ),  [ 'Notifications', 'notifications' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='newhistory' id='newhistory' method='POST' action=''>\n<table>";
 	genFormEx( [ [ 'textarea', 'Text:', undef, 'text', 'rows="5" cols="50"' ],
