@@ -61,7 +61,8 @@ sub newItemSubmit( $$$$ ) {
 				return undef;
 			},
 			'note' => sub { return ( length shift > 1024 ) ? 'Note can not be longer than 1024 characters' : undef; },
-			'discussion' => sub { return ( length shift > 1024 ) ? 'Discussion can not be longer than 1024 characters' : undef; }
+			'discussion' => sub { return ( length shift > 1024 ) ? 'Discussion can not be longer than 1024 characters' : undef; },
+			'subscribe' => undef
 		}, [ sub { my( $data ) = @_;
 			my $errstr;
 			return undef unless( length $data->{'id'} );#No address, so let it for the first check
@@ -81,7 +82,7 @@ sub newItemSubmit( $$$$ ) {
 			return genNewItemForm( $req, $args, $auth, $tables, $result, $data );
 		}
 		notify( $tables, $data->{'address'}->parent()->get(), $comName, 2, 0 );#Notify the parent (parent gets new items)
-		$tables->submitNotification( $auth->{'authid'}, $data->{'address'}->get(), { 'recursive' => 0, 'notification' => 1, 'way' => 0 } );
+		$tables->submitNotification( $auth->{'authid'}, $data->{'address'}->get(), { 'recursive' => 0, 'notification' => 1, 'way' => 0 } ) if( defined $data->{'subscribe'} && $data->{'subscribe'} eq 'subscribe' );
 		tulog( $auth->{'authid'}, "Item created ".$data->{'address'}->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'note'} )." ".logEscape( $data->{'discussion'} )." $comName" );
 		return HTTPRedirect( $req, '/read/'.$data->{'address'}->get().'?action=list' );
 	} else {
@@ -101,6 +102,7 @@ sub genNewHistoryForm( $$$$$$ ) {
 		[ 'input', 'Request deletion', 'checkbox', 'delete', 'value="delete"' ],
 		[ 'input', 'Name:', 'text', 'name', 'maxlength="200"' ],
 		[ 'input', 'Note:', 'text', 'note', 'maxlength="1024"' ],
+		!$tables->notifExists( $auth->{'authid'}, $address->get() ) ? [ 'input', 'Subscribe:', 'checkbox', 'subscribe', "value='subscribe' checked='checked'" ] : (),
 		[ 'input', '', 'submit', 'submit', 'value="Submit"' ] ], $values );
 	print '</table></form>';
 	genHtmlTail();
@@ -135,7 +137,8 @@ sub newHistorySubmit( $$$$ ) {
 				return undef if $delete eq 'delete';
 				return 'Invalid form value';
 				return undef;
-			}
+			},
+			'subscribe' => undef
 		}, [ sub { my( $data ) = @_;
 			return 'You must provide either name, text or request a deletion' if( ! length $data->{'name'} && ! length $data->{'text'} && ! $data->{'delete'} );
 			return undef;
@@ -150,6 +153,7 @@ sub newHistorySubmit( $$$$ ) {
 		my $hid = $tables->submitHistory( $data, $auth, $address );
 		tulog( $auth->{'authid'}, "Discussion created $hid ".$address->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'description'} )." ".logEscape( $data->{'text'} ) );
 		notify( $tables, $address->get(), $hid, ( defined $name && ( $name ne '' ) ) ? 1 : 0, 1 );
+		$tables->submitNotification( $auth->{'authid'}, $address->get(), { 'recursive' => 0, 'notification' => 1, 'way' => 0 } ) if( defined $data->{'subscribe'} && $data->{'subscribe'} eq 'subscribe' );
 		return HTTPRedirect( $req, '/read/'.$address->get().'?action=list' );
 	} else {
 		return notLoggedComplaint( $req, $args, $auth );

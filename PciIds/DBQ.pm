@@ -96,7 +96,8 @@ sub new( $ ) {
 		'searchname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? ORDER BY l.id',
 		'searchlocalname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? AND l.id LIKE ? ORDER BY l.id',
 		'hasChildren' => 'SELECT DISTINCT 1 FROM locations WHERE parent = ?',
-		'hasMain' => 'SELECT DISTINCT 1 FROM locations WHERE id = ? AND mainhistory IS NOT NULL'
+		'hasMain' => 'SELECT DISTINCT 1 FROM locations WHERE id = ? AND mainhistory IS NOT NULL',
+		'notif-exists' => 'SELECT DISTINCT 1 FROM notifications WHERE user = ? AND ( location = ? OR ( recursive = 1 AND type <= 1 AND SUBSTR( ?, 1, LENGTH( location ) ) = location ) )'
 	} );
 }
 
@@ -313,6 +314,11 @@ sub pushNotifications( $$$$$ ) {
 	$self->command( 'notify', [ $history, 1, $reason, 1, $priority, $location, $location ] );
 	$self->command( 'newtime-mail', [ $priority, $location, $location ] );
 	$self->command( 'newtime-xmpp', [ $priority, $location, $location ] );
+}
+
+sub notifExists( $$$ ) {
+	my( $self, $user, $location ) = @_;
+	return scalar @{$self->query( 'notif-exists', [ $user, $location, $location ] )};
 }
 
 sub mailNotifs( $$ ) {
