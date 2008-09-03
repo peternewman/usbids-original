@@ -3,6 +3,18 @@ use strict;
 use warnings;
 use base 'PciIds::DBQAny';
 
+my $adminDumpSql = 'SELECT
+			locations.id, locations.name, locations.note, locations.mainhistory, musers.email, musers.login, main.discussion, main.time,
+			history.id, history.discussion, history.nodename, history.nodenote, users.email, users.login, history.time
+		FROM
+			locations INNER JOIN history ON history.location = locations.id
+			LEFT OUTER JOIN users ON history.owner = users.id
+			LEFT OUTER JOIN history AS main ON locations.mainhistory = main.id
+			LEFT OUTER JOIN users AS musers ON main.owner = musers.id
+		WHERE history.seen = "0" AND locations.id LIKE ?
+		ORDER BY locations.id, history.id
+		LIMIT ';
+
 sub new( $ ) {
 	my( $dbh ) = @_;
 	my $node = 'SELECT id, name, note, mainhistory FROM locations WHERE parent = ? ORDER BY ';
@@ -30,17 +42,7 @@ sub new( $ ) {
 		'newitem' => 'INSERT INTO locations (id, parent) VALUES(?, ?)',
 		'newhistory' => 'INSERT INTO history (location, owner, discussion, nodename, nodenote) VALUES(?, ?, ?, ?, ?)',
 		'history' => 'SELECT history.id, history.discussion, history.time, history.nodename, history.nodenote, history.seen, users.login, users.email FROM history LEFT OUTER JOIN users ON history.owner = users.id WHERE history.location = ? ORDER BY history.time',
-		'admindump' => 'SELECT
-			locations.id, locations.name, locations.note, locations.mainhistory, musers.email, musers.login, main.discussion, main.time,
-			history.id, history.discussion, history.nodename, history.nodenote, users.email, users.login, history.time
-		FROM
-			locations INNER JOIN history ON history.location = locations.id
-			LEFT OUTER JOIN users ON history.owner = users.id
-			LEFT OUTER JOIN history AS main ON locations.mainhistory = main.id
-			LEFT OUTER JOIN users AS musers ON main.owner = musers.id
-		WHERE history.seen = "0" AND locations.id LIKE ?
-		ORDER BY locations.id, history.id
-		LIMIT 100',#Dumps new discussion submits with their senders and corresponding main history and names
+		'admindump' => "$adminDumpSql 100",#Dumps new discussion submits with their senders and corresponding main history and names
 		'delete-hist' => 'DELETE FROM history WHERE id = ?',
 		'mark-checked' => 'UPDATE history SET seen = 1 WHERE id = ?',
 		'delete-item' => 'DELETE FROM locations WHERE id = ?',
@@ -226,9 +228,18 @@ sub submitHistory( $$$$ ) {
 	return $self->last();
 }
 
-sub adminDump( $$ ) {
-	my( $self, $prefix ) = @_;
-	return $self->query( 'admindump', [ "$prefix%" ] );
+sub adminDump( $$$ ) {
+	my( $self, $prefix, $limit ) = @_;
+	if( $limit ) {
+		$limit = int( $limit * 1.2 );
+		my $q = $self->{'dbh'}->prepare( "$adminDumpSql $limit" );
+		$q->execute( "$prefix%" );
+		my @result = @{$q->fetchall_arrayref()};#Copy the array, finish() deletes the content
+		$q->finish();
+		return \@result;
+	} else {
+		return $self->query( 'admindump', [ "$prefix%" ] );
+	}
 }
 
 sub deleteHistory( $$ ) {

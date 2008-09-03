@@ -54,6 +54,7 @@ sub genNewAdminForm( $$$$$ ) {
 	my( $req, $args, $tables, $error, $auth ) = @_;
 	my $address = PciIds::Address::new( $req->uri() );
 	my $prefix = $address->get();
+	my $limit = $args->{'limit'};
 	$prefix = '' if( $args->{'global'} );
 	my $caption = 'Administration '.( $args->{'global'} ? '(Global)' : '('.encode( $address->pretty() ).')' );
 	genHtmlHead( $req, $caption, undef );
@@ -66,11 +67,11 @@ sub genNewAdminForm( $$$$$ ) {
 	my $cnt = 0;
 	my $hiscnt = 0;
 	my $subcnt;
-	foreach( @{$tables->adminDump( $prefix )} ) {
+	foreach( @{$tables->adminDump( $prefix, $limit )} ) {
 		my( $locId, $actName, $actNote, $actHist, $actEmail, $actLogin, $actDisc, $actTime,
 			$hist, $disc, $name, $note, $email, $login, $time ) = @{$_};
 		if( !defined( $lastId ) || ( $lastId ne $locId ) ) {
-			last if( $hiscnt > 80 );
+			last if( $hiscnt > ( defined $limit ? $limit : 80 ) );
 			$lastId = $locId;
 			if( $started ) {
 				genNewForm( $cnt );
