@@ -54,12 +54,14 @@ sub genNewAdminForm( $$$$$ ) {
 	my( $req, $args, $tables, $error, $auth ) = @_;
 	my $address = PciIds::Address::new( $req->uri() );
 	my $prefix = $address->get();
-	my $limit = $args->{'limit'};
+	my $limit = delete $args->{'limit'};
 	$prefix = '' if( $args->{'global'} );
 	my $caption = 'Administration '.( $args->{'global'} ? '(Global)' : '('.encode( $address->pretty() ).')' );
 	genHtmlHead( $req, $caption, undef );
 	my $glob = delete $args->{'global'};
-	genCustomHead( $req, $args, $address, $caption, [ $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), $glob ? [ 'Local', 'admin' ] : [ 'Global', 'admin?global=1' ], [ 'Help', 'help', 'admin' ], [ '', 'jump' ] ], [ [ 'Log out', 'logout' ] ] );
+	my $moreButt = 'admin?limit='.( $limit ? int( $limit * 2 ) : 160 ).buildExcept( 'action', $args );
+	$moreButt .= '?global='.$glob if defined $glob;
+	genCustomHead( $req, $args, $address, $caption, [ $address->canAddItem() ? [ 'Add item', 'newitem' ] : (), $address->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), $glob ? [ 'Local', 'admin'.buildExcept( 'action', $args ) ] : [ 'Global', 'admin?global=1'.buildExcept( 'action', $args ) ], [ 'More items', $moreButt ], [ 'Help', 'help', 'admin' ], [ '', 'jump' ] ], [ [ 'Log out', 'logout' ] ] );
 	print "<div class='error'>$error</div>\n" if( defined $error );
 	print "<form name='admin' id='admin' class='admin' method='POST' action=''>\n";
 	my $lastId;
