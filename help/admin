@@ -1,0 +1,42 @@
+Administration interface
+
+<h2>Layout</h2>
+<p>
+Each item requiring administration has it's own rectangle with few lines.
+The first line (either white or grey, depending on the current ID status) contains its path.
+The second line (green), if it is present, specifies current name.
+<p>
+The following gray lines are new discussion comments.
+<p>
+The last, yellow, line is for submitting answer.
+
+<h2>Actions</h2>
+<h3>Deletes</h3>
+<p>
+The last column (with square check-boxes) is for deleting.
+To delete the whole item, use red one in the first line (present only if it is possible to delete this item).
+Each discussion comment has it's own one.
+The delete checkbox in the yellow line will delete name of the current item (eg. the history is preserved, but it will not appear in pci.ids or other exports).
+
+<h3>Selecting</h3>
+<p>
+The round boxes (on the left side of the deleting ones) is for selecting active history comment, which specifies the name of the item.
+If you leave it as it is, on the first line, nothing changes.
+If you select the green one, the name does not change, but the whole history of the item is marked as seen and won't appear again in the administration interface (until someone writes some more).
+If you select any history comment, it will become active.
+
+<h3>Commenting</h3>
+<p>
+The yellow line act's similarly to <a href='$HELP_URL$newietm>new item</a> form.
+If you provide only the text (the large box), it will just appear in the history.
+If you specify a name, it will become active (even if you specified any other active by a round box).
+All comments from administration interface are marked as seen, so you do not have to approve them.
+<p>
+You can use predefined answers to save you some typing. Just select it from the box on the left side.
+If you have javascript enabled, it will appear in the text box and you can view and modify it.
+If your browser does not run javascript, nothing appears, but the combo box overrides the text in the box when in non-default position.
+
+<h3>Seen history</h3>
+<p>
+If you perform any action on an item, all it's history will become marked as seen (will appear in white box in <a href='$HELP_URL$list'>browsing</a> and will not appear in administration interface</a>).
+If you do not want to change anything about the item, just use the green selection box to read the history.
