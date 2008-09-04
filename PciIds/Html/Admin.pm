@@ -38,14 +38,14 @@ sub genHist( $$$$$$$$$$$ ) {
 	}
 	print "<span class='note'>Note: ".encode( $note )."<br></span>" if defined $note && $note ne '';
 	print safeEncode( $disc );
-	print "<td class='selects'><input type='radio' name='$selname' 'value='$selvalue'>\n";
+	print "<td class='selects'><input type='radio' name='$selname' value='$selvalue'>\n";
 	print "<td class='deletes'><input type='checkbox' name='$delname' value='$delvalue'>\n" if defined $delname
 }
 
 sub genNewForm( $ ) {
 	my( $num ) = @_;
 	print "<tr class='newhistory'><td>TODO combo";
-	print "<td><span class='newname'>Name: <input type='text' name='name-$num'></span><span class='newnote'>Note: <input type='note-$num'></span><br>\n";
+	print "<td><span class='newname'>Name: <input type='text' name='name-$num'></span><span class='newnote'>Note: <input type='text' name='note-$num'></span><br>\n";
 	print "<textarea name='disc-$num'></textarea>\n";
 	print "<td><td class='deletes'><input type='checkbox' name='loc-$num-softdel' value='del'>\n";
 }
@@ -90,17 +90,24 @@ sub genNewAdminForm( $$$$$ ) {
 			print "<col class='author'><col class='main'><col class='controls' span='2'>\n";
 			print "<tr class='label'><p>\n";
 			print "<td class='path' colspan='2'>";
-			genPathBare( $req, $addr, 0, 0, 0 );
+			genPathBare( $req, $addr, 1, 0 );
 			print "<input type='hidden' name='loc-$cnt-subcnt' value='$subcnt'>" if( $subcnt );
 			$subcnt = 0;
 			$cnt ++;
 			print "<td class='selects'><input type='radio' name='loc-$cnt-sel' value='curr' checked='checked'>";
 			print "<td class='deletes'><input type='checkbox' name='loc-$cnt-del' value='del'>" if hasRight( $auth->{'accrights'}, 'prune' ) || ( !defined $actHist && !$tables->hasChildren( $addr->get() ) );
-			genHist( 'main-history', $actEmail, $actLogin, $actTime, $actName, $actNote, $actDisc, "loc-$cnt-sel", 'seen', undef, undef ) if( defined $actHist );
+			print "<input type='hidden' name='loc-$cnt' value='$locId'>";
+			if( defined $actHist ) {
+				genHist( 'main-history', $actEmail, $actLogin, $actTime, $actName, $actNote, $actDisc, "loc-$cnt-sel", 'seen', undef, undef );
+			} else {
+				print "<tr class='main-history'><td class='empty' colspan='2'><td><input type='radio' name='loc-$cnt-sel' value='seen'>";
+			}
 		}
 		$hiscnt ++;
 		$subcnt ++;
 		genHist( 'unseen-history', $email, $login, $time, $name, $note, $disc, "loc-$cnt-sel", $hist, "del-$hiscnt", "del-$hist" );
+		print "<input type='hidden' name='owner-$hist' value='$locId'>";
+		print "<input type='hidden' name='his-$cnt-$subcnt' value='$hist'>";
 	}
 	print "<input type='hidden' name='subcnt-$cnt' value='$subcnt'>\n" if( defined( $subcnt ) );
 	if( $started ) {
@@ -144,12 +151,10 @@ sub submitAdminForm( $$$$ ) {
 		my $maxcnt = getFormValue( 'max-cnt', 0 );
 		my $maxhiscnt = getFormValue( 'max-hiscnt', 0 );
 		$errors = '';
-		# Scan for approved and deleted items
+		# Scan for deleted histories
 		for( my $i = 1; $i <= $maxhiscnt; $i ++ ) {
 			my( $del ) = getFormValue( "del-$i", '' ) =~ /^del-(\d+)$/;
 			$deleted{$del} = 1 if( defined $del && $del ne '' );
-			my( $appr ) = getFormValue( "appr-$i", '' ) =~ /^appr-(\d+)$/;
-			$approved{$appr} = 1 if( defined $appr && $appr ne '' );
 		}
 		for( my $i = 1; $i <= $maxcnt; $i ++ ) {
 			my( $sel ) = getFormValue( "loc-$i-sel", '' ) =~ /^(\d+)$/;
@@ -166,17 +171,14 @@ sub submitAdminForm( $$$$ ) {
 				delete $approved{$id};
 			}
 		}
-		#Do the deletes and approves
+		#Do the deletes
+		my %modified;
 		foreach my $del ( keys %deleted ) {
 			$tables->deleteHistory( $del );
+			$modified{getFormValue( "owner-$del", '' )} = 1;
 			tulog( $authid, "Discussion deleted $del" );
 		}
-		foreach my $appr ( keys %approved ) {
-			$tables->markChecked( $appr );
-			tulog( $authid, "Discussion checked $appr" );
-		}
 		#Handle the items
-		my $defaultSeen = getFormValue( 'default-seen', '' ) =~ /^default-seen$/;
 		for( my $i = 1; $i <= $maxcnt; $i ++ ) {
 			my $addr = PciIds::Address::new( getFormValue( "loc-$i", '' ) );
 			next if $collision{$addr->get()};
@@ -203,8 +205,9 @@ sub submitAdminForm( $$$$ ) {
 				appendError( "You must specify name if you set note at item ".$addr->pretty() );
 				next;
 			}
+			my $action = $modified{$addr->get()};
+			$action = 1 if getFormValue( "loc-$i-sel", '' ) eq 'seen';
 			my( $select ) = getFormValue( "loc-$i-sel", '' ) =~ /^(\d+)$/;
-			my $action = 0;
 			if( defined $name || defined $discussion || $delete ) {
 				my $histId = $tables->submitHistory( { 'name' => $name, 'note' => $note, 'text' => $discussion, 'delete' => $delete }, $auth, $addr );
 				$tables->markChecked( $histId );
@@ -219,12 +222,12 @@ sub submitAdminForm( $$$$ ) {
 				$action = 1;
 				notify( $tables, $addr->get(), $select, 2, 2 );
 			}
-			if( $action && $defaultSeen ) {#Approve anything in this item
+			if( $action ) {#Approve anything in this item
 				my $subcnt = getFormValue( "loc-$i-subcnt", 0 );
 				for( my $j = 1;  $j <= $subcnt; $j ++ ) {
 					my( $id ) = getFormValue( "his-$i-$j", '' ) =~ /^(\d+)$/;
 					next unless defined $id;
-					next if $approved{$id} || $deleted{$id};
+					next if $deleted{$id};
 					$tables->markChecked( $id );
 					tulog( $authid, "Discussion checked $id" );
 				}

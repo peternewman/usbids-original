@@ -21,6 +21,7 @@ sub genHtmlHead( $$$ ) {
 	print '<html lang="en"><head><title>'.encode( $caption )."</title>\n";
 	print "<link rel='stylesheet' type='text/css' media='screen' href='/static/screen.css'>\n";
 	print "<link rel='stylesheet' type='text/css' media='print' href='/static/print.css'>\n";
+	print "<link rel='stylesheet' type='text/css' media='screen,print' href='/static/common.css'>\n";
 	print $metas if( defined( $metas ) );
 	print "</head><body>\n";
 }
@@ -150,7 +151,7 @@ sub HTTPRedirect( $$ ) {
 	return HTTP_SEE_OTHER;
 }
 
-sub genPathBare( $$$$$ ) {
+sub genPathBare( $$$$ ) {
 	my( $req, $address, $printAddr, $started ) = @_;
 	my $path;
 	if( defined $address ) {
@@ -183,7 +184,7 @@ sub genPath( $$$ ) {
 	my( $req, $address, $printAddr ) = @_;
 	print "<div class='path'>\n";
 	print "<p><a href='http://".$req->hostname()."/index.html'>Main</a>";
-	genPathBare( $req, $address, $printAddr, 1, 1 );
+	genPathBare( $req, $address, $printAddr, 1 );
 	print "</div>\n";
 }
 

@@ -83,54 +83,6 @@ ul.navigation
 {
 	margin-left: -1em; /* Hack. Move the place the bullets would take if they were there back left. */
 }
-form table,
-table.subnodes
-{
-	width: 100%;
-	table-layout: fixed;
-}
-col.name-col
-{
-	width: 60%;
-}
-form table col.label
-{
-	width: 15%;
-}
-form table col.edit
-{
-	width: 85%;
-}
-input.text,
-input.password,
-textarea
-{
-	width: 100%;
-}
-input.jump
-{
-	width: 8em;
-}
-form.jump p
-{
-	margin-top: 0px;
-}
-form.admin col.author
-{
-	width: 20%;
-}
-form.admin col.main
-{
-	width: 74%;
-}
-form.admin col.controls
-{
-	width: 3%;
-}
-form.admin table
-{
-	background: #BBBBFF;
-}
 form.admin tr.label td.deletes
 {
 	background: red;
@@ -138,4 +90,9 @@ form.admin tr.label td.deletes
 form.admin .newhistory
 {
 	background: #FFFFCC;
+}
+form.admin td.empty,
+form.admin table
+{
+	background: #BBBBFF;
 }
