@@ -8,6 +8,7 @@ use PciIds::Html::Forms;
 use PciIds::Notifications;
 use PciIds::Address;
 use PciIds::Log;
+use PciIds::Startup;
 use Apache2::Const qw(:common :http);
 
 sub safeEncode( $ ) {
@@ -42,12 +43,45 @@ sub genHist( $$$$$$$$$$$ ) {
 	print "<td class='deletes'><input type='checkbox' name='$delname' value='$delvalue'>\n" if defined $delname
 }
 
-sub genNewForm( $ ) {
-	my( $num ) = @_;
-	print "<tr class='newhistory'><td>TODO combo";
+sub genNewForm( $$ ) {
+	my( $num, $values ) = @_;
+	print "<tr class='newhistory'><td>";
+	if( @{$values} ) {
+		print "<select id='ans-$num' name='ans-$num' onchange='answer( \"$num\" );'><option value='0'>Stock answers</option>";
+		my $i = 0;
+		foreach( @{$values} ) {
+			$i ++;
+			my( $name ) = @{$_};
+			print "<option value='$i'>$name</option>";
+		}
+		print "</select>\n";
+	} else {
+		print "No stock answers";
+	}
 	print "<td><span class='newname'>Name: <input type='text' name='name-$num'></span><span class='newnote'>Note: <input type='text' name='note-$num'></span><br>\n";
-	print "<textarea name='disc-$num'></textarea>\n";
+	print "<textarea id='disc-$num' name='disc-$num'></textarea>\n";
 	print "<td><td class='deletes'><input type='checkbox' name='loc-$num-softdel' value='del'>\n";
+}
+
+sub loadStock() {
+	my @stock;
+	if( open ANS, "$directory/answers" ) {
+		my( $name, $text, $lines );
+		while( defined( $name = <ANS> ) ) {
+			$lines = '';
+			while( defined( $text = <ANS> ) ) {
+				chomp $text;
+				last if $text eq '';
+				$lines .= '<br>' if $lines ne '';
+				$lines .= encode( $text );
+			}
+			push @stock, [ encode( $name ), $lines ];
+		}
+		close ANS;
+	} else {
+		print STDERR "Could not find stock answers.\n";
+	}
+	return \@stock;
 }
 
 sub genNewAdminForm( $$$$$ ) {
@@ -69,6 +103,26 @@ sub genNewAdminForm( $$$$$ ) {
 	my $cnt = 0;
 	my $hiscnt = 0;
 	my $subcnt;
+	my $stock = loadStock();
+	print "<input type='hidden' name='jscript-active' id='jscript-active' value='0'>";#Trick to find out if user has JScript
+	print "<script type='text/javascript'><!--\n document.getElementById(\"jscript-active\").value = \"1\"; \n";
+	if( @{$stock} ) {
+		print "function answers() {\nreturn new Array( \"\" ";
+		foreach( @{$stock} ) {
+			my( $x, $text ) = @{$_};
+			print ', "'.$text.'"';
+		}
+		print ");\n}\n";
+	}
+	print '
+function answer( id ) {
+	var ans, index;
+	ans = answers();
+	index = document.getElementById( "ans-" + id ).value;
+	document.getElementById( "disc-" + id ).value = ans[index];
+}
+';
+	print "// --></script>";
 	foreach( @{$tables->adminDump( $prefix, $limit )} ) {
 		my( $locId, $actName, $actNote, $actHist, $actEmail, $actLogin, $actDisc, $actTime,
 			$hist, $disc, $name, $note, $email, $login, $time ) = @{$_};
@@ -76,7 +130,7 @@ sub genNewAdminForm( $$$$$ ) {
 			last if( $hiscnt > ( defined $limit ? $limit : 80 ) );
 			$lastId = $locId;
 			if( $started ) {
-				genNewForm( $cnt );
+				genNewForm( $cnt, $stock );
 				print "</table>\n";
 			} else {
 				$started = 1;
@@ -111,7 +165,7 @@ sub genNewAdminForm( $$$$$ ) {
 	}
 	print "<input type='hidden' name='subcnt-$cnt' value='$subcnt'>\n" if( defined( $subcnt ) );
 	if( $started ) {
-		genNewForm( $cnt );
+		genNewForm( $cnt, $stock );
 		print "</table>\n";
 		print "<p><input type='submit' name='submit' value='Submit'>\n";
 		print "<input type='hidden' name='loc-$cnt-subcnt' value='$subcnt'>" if( $subcnt );
@@ -148,6 +202,9 @@ sub submitAdminForm( $$$$ ) {
 	my $authid = $auth->{'authid'};
 	if( defined( $authid ) && hasRight( $auth->{'accrights'}, 'validate' ) ) {
 		my( %deleted, %approved );
+		my $hasJscript = getFormValue( 'jscript-active', '0' );
+		my $ans;
+		$ans = loadStock() unless $hasJscript;#If there is jscript, no need to translate
 		my $maxcnt = getFormValue( 'max-cnt', 0 );
 		my $maxhiscnt = getFormValue( 'max-hiscnt', 0 );
 		$errors = '';
@@ -194,6 +251,10 @@ sub submitAdminForm( $$$$ ) {
 			my $note = getFormValue( "note-$i", undef );
 			$note = undef if defined $note && $note eq '';
 			my $discussion = getFormValue( "disc-$i", '' );
+			unless( $hasJscript ) {#Modified by the stock answers, is no jscript at user
+				my $index = getFormValue( "ans-$i", '0' );
+				$discussion = $ans->[$index-1]->[1] if $index;
+			}
 			$discussion = undef if defined $discussion && $discussion eq '';
 			my $delete = 0;
 			if( getFormValue( "loc-$i-softdel", '' ) =~ /^del$/ ) {
