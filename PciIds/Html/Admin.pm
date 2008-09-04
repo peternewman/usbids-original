@@ -72,8 +72,8 @@ sub loadStock() {
 			while( defined( $text = <ANS> ) ) {
 				chomp $text;
 				last if $text eq '';
-				$lines .= '<br>' if $lines ne '';
-				$lines .= encode( $text );
+				$lines .= "\n" if $lines ne '';
+				$lines .= $text;
 			}
 			push @stock, [ encode( $name ), $lines ];
 		}
@@ -110,6 +110,8 @@ sub genNewAdminForm( $$$$$ ) {
 		print "function answers() {\nreturn new Array( \"\" ";
 		foreach( @{$stock} ) {
 			my( $x, $text ) = @{$_};
+			$text =~ s/"/\\"/g;
+			$text =~ s/\n/\\n/g;
 			print ', "'.$text.'"';
 		}
 		print ");\n}\n";
