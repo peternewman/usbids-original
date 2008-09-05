@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 # Mail robot for processing of PCI ID submissions
 # (c) 2001--2002 Martin Mares <mj@ucw.cz>
-# 2008 Michal Vaner <vorner@ucw.cz>
+# (c) 2008 Michal Vaner <vorner@ucw.cz>
 
 use Mail::Header;
 use Getopt::Long;
