@@ -27,7 +27,7 @@ our @EXPORT = qw(&checkConf &defConf %config &confList);
 our %config;
 
 sub loadConf() {
-	open CONFIG, $directory."/config" or die "Config file not found. Make sure config is in the directory and the correct path is in Startup.pm\n";
+	open CONFIG, $directory."cf/config" or die "Config file not found. Make sure config is in the cf directory and the correct path is in Startup.pm\n";
 	foreach( <CONFIG> ) {
 		next if( /^\s*(|#.*)$/ );
 		chomp;

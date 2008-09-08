@@ -143,7 +143,7 @@ sub pushProfile( $$$$ ) {
 checkConf( [ 'passwdsalt', 'regmailsalt', 'authsalt' ] );
 defConf( { 'authtime' => 2100, 'regenauthtime' => 300 } );
 
-open PRIVS, $directory."/rights" or die "Could not open privilege definitions\n";
+open PRIVS, $directory."cf/rights" or die "Could not open privilege definitions\n";
 foreach( <PRIVS> ) {
 	my( $num, $name ) = /^(\d+)\s+(.*)$/ or die "Invalid syntax in privileges\n";
 	$privnames{$num} = $name;

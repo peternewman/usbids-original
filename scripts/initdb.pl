@@ -47,7 +47,7 @@ sub createTable( $ ) {
 }
 
 my $dbh = connectDb();
-open TABLES, $directory."tables" or die "Could not open table definitions\n";
+open TABLES, $directory."cf/tables" or die "Could not open table definitions\n";
 foreach( <TABLES> ) {
 	chomp;
 	if( /^\s*$/ ) {
