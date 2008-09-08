@@ -25,6 +25,7 @@ BEGIN {
 }
 use PciIds::Config;
 use PciIds::Db;
+use PciIds::Startup;
 use DBI;
 
 my @lines;
@@ -46,7 +47,7 @@ sub createTable( $ ) {
 }
 
 my $dbh = connectDb();
-open TABLES, "tables" or die "Could not open table definitions\n";
+open TABLES, $directory."tables" or die "Could not open table definitions\n";
 foreach( <TABLES> ) {
 	chomp;
 	if( /^\s*$/ ) {

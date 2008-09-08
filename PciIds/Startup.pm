@@ -22,7 +22,7 @@ use warnings;
 use base 'Exporter';
 
 #Where are data?
-our $directory = '/home/vorner/prog/pciids/';
+our $directory = '/home/vorner/prog/pciids/cf/';
 our @EXPORT=qw($directory);
 
 #Where are the modules?
