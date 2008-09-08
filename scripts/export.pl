@@ -26,13 +26,17 @@ BEGIN {
 use PciIds::Db;
 use PciIds::DBQAny;
 
+my $tree = shift;
+
+die "Specify tree to dump as a first parameter\n" unless defined $tree;
+
 my $db = PciIds::DBQAny::new( connectDb(), {
-	'list' => 'SELECT id, name, note FROM locations WHERE id like "PC/%" OR id like "PD/%" ORDER BY id'
+	'list' => 'SELECT id, name, note FROM locations WHERE id like ? ORDER BY id'
 } );
 
 my $lastInvalid = undef;
 
-foreach( @{$db->query( 'list', [] )} ) {
+foreach( @{$db->query( 'list', [ "$tree/%" ] )} ) {
 	my( $id, $name, $description ) = @{$_};
 	next if defined $lastInvalid and substr( $id, 0, length $lastInvalid ) eq $lastInvalid;
 	if( !defined $name || $name eq '' ) {
