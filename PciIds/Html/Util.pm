@@ -69,7 +69,7 @@ sub genCustomMenu( $$$$ ) {
 	if( defined $address ) {
 		$url = '/'.$address->get().buildExcept( 'action', $args ).'?action=';
 	} else {
-		$url = '/read/?action=';
+		$url = '/?action=';
 	}
 	print "<ul>\n";
 	foreach( @{$list} ) {
