@@ -20,14 +20,15 @@
 
 set -e
 
-cd ~vorner/www/pci-ids2.ucw.cz/
-cp /home/pciids/head.ids pci.ids.new
-./scripts/export.pl | sed -e '/^ffff/r class_head.ids' >> pci.ids.new
-if ! [ -f static/pci.ids ] || ! diff static/pci.ids pci.ids.new >/dev/null ; then
-	cp pci.ids.new ~/origs/00-current
-	mv pci.ids.new static/pci.ids
-	bzip2 -9c <static/pci.ids >static/pci.ids.bz2
-	gzip -9c <static/pci.ids >static/pci.ids.gz
-else
-	rm pci.ids.new
+cp perl/cf/head.ids pci.ids.new
+./perl/scripts/export.pl PC >> pci.ids.new
+cat perl/cf/class_head.ids >> pci.ids.new
+./perl/scripts/export.pl PD >> pci.ids.new
+if ! [ -f docs/pci.ids ] || ! cmp static/pci.ids pci.ids.new >/dev/null ; then
+	ln pci.ids.new ~/origs/00-current
+	ln pci.ids.new docs/pci.ids
+	bzip2 -9c <docs/pci.ids >docs/pci.ids.bz2
+	gzip -9c <docs/pci.ids >docs/pci.ids.gz
 fi
+
+rm pci.ids.new
