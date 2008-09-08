@@ -21,9 +21,11 @@
 set -e
 
 cp perl/cf/head.ids pci.ids.new
-./perl/scripts/export.pl PC >> pci.ids.new
-cat perl/cf/class_head.ids >> pci.ids.new
-./perl/scripts/export.pl PD >> pci.ids.new
+cd perl
+./scripts/export.pl PC >> ../pci.ids.new
+cat cf/class_head.ids >> ../pci.ids.new
+./scripts/export.pl PD >> ../pci.ids.new
+cd ..
 if ! [ -f docs/pci.ids ] || ! cmp static/pci.ids pci.ids.new >/dev/null ; then
 	ln pci.ids.new ~/origs/00-current
 	ln pci.ids.new docs/pci.ids
