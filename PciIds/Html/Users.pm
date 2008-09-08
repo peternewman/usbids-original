@@ -224,7 +224,7 @@ sub loginSubmit( $$$ ) {
 	if( $logged ) {
 		$req->err_headers_out->add( 'Set-Cookie' => new CGI::Cookie( -name => 'auth', -value => genAuthToken( $tables, $id, $req, undef, $email ) ) );
 		$args->{'action'} = ( defined $args->{'redirectaction'} && $args->{'redirectaction'} ne '' ) ? $args->{'redirectaction'} : 'list';
-		my $url = 'http://'.$req->hostname().setAddrPrefix( $req->uri(), $args->{'action'} eq 'list' ? 'read' : 'mods' ).buildExcept( 'redirectaction', $args );
+		my $url = 'https://'.$req->hostname().setAddrPrefix( $req->uri(), $args->{'action'} eq 'list' ? 'read' : 'mods' ).buildExcept( 'redirectaction', $args );
 		return HTTPRedirect( $req, $url );
 	} else {
 		return genLoginForm( $req, $args, 'Invalid login credetials', $data );

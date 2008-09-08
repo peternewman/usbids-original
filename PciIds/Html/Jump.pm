@@ -37,10 +37,10 @@ sub jumpWindow( $$ ) {
 	print "</form>\n";
 }
 
-sub redirect( $$$ ) {
-	my( $req, $args, $addr ) = @_;
+sub redirect( $$$$ ) {
+	my( $req, $args, $addr, $hasSSL ) = @_;
 	my $prefix = ( !defined $args->{'action'} || $args->{'action'} eq '' || $args->{'action'} eq 'list' ) ? 'read' : 'mods';
-	my $url = "http://".$req->hostname()."/$prefix/$addr".buildArgs( $args );
+	my $url = protoName( $hasSSL )."://".$req->hostname()."/$prefix/$addr".buildArgs( $args );
 	return HTTPRedirect( $req, $url );
 }
 
@@ -49,8 +49,8 @@ sub itemExists( $$ ) {
 	return defined $tables->item( $addr );
 }
 
-sub tryDirect( $$$$ ) {
-	my( $req, $args, $tables, $search ) = @_;
+sub tryDirect( $$$$$ ) {
+	my( $req, $args, $tables, $search, $hasSSL ) = @_;
 	my $address = PciIds::Address::new( $req->uri() );
 	$search =~ s/:/\//g;
 	$search =~ s/ //g;
@@ -58,10 +58,10 @@ sub tryDirect( $$$$ ) {
 	$search =~ s/^\//$top\//;
 	#Is it absolute address?
 	my $saddr = PciIds::Address::new( $search );
-	return redirect( $req, $args, $saddr->get() ) if( defined $saddr && itemExists( $tables, $saddr->get() ) );
+	return redirect( $req, $args, $saddr->get(), $hasSSL ) if( defined $saddr && itemExists( $tables, $saddr->get() ) );
 	while( defined $address ) {
 		$saddr = PciIds::Address::new( $address->get()."/$search" );
-		return redirect( $req, $args, $saddr->get() ) if( defined $saddr && itemExists( $tables, $saddr->get() ) );
+		return redirect( $req, $args, $saddr->get(), $hasSSL ) if( defined $saddr && itemExists( $tables, $saddr->get() ) );
 		$address = $address->parent();
 	}
 	return undef;
@@ -72,7 +72,7 @@ sub jump( $$$$ ) {
 	$args->{'action'} = delete $args->{'origin'};
 	my $search = getFormValue( 'where', '' );
 	my $idOnly = $search =~ s/^#//;
-	my $direct = tryDirect( $req, $args, $tables, $search );
+	my $direct = tryDirect( $req, $args, $tables, $search, $auth->{'ssl'} );
 	return $direct if defined $direct;
 	my $address = PciIds::Address::new( $req->uri() );
 	unless( $idOnly || length $search < 3 ) {#Try extended search
@@ -89,7 +89,7 @@ sub jump( $$$$ ) {
 			genPath( $req, $address, 1 );
 			print "<h2>Found items</h2>\n";
 			genTableHead( 'found', [ 'ID', 'Name', 'Parent' ], [] );
-			my $prefix = 'http://'.$req->hostname().'/'.( ( !defined $args->{'action'} || $args->{'action'} eq '' || $args->{'action'} eq 'list' ) ? 'read/' : 'mods/' );
+			my $prefix = $req->hostname().'/'.( ( !defined $args->{'action'} || $args->{'action'} eq '' || $args->{'action'} eq 'list' ) ? 'read/' : 'mods/' );
 			my $suffix = buildArgs( $args );
 			htmlFormatTable( $result, 3, [], [ sub {
 				my $addr = shift;

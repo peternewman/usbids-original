@@ -25,10 +25,15 @@ use PciIds::Users;
 use Apache2::Const qw(:common :http);
 use APR::Table;
 
-our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem &genLocMenu &genCustomHead &genPathBare);
+our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem &genLocMenu &genCustomHead &genPathBare &protoName);
 
 sub encode( $ ) {
 	return encode_entities( shift, "\"'&<>" );
+}
+
+sub protoName( $ ) {
+	my( $hasSSL ) = ( @_ );
+	return 'http' . ( 's' x $hasSSL );
 }
 
 sub genHtmlHead( $$$ ) {
@@ -78,7 +83,7 @@ sub genCustomMenu( $$$$ ) {
 			$prefix = '/read' if( !defined( $action ) or ( $action eq 'list' ) or ( $action eq '' ) or ( $action eq 'help' ) );
 			my $suffix = '';
 			$suffix = '?help='.$param if( $action eq 'help' );
-			item( 'http://'.$req->hostname().$prefix.$url.$action.$suffix, $label );
+			item( $prefix.$url.$action.$suffix, $label );
 		}
 	}
 	print "</ul>\n";
@@ -192,7 +197,7 @@ sub genPathBare( $$$$ ) {
 		if( !$printAddr && $myAddr ) {
 			print "<strong>".encode( $addr->pretty() )."</strong>";
 		} else {
-			print "<a href='http://".$req->hostname()."/read/".$addr->get()."'>".encode( $addr->pretty() )."</a>";
+			print "<a href='/read/".$addr->get()."'>".encode( $addr->pretty() )."</a>";
 		}
 		print ")" if( $exception );
 	}
@@ -201,7 +206,7 @@ sub genPathBare( $$$$ ) {
 sub genPath( $$$ ) {
 	my( $req, $address, $printAddr ) = @_;
 	print "<div class='path'>\n";
-	print "<p><a href='http://".$req->hostname()."/index.html'>Main</a>";
+	print "<p><a href='/index.html'>Main</a>";
 	genPathBare( $req, $address, $printAddr, 1 );
 	print "</div>\n";
 }
