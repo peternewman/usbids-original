@@ -26,9 +26,9 @@ cd perl
 cat cf/class_head.ids >> ../pci.ids.new
 ./scripts/export.pl PD >> ../pci.ids.new
 cd ..
-if ! [ -f docs/pci.ids ] || ! cmp static/pci.ids pci.ids.new >/dev/null ; then
-	ln pci.ids.new ~/origs/00-current
-	ln pci.ids.new docs/pci.ids
+if ! [ -f docs/pci.ids ] || ! cmp docs/pci.ids pci.ids.new >/dev/null ; then
+	ln -f pci.ids.new ~/origs/00-current
+	ln -f pci.ids.new docs/pci.ids
 	bzip2 -9c <docs/pci.ids >docs/pci.ids.bz2
 	gzip -9c <docs/pci.ids >docs/pci.ids.gz
 fi
