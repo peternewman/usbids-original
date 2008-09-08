@@ -103,8 +103,8 @@ sub jump( $$$$ ) {
 	}
 	genHtmlHead( $req, 'No matches', undef );
 	print "<div class='top'>\n";
-	print '<h1>No matches</h1>';
 	genMenu( $req, $address, $args, $auth, [ [ 'Help', 'help', 'jump' ] ] );
+	print '<h1>No matches</h1>';
 	print "<div class='clear'></div>\n";
 	print "</div\n>";
 	genPath( $req, $address, 1 );
