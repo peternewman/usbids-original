@@ -37,7 +37,7 @@ sub getHelp( $$ ) {
 	genHtmlHead( $req, $head, undef );
 	my $addr = PciIds::Address::new( $req->uri() );
 	print "<div class='top'>\n";
-	genMenu( $req, $addr, $args, $auth, [ [ 'Help index', 'help', 'index' ] ] );
+	genMenu( $req, $addr, $args, $auth, [ ( $helpname eq 'index' ) ? () : [ 'Help index', 'help', 'index' ] ] );
 	print "<h1>$head</h1>\n";
 	print "<div class='clear'></div></div>\n";
 	genPath( $req, $addr, 1 );
