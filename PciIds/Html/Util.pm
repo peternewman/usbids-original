@@ -206,7 +206,7 @@ sub genPathBare( $$$$ ) {
 sub genPath( $$$ ) {
 	my( $req, $address, $printAddr ) = @_;
 	print "<div class='path'>\n";
-	print "<p><a href='/index.html'>Main</a>";
+	print "<p><a href='/'>Main</a>";
 	genPathBare( $req, $address, $printAddr, 1 );
 	print "</div>\n";
 }
