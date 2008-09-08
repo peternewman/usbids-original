@@ -91,16 +91,14 @@ sub genAuthToken( $$$$$ ) {
 	}
 	my $haveRights = scalar @{$rights};
 	my $time = time;
-	my $ip = $req->connection()->remote_ip();
-	return "$id:$haveRights:$time:".md5_hex( "$id:$time:$ip:".$config{'authsalt'} ).":$name";
+	return "$id:$haveRights:$time:".md5_hex( "$id:$time:".$config{'authsalt'} ).":$name";
 }
 
 sub checkAuthToken( $$$ ) {
 	my( $tables, $req, $token ) = @_;
 	my( $id, $haveRights, $time, $hex, $name ) = defined( $token ) ? split( /:/, $token ) : ();
 	return ( 0, 0, 0, [], "Not logged in", undef ) unless( defined $hex );
-	my $ip = $req->connection()->remote_ip();
-	my $expected = md5_hex( "$id:$time:$ip:".$config{'authsalt'} );
+	my $expected = md5_hex( "$id:$time:".$config{'authsalt'} );
 	my $actTime = time;
 	my $tokOk = ( $expected eq $hex );
 	my $authed = ( $tokOk && ( $time + $config{'authtime'} > $actTime ) );
