@@ -83,7 +83,7 @@ sub genNewForm( $$ ) {
 
 sub loadStock() {
 	my @stock;
-	if( open ANS, "$directory/answers" ) {
+	if( open ANS, "$directory/cf/answers" ) {
 		my( $name, $text, $lines );
 		while( defined( $name = <ANS> ) ) {
 			$lines = '';
