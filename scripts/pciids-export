@@ -27,7 +27,7 @@ cat cf/class_head.ids >> ../pci.ids.new
 cd ..
 if ! [ -f docs/pci.ids ] || ! cmp docs/pci.ids pci.ids.new >/dev/null ; then
 	cp perl/cf/head.ids pci.ids.final
-	echo '# Current to date: '`date +%Y%m%d` >> pci.ids.final
+	echo '# Version: '`date +%Y%m%d` >> pci.ids.final
 	echo >> pci.ids.final
 	cat pci.ids.new >> pci.ids.final
 	ln -f pci.ids.final ~/origs/00-current
