@@ -20,15 +20,19 @@
 
 set -e
 
-cp perl/cf/head.ids pci.ids.new
 cd perl
-./scripts/export.pl PC >> ../pci.ids.new
+./scripts/export.pl PC > ../pci.ids.new
 cat cf/class_head.ids >> ../pci.ids.new
 ./scripts/export.pl PD >> ../pci.ids.new
 cd ..
 if ! [ -f docs/pci.ids ] || ! cmp docs/pci.ids pci.ids.new >/dev/null ; then
-	ln -f pci.ids.new ~/origs/00-current
-	ln -f pci.ids.new docs/pci.ids
+	cp perl/cf/head.ids pci.ids.final
+	echo '# Current to date: '`date +%Y%m%d` >> pci.ids.final
+	echo >> pci.ids.final
+	cat pci.ids.new >> pci.ids.final
+	ln -f pci.ids.final ~/origs/00-current
+	ln -f pci.ids.final docs/pci.ids
+	rm pci.ids.final
 	bzip2 -9c <docs/pci.ids >docs/pci.ids.bz2
 	gzip -9c <docs/pci.ids >docs/pci.ids.gz
 fi
