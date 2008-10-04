@@ -25,3 +25,8 @@
 	border-bottom: dotted;
 	border-bottom-width: 1px;
 }
+form.jump
+{
+	display: none;
+	overflow: none;
+}
