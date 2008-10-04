@@ -89,7 +89,7 @@ sub jump( $$$$ ) {
 			genPath( $req, $address, 1 );
 			print "<h2>Found items</h2>\n";
 			genTableHead( 'found', [ 'ID', 'Name', 'Parent' ], [] );
-			my $prefix = $req->hostname().'/'.( ( !defined $args->{'action'} || $args->{'action'} eq '' || $args->{'action'} eq 'list' ) ? 'read/' : 'mods/' );
+			my $prefix = '/'.( ( !defined $args->{'action'} || $args->{'action'} eq '' || $args->{'action'} eq 'list' ) ? 'read/' : 'mods/' );
 			my $suffix = buildArgs( $args );
 			htmlFormatTable( $result, 3, [], [ sub {
 				my $addr = shift;
