@@ -96,3 +96,10 @@ form.admin table
 {
 	background: #BBBBFF;
 }
+.header
+{
+	background-color: #4c3bff;
+	color: #fffa45;
+	border: solid blue;
+	border-width: 1px;
+}

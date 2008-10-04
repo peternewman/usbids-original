@@ -1,37 +1,93 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en"><head><title>PciIds</title>
+<html lang="en"><head><title>The PCI ID Repository</title>
+<link rel='stylesheet' type='text/css' media='all' href='/static/common.css'>
 <link rel='stylesheet' type='text/css' media='screen' href='/static/screen.css'>
 <link rel='stylesheet' type='text/css' media='print' href='/static/print.css'>
 </head><body>
-	<h1>PciIds</h1>
-	<p>Welcome to new website of PCI ID database.
-	<ul>
-		<li><a href='/read/PC/'>PCI devices</a>
-		<li><a href='/read/PD/'>PCI device classes</a>
-	</ul>
-	<p>You can download the PCI database in <a href='/pci.ids'>pci.ids</a> format or its compressed version (<a href='/pci.ids.gz'>gz</a>, <a href='/pci.ids.bz2'>bz2</a>). They are regenerated every 24 hours.
 
-	<p>The contents of the database and the generated files can be distributed
+<div class=header>
+<h1 class=collapse>The PCI ID Repository</h1>
+<p class=collapse style='margin-top: 1ex'>The home of the <code>pci.ids</code> file
+</div>
+
+<p>This is a public repository of all known ID's used in PCI devices:
+ID's of vendors, devices, subsystems and device classes. It is used in
+various programs (e.g., <a href="http://mj.ucw.cz/pciutils.html">The PCI Utilities</a>)
+to display full human-readable names instaed of cryptic numeric codes.
+
+<h2>Browse</h2>
+
+<p>You can use our web interface to browse the lists and also to submit new
+entries or to update the existing ones:
+
+<ul>
+	<li><a href='/read/PC/'>PCI devices</a>
+	<li><a href='/read/PD/'>PCI device classes</a>
+</ul>
+
+<p>You may want to read <a href='/read/?action=help?help=index'>help</a> before you start using the
+web interface.
+
+<h2>Download</h2>
+
+<p>We generate daily snapshots of the database in form of a
+<code>pci.ids</code> file. You can download the snapshot to update
+the list used by your system:
+
+<ul>
+	<li><a href='/v2.2/pci.ids'>pci.ids</a>
+	<li><a href='/v2.2/pci.ids.gz'>pci.ids.gz</a> (compressed by gzip)
+	<li><a href='/v2.2/pci.ids.bz2'>pci.ids.bz2</a> (compressed by bzip2)
+</ul>
+
+<p>The above files require pciutils v2.2 or newer. If you are still using an older
+version for some reason, please get these instead: <a href='/pci.ids'>pci.ids-2.0</a>,
+<a href='/pci.ids.gz'>pci.ids-2.0.gz</a>, or <a href='/pci.ids.bz2'>pci.ids-2.0.bz2</a>. They
+could however lack some subsystems.
+
+<p>The contents of the database and the generated files can be distributed
 under the terms of either the <a href="http://www.opensource.org/licenses/gpl-license.php">GNU General Public License</a> (version 2 or later)
 or of the <a href="http://www.opensource.org/licenses/bsd-license.php">3-clause BSD License.</a>
 
-	<p>You may want to read <a href='/read/?action=help?help=index'>help</a> before you start using this site.
-<h2>How to submit new data</h2>
+<h2>Submit new data</h2>
 
-<p>If you have any device not listed in our database, we'll be glad to hear
-about it and add it to our database.
+<p>The database is maintained by volunteers like you, so if you have any
+devices which are not identified properly, please help us by adding them
+to the database or by fixing the existing entry.
 
-<p><b>New entries</b> are welcome, but please submit only accurate information
-&ndash; descriptions like "unknown modem device" are only of a little use to
-anybody. Real chip names and numbers are preferred over marketing names,
-in case you know both, please enclose the marketing name in square brackets
-like in "<tt>3c595 100BaseTX [Vortex]</tt>". Please avoid repeating vendor
-names in device or subsystem names. If you have anything important to mention
-(especially why are you changing an existing entry), please add a discussion comment.
+<p>New entries are always welcome, but please submit only accurate information
+&ndash; descriptions like "unknown modem device" are hardly useful for anybody.
+of existing entries to clarify the description or to correct mistakes are also
+welcome, but in this case please always add a discussion comment explaining the
+reason for the change.
 
-<p>
-You may submit them on this site (for help see <a href='/read/?action=help?help=newitem'>this</a>) or
-send a patch to <a href='/pci.ids'>pci.ids</a> file to address <a href='mailto:pci-ids@ucw.cz'>pci-ids@ucw.cz</a>.
-See <a href='/read/?action=help?help=mailsubmit'>mail submit help</a>.
+<p>Updates can be submitted either via the web interface, or as patches to the <code>pci.ids</code>
+file sent by e-mail to our mail robot at <a href='mailto:pci-ids@ucw.cz'>pci-ids@ucw.cz</a>
+(see the <a href='/read/?action=help?help=mailsubmit'>mail submit help</a>).
+
+<p><em>In all cases, please read the <a href='/read/?action=help?help=submit'>submission guidelines</a>
+first.</em>
+
+<h2>Feedback</h2>
+
+<p>If you have encountered any problems or if you have any suggestions, please <a href='pciids-devel@lists.sourceforge.net'>let
+us know</a>.
+
+<div><hr>
+<table width="100%">
+<tr>
+<td>
+Maintained by <a href="http://mj.ucw.cz/">Martin Mares</a> and <a href="http://vorner.pretel.cz/">Michal
+Vaner</a> with great help by volunteers from the <a href="http://www.sourceforge.net/projects/pciids/">pciids project</a>
+at <a href="http://www.sourceforge.net/">SourceForge</a>.
+</td><td rowspan=2>
+<a href="http://www.anybrowser.org/campaign/"><img src="/static/anybrowser.png" width=88 height=31 alt="Best viewed with any browser."></a>
+</td><td rowspan=2>
+<a href="http://sourceforge.net/"><img src="http://sourceforge.net/sflogo.php?group_id=35833" width="88" height="31" border="0" alt="SourceForge"></a>
+</td></tr>
+<tr><td><span style="display: block">No counters, no frames, no syntax
+errors.</span></td></tr>
+</table>
+</div>
 
 </body></html>
