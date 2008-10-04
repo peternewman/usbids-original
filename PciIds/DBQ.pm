@@ -113,8 +113,8 @@ sub new( $ ) {
 		'dropnotifsxmpp' => 'DELETE FROM pending WHERE notification = 1 AND EXISTS ( SELECT 1 FROM users WHERE users.id = pending.user AND nextxmpp <= ? )',
 		'dropnotifsmail' => 'DELETE FROM pending WHERE notification = 0 AND EXISTS ( SELECT 1 FROM users WHERE users.id = pending.user AND nextmail <= ? )',
 		'time' => 'SELECT NOW()',
-		'searchname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? ORDER BY l.id',
-		'searchlocalname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? AND l.id LIKE ? ORDER BY l.id',
+		'searchname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? ORDER BY LENGTH(l.id), l.id',
+		'searchlocalname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? AND l.id LIKE ? ORDER BY LENGTH(l.id), l.id',
 		'hasChildren' => 'SELECT DISTINCT 1 FROM locations WHERE parent = ?',
 		'hasMain' => 'SELECT DISTINCT 1 FROM locations WHERE id = ? AND mainhistory IS NOT NULL',
 		'notif-exists' => 'SELECT DISTINCT 1 FROM notifications WHERE user = ? AND ( location = ? OR ( recursive = 1 AND type <= 1 AND SUBSTR( ?, 1, LENGTH( location ) ) = location ) )'
