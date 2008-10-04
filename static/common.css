@@ -53,6 +53,21 @@ div.top p.home
 	text-align: center;
 	margin: 0 0;
 }
+div.help-example div.bluesquare
+{
+	float: left;
+}
+div.help-example p.home
+{
+	position: absolute;
+	right: 0em;
+	left: 0em;
+}
+div.help-example h1,
+div.help-example p.home
+{
+	text-align: center;
+}
 div.top h1
 {
 	margin-top: 0.5ex;

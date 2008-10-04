@@ -39,7 +39,7 @@ form.admin table.item tr.label,
 .author, .time
 {
 	font-style: italic;
-	color: #444444;
+color: #444444;
 }
 .discussion div p, .admin div p
 {
@@ -48,16 +48,16 @@ form.admin table.item tr.label,
 }
 div.lmenu
 {
-	float: left;
-	width: 20%;
+float: left;
+width: 20%;
 }
 div.rmenu
 {
-	float: right;
-	text-align: right;
-	width: 20%;
-	padding-right: 1em;
-	margin: 0px;
+float: right;
+       text-align: right;
+width: 20%;
+       padding-right: 1em;
+margin: 0px;
 }
 div.bigbluesquare
 {
@@ -70,8 +70,21 @@ div.bluesquare
 	top: 1ex;
 	width: 60%;
 }
+div.bluesquare-example
+{
+	left: 20%;
+	width: 60%;
+	position: absolute;
+	height: 5em;
+}
+div.help-example div.lmenu,
+div.help-example div.rmenu
+{
+	background: #BBBBFF;
+}
 div.bluesquare,
-div.bigbluesquare
+div.bigbluesquare,
+div.bluesquare-example
 {
 	background-color: #4c3bff;
 	color: #fffa45;

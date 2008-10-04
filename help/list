@@ -38,12 +38,14 @@ an admin), or discussion comments not yet seen by an admin.
 <div class='lmenu'><ul>
 	<li><a href='$HELP_URL$newitem'>Add item</a>
 	<li><a href='$HELP_URL$newhistory'>Discuss</a>
-	<li><form class='jump' method='POST' action='$HELP_URL$jump'><p><input type='text' class='jump' disabled='disabled'><input type='submit' value='Jump'></form>
 </ul></div>
 <div class='rmenu'><ul>
 	<li><a href='$HELP_URL$account'>Log in</a>
 </ul></div>
-<h1>ID 0000</h1>
+<div class='bluesquare-example'>
+<h1>The PCI ID Repository</h1>
+<p class='home'>The home of the pci.ids file
+</div>
 <div class='clear'></div></div>
 <div class='path'><p><a href='$HELP_URL$index'>Main page</a>&nbsp;-&gt;&nbsp<a href='$HELP_URL$index'>Parent</a></div>
 <h2>ID 0000</h2>
