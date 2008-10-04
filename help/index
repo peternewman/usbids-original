@@ -1,5 +1,5 @@
 Help index
-<h2>Read only operations</h2>
+<h2>Read-only operations</h2>
 <ul class='navigation'>
 	<li><a href='$HELP_URL$list'>Browsing</a>
 	<li><a href='$HELP_URL$jump'>Jumping</a>

@@ -1,20 +1,27 @@
 Jumping
-The jump box (little text box with 'Jump' button by its side) has two functions.
+The jump box (the little text box with the 'Jump' button by its side) has two functions.
 
 <h2>Direct ID jump</h2>
 <p>
 If you enter an ID and press Jump (or Enter), you are sent directly to that ID.
 <p>
-You can use both slashes ('/') and colons (':') as ID segment separators.
-If the ID starts with an ID type prefix (eg. 'PC'), it is considered absolute.
-If it starts with a segment separator, it is considered absolute inside current ID tree (eg. PCI devices).
-Absolute addresses are tried first, if they do not exist, relative search is done.
-Otherwise, it is relative and is appended to current ID, then to its parent and so on, until some exists or a root of tree is reached.
+The ID can be either an absolute path (with segments separated by slashes
+and/or colons). The exact rules for matching the paths are as follows, but
+maybe you want to see the examples at the end of this page first.
+<p>
+If the ID starts with an ID type prefix (e.g., 'PC'), it is considered absolute.
+<p>
+If it starts with a segment separator, it is considered absolute inside current ID tree (e.g., PCI devices).
+<p>
+Otherwise, it is relative and it is appended to the current ID, then to its parent and so on,
+until an existing entry or the root of the tree is reached.
+<p>
+If the absolute address is not found, we try to interpret it as relative instead.
 
 <h2>Name search</h2>
 <p>
-If direct ID jump does not succeed, names of items are searched for it.
-By default only names of the same ID type are searched (if you browse PCI devices, you will not get results from device classes).
+If the direct ID jump does not succeed, we search entry names for the given string.
+By default, only names of the same ID type are searched (if you browse PCI devices, you will not get results from device classes).
 If you want to search all names, prefix the search with an asterisk ('*').
 <p>
 If you want to turn off name search in your query, prefix the query with '#'.
@@ -23,10 +30,10 @@ If you want to turn off name search in your query, prefix the query with '#'.
 <p>
 All examples are searches from within ID 'PC:0000:0000'.
 <ul>
-	<li><tt>PD:00</tt> ‒ jumps to <tt>PD:00</tt>, if it exist.
-	<li><tt>:1234</tt> ‒ jumps to <tt>PC:1234</tt>, if it exist.
+	<li><tt>PD:00</tt> ‒ jumps to <tt>PD:00</tt> (PCI class <tt>00</tt>), if it exists.
+	<li><tt>:1234</tt> ‒ jumps to <tt>PC:1234</tt> (PCI device vendor <tt>1234</tt>), if it exists.
 	<li><tt>abcd</tt> ‒ tries <tt>PC:0000:0000:abcd</tt>, then <tt>PC:0000:abcd</tt>, then <tt>PC:abcd</tt>. Then searches in names.
-	<li><tt>#abcd</tt> ‒ same as above, but does not continue searching in names.
-	<li><tt>Some text</tt> ‒ all id searches will fail, names of PCI devices are searched for <tt>Some text</tt>.
-	<li><tt>*Some text</tt> ‒ same, but the search is trough all devices in database.
+	<li><tt>#abcd</tt> ‒ same as above, but does not switch to searching in names.
+	<li><tt>Some text</tt> ‒ all ID searches will fail, so names of PCI devices are searched for <tt>Some text</tt>.
+	<li><tt>*Some text</tt> ‒ same, but the search is through all items in the database.
 </ul>

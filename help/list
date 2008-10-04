@@ -1,25 +1,36 @@
 Browsing ID list
 <p>
-You can examine the current list of IDs.
-The IDs are organized into a tree.
+You can browse the list of ID's, including the history of the entries.
+<p>
+The ID's are organized in the form of a tree. The top level lists vendors,
+the next level enumerates their devices and the bottommost level shows the
+subsystems. Other lists, like the list of classes, are organized in a similar
+way.
 <h2>Page anatomy</h2>
 <p>
-Page is divided into parts:
+The page is divided into several parts:
 <ul>
-	<li><strong>Menu</strong> ‒ you can perform actions, both in connection with current item (like <a href='$HELP_URL$newitem'>adding a new sub-item</a>, in top left corner) and global (<a href='$HELP_URL$profile'>editing your profile</a>, in top right corner).
-	<li><strong>Hierarchy</strong> ‒ lists all parental items.
-	<li><strong>Item status</strong> ‒ contains current name and comment.
-	<li><strong>Discussion</strong> ‒ contains history of suggested names, notes and general talk about current item.
-	<li><strong>List of sub-items</strong> ‒ all direct sub-items are listed here and you can browse into them.
+	<li><strong>Menu</strong> ‒ you can perform actions, both in connection with current item (like <a href='$HELP_URL$newitem'>adding a new sub-item</a>, in the top left corner) and global (<a href='$HELP_URL$profile'>editing your profile</a>, in the top right corner).
+	<li><strong>Hierarchy</strong> ‒ lists all parent items.
+	<li><strong>Item status</strong> ‒ contains the current name and the attached comment.
+	<li><strong>Discussion</strong> ‒ contains the history of suggested names, notes and general talk about the current item.
+	<li><strong>List of sub-items</strong> ‒ all direct sub-items of the current item are listed here and you can descend into them.
 </ul>
 
-You can find menu and hierarchy in most other pages and they have the same function.
+You can find the menu and the hierarchy in most other pages; they work in similar way there.
 
 <h2>Colors</h2>
-Colors are used both in discussion and list of sub-items to mark status of discussion comments and sub-items respectively.
-<span class='main-history'>Green entries</span> are discussion comments which provide current item name.
-<span class='unseen-history'>Grey ones</span> are entries with some problem. They are either items without any assigned name (discussion about non-existing item, new item which was not yet approved by an admin) or discussion comments not yet seen by an admin.
-<span class='history'>White ones</span> are the rest, usual discussion and valid items.
+
+<p>Colors are used in both the discussion and the list of sub-items to mark status of discussion comments and sub-items respectively.
+
+<p><span class='main-history'>Green entries</span> are discussion comments that provide the current item name
+&ndash; the "active" ones.
+
+<p><span class='unseen-history'>Grey entries</span> are those which need attention: They are either items without
+any assigned name (either discussion about a not-yet-existing item, or a new item which was not yet approved by
+an admin), or discussion comments not yet seen by an admin.
+
+<p><span class='history'>White ones</span> are the rest: regular discussion and approved items.
 
 <h2>Example</h2>
 <div class='help-example'>

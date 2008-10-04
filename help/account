@@ -1,46 +1,49 @@
 Your account
 <p>
-If you want to edit something or just receive notifications about changes, you need an account.
-If you want to only view and browse information here, you do not need one.
+If you want to edit something or to receive notifications about changes, you need an account.
+It is however not needed for simple browsing of the list.
 <p>
-The account contains your email address and password.
-If you want, you can provide a login name and xmpp address as well.
+The account is identified by your email address and a password.
+If you want, you can provide a login name and a xmpp address as well.
 <p>
-Email and xmpp addresses will be used to send you notifications about changes (if you request them).
-Email address can be used to reset your password, if you forget it.
-Neither your email nor your xmpp address will be showed to anybody but you and admins.
+Email and xmpp addresses will be used to send notifications about changes to you (if you request them).
+An email address can be also used to reset your password, in case you forget it.
+Neither your email nor your xmpp address will be shown to anybody but you and the admins.
 <p>
-Login name is used for your convenience during login (you can log in by either email or login name) and
-it is showed with discussion submits you wrote.
+The login name is used for your convenience during login (you can log in by either your email or
+your login name) and it is also publicly shown in the discussion items you wrote.
 
 <h2>Obtaining an account</h2>
 <p>
-It is possible you account has been created already.
-It is created if you submit something using email.
-And we created accounts for all submits imported from previous version of this site.
-In that case, you need to <a href='$AC_URL$respass'>reset your password</a> (because exists no password for you).
+It is quite possible that your account has been already created. This happens if you
+have submitted an entry using the email robot, or if you have used the address in the previous
+incarnation of this web interface.
+In that case, you need to <a href='$AC_URL$respass'>reset your password</a>, because the account
+does not have a password yet.
 <p>
-If you do not have an account, go to <a href='$AC_URL$register'>register</a> item in menu (you can find it, when you visit <a href='$AC_URL$login'>Log in</a> page) and fill your email address.
-A message containing confirmation link will be sent to it.
-After you follow the link and fill in the rest, your account is ready for use.
+If you do not have an account, click on <a href='$AC_URL$register'>register</a> item in the menu (you can find it when you visit the <a href='$AC_URL$login'>Log in</a> page) and fill in your email address.
+A message containing a confirmation link will be sent to you.
+After you follow the link and fill in some more information, your account will be ready for use.
 
-<h2>Reseting password</h2>
+<h2>Resetting password</h2>
 <p>
 If your account was created automatically or you forget your password, you need to reset it.
 Enter your email address into the <a href='$AC_URL$respass'>reset password</a> page.
-A message with confirmation link will be sent to you.
+A message with a confirmation link will be sent to you.
 When you follow it, you will be provided with a form where you can change the password.
 
 <h2>Logging in</h2>
 <p>
-When you want to edit some information here or alter your own settings, you need to be logged in.
-Fill the form on the <a href='$AC_URL$login'>log in</a> page.
+When you want to edit any entries in the lists or to alter your personal settings, you need to be logged in.
+Fill in the form on the <a href='$AC_URL$login'>log in</a> page.
 You can provide either your email address or your login name, they both work.
 <p>
-After successful login, you will be redirected either to <a href='$HELP_URL$list'>ID browsing</a> or to any action you tried to perform and it required login.
+After a successful login, you will be redirected either to <a href='$HELP_URL$list'>ID browsing</a> or to the action
+you tried to perform which required login.
 <p>
 You can log out again by <a href='$AC_URL$logout'>log out</a> menu item.
-You will be logged out automatically if you do not do anything in a long time (approx. 30 minutes) or close your browser.
+You will be logged out automatically after approximately 30 minutes of inactivity
+or when you close your browser.
 
 <h2>Actions requiring login</h2>
 <ul class='navigation'>
@@ -52,6 +55,8 @@ You will be logged out automatically if you do not do anything in a long time (a
 
 <h2>Accounts with additional rights</h2>
 <p>
-There are accounts with additional rights, like deleting whole items or approving history comments.
+Some accounts are gifted with extra powers that are not available to ordinary users.
+These include deleting items from the discussion, approving entries and other administrative
+actions.
 If you have one, you probably know it already.
-If you think you should have one, contact owners of this site.
+If you think you should have one, contact the maintainers of this site.
