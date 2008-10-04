@@ -1,4 +1,4 @@
-PCI device classes
+PCI Device Classes
 <h2>Device classes</h2>
 <p>
 Device class is identified by a single byte. It is stored as 2 hexadecimal digits (all in lowercase).

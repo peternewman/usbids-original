@@ -1,24 +1,46 @@
-Add a new item
+Adding a new item
 <p>
-If you know about an ID which is not listed in the database, you will be welcome
-to submit it.
-Just browse to the parent item and click on the <a href='$AC_URL$newitem'>add item</a> link.
+If you know about an ID which is not listed in the database, you are welcome
+to submit a new entry.
+<p>
+To add it, browse to its parent entry, click on the <a href='$AC_URL$newitem'>add item</a> link
+and enter the last part of the new ID (without the parent ID) together with its name.
+For example, when you want to submit the PCI device <tt>1234:5678</tt> (vendor ID <tt>1234</tt>,
+device ID <tt>5678</tt>) and the vendor <tt>1234</tt> already exists, go to the page of
+that vendor and enter a new item with ID <tt>5678</tt> there.
+<p>
 If you want to change an existing entry, just <a href='$HELP_URL$newdiscuss'>post a discussion
 item</a> instead.
 <p>
-To create a new entry, you need to fill in the ID and its name.
-The ID is just the last part (without the parent part; for example if you have PCI device
-<tt>1234:5678</tt> and the vendor <tt>1234</tt> already exists, you enter only <tt>5678</tt>).
-If you know chip name, it is preferred over marketing name.
+You can also add a note to the name. The notes are distributed together with the ID's,
+so they should be used only in important cases (for example to draw attention to the fact
+that the ID was used by a different company due to a mistake).
 <p>
-You can add some note to the name, for example, if the ID is not really owned by the company using it.
-You can add a discussion comment to it (why you think it is correct).
-The difference between note and discussion is that note is additional information to name, while discussion is administrative.
-Also, note is sometimes distributed, while discussion isn't.
+If you want to comment on anything, feel free to post a discussion comment. (Unlike
+the note, it is only kept for other people editing the lists, not distributed to
+users.)
 <p>
-Both note and discussion is optional.
+After you submit the change, it will wait for approval by an admin.
+
+<h2>Rules</h2>
 <p>
-After you submit it, it will wait approval of an admin.
+<em>There is a couple of simple rules you should obey:</em>
+<ul>
+	<li>Avoid generic names like "unknown network card", they are not
+	likely to help anybody.
+	<li>Prefer chip names over marketing names. If you know both,
+	please include the marketing name in square brackets
+	(e.g., "<tt>3c595 100BaseTX [Vortex]</tt>").
+	<li>Do not repeat the name of the vendor in the name of the device.
+	<li>Look at the names of similar devices and follow the same form.
+	<li>Verify the kind of the entry: do not submit subsystems as devices,
+	do not submit USB ID's to the PCI lists :-)
+</ul>
+<p>If you are not familar with the syntax of the ID's, please check the description:
+<ul class='navigation'>
+	<li><a href='$HELP_URL$pci'>PCI devices</a>
+	<li><a href='$HELP_URL$pci_class'>PCI device classes</a>
+</ul>
 
 <h2>Approval</h2>
 <p>
@@ -26,12 +48,6 @@ All submissions are checked by the administrators for errors. The admins either 
 the entry, or ask you to correct it or to provide more details. In cases of blatant
 abuse (spam in comments etc.), they have the power to remove the entry completely.
 <p>
-Before submitting changes, please consult the 
-You should check specific help for corresponding ID type:
-<ul class='navigation'>
-	<li><a href='$HELP_URL$pci'>PCI devices</a>
-	<li><a href='$HELP_URL$pci_class'>PCI device classes</a>
-</ul>
 
 <h2>Notification subscription</h2>
 <p>
@@ -40,6 +56,6 @@ For more information about notifications look at <a href='$HELP_URL$notification
 
 <h2>See also</h2>
 <p>
-Once item is submitted, it is not sealed for ever. You can <a href='$HELP_URL$newhistory'>discuss</a> existing items and suggest them new names.
+Once an item is submitted, it is not sealed for ever. You can <a href='$HELP_URL$newhistory'>discuss</a> existing items and suggest new names for them.
 <p>
-If you are interested in changes in some item (or its whole subtree), you can let the system send you <a href='$HELP_URL$notifications'>notifications</a>.
+If you are interested in changes in some item (or in its whole subtree), you can let the system send you <a href='$HELP_URL$notifications'>notifications</a>.

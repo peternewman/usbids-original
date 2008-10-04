@@ -1,19 +1,25 @@
 PCI devices
 <h2>Vendors</h2>
 <p>
-The top level of hierarchy is a vendor list.
-Each vendor has a 2-byte long id, stored in database as 4 hexadecimal digits (with lowercase letters).
+The top level of the hierarchy is the list of vendors.
+Each vendor has a 2-byte ID, stored in the database as 4 hexadecimal digits (with lowercase letters).
 They can be browsed <a href='/read/PC'>here</a>.
 
 <h2>Devices</h2>
 <p>
-Each vendor contains a list of its devices.
-Each device in the list has a 2-byte long id, stored the same way as vendor id (4 hexadecimal letters).
+Each vendor keeps a list of his devices and assigns ID's to them.
+Each device in the list has a 2-byte long ID, stored the same way as the vendor ID (4 hexadecimal digits).
 
 <h2>Subsystems</h2>
-A device can consist of more sub-systems.
-Each sub-system has 4-byte long id, stored as 8 hexadecimal letters, split in the middle by a space (for example <tt>1234 abcd</tt> could be a sub-system id).
-The first quad of digits is considered a vendor id (from the same list of vendors). The vendor of the sub-system can be different than vendor of the device.
+<p>
+Sometimes, a device ID is not sufficient to select the right driver. For example, the same
+chip can be wired in different ways on different boards. In such cases, the manufacturer of
+the board defines a subsystem ID for the board, which serves as an additional identification.
+<p>
+The subsystem ID's are 4 bytes long, stored as 8 hexadecimal letters with a space in the middle
+(e.g., <tt>1234 abcd</tt> could be a subsystem ID).
+The first quad of digits is the vendor ID (from the same list of vendors as the devices;
+possibly different from the vendor of the device itself), the rest is assigned by the vendor.
 
 <h2>See also</h2>
 <p>
