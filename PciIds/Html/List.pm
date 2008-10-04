@@ -96,7 +96,7 @@ sub list( $$$$ ) {
 		genTableTail();
 		print "<p><a href='".buildExcept( 'action', $args )."?action=newitem'>Add item</a>\n";
 	}
-	genHtmlTail();
+	genHtmlFooter( 1, $req, $args );
 	return OK;
 }
 

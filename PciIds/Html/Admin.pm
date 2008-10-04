@@ -194,7 +194,7 @@ function answer( id ) {
 		print "<p>No pending items.\n";
 	}
 	print "</form>\n";
-	genHtmlTail();
+	genHtmlFooter( 1, $req, $args );
 	return OK;
 }
 

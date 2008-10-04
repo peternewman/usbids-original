@@ -52,7 +52,7 @@ sub genNewItemForm( $$$$$$ ) {
 	If there is something you want to clarify about the item, you can use note (like the ID does not belong to people using it).
 	Discussion is for things more relevant to history of the item than the real device (like information source).
 	Both note and discussion is optional.';
-	genHtmlTail();
+	genHtmlFooter( 1, $req, $args );
 	return OK;
 }
 
@@ -94,7 +94,7 @@ sub newItemSubmit( $$$$ ) {
 			my $addr = PciIds::Address::new( $req->uri() );
 			genCustomHead( $req, $args, $addr, 'ID collision', [ [ 'Add other item', 'newitem' ], $addr->canDiscuss() ? [ 'Discuss', 'newhistory' ] : (), ], [ logItem( $auth ) ] );
 			print '<p>Sorry, this ID already exists.';
-			genHtmlTail();
+			genHtmlFooter( 0, undef, undef );
 			return OK;
 		} elsif( $result ) {
 			return genNewItemForm( $req, $args, $auth, $tables, $result, $data );
@@ -137,7 +137,7 @@ sub genNewHistoryForm( $$$$$$ ) {
 	You must provide at last name or discussion or deletion request.
 <p>
 	If you provide note, you must provide name too.';
-	genHtmlTail();
+	genHtmlFooter( 1, $req, $args );
 	return OK;
 }
 

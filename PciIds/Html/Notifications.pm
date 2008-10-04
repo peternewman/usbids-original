@@ -64,7 +64,7 @@ sub genNotifForm( $$$$$$ ) {
 		}
 		print "</ul></div>\n";
 	}
-	genHtmlTail();
+	genHtmlFooter( 1, $req, $args );
 	return OK;
 }
 

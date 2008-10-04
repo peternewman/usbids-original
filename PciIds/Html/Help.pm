@@ -49,7 +49,7 @@ sub getHelp( $$ ) {
 		print $line;
 	}
 	close HELP;
-	genHtmlTail();
+	genHtmlFooter( 1, $req, $args );
 	return OK;
 }
 

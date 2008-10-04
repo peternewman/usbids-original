@@ -44,7 +44,7 @@ sub genRegisterForm( $$$$ ) {
 	genForm( [ [ 'Email:', 'text', 'email', 'maxlength="255"' ],
 		[ '', 'submit', 'register', 'value="Register"' ] ], $values );
 	print '</table></form>';
-	genHtmlTail();
+	genHtmlFooter( 0, undef, undef );
 	return OK;
 }
 
@@ -84,7 +84,7 @@ sub registerSubmit( $$$ ) {#A registration form has been submited
 	print '<p>
 			An email containing further information has been sent to you.
 			Please follow these instruction to finish the registration process.';
-	genHtmlTail();
+	genHtmlFooter( 0, undef, undef );
 	return OK;
 }
 
@@ -102,7 +102,7 @@ sub genConfirmForm( $$$$ ) {
 		[ 'Confirm password:', 'password', 'confirm_password' ],
 		[ '', 'submit', 'register', 'value=Register' ] ], $values );
 	print '</table></form>';
-	genHtmlTail();
+	genHtmlFooter( 0, undef, undef );
 	return OK;
 }
 
@@ -115,7 +115,7 @@ sub usedAddress( $$ ) {
 			An account for this address is already registered.
 			Please, reset or remember your password or start again with a different address.
 		</div>';
-	genHtmlTail();
+	genHtmlFooter( 0, undef, undef );
 	return 0;
 }
 
@@ -129,7 +129,7 @@ sub checkRegHash( $$$$$ ) {
 				This registration request is invalid.
 				Are you sure you got it from the registration email?
 			</div>';
-		genHtmlTail();
+		genHtmlFooter( 0, undef, undef );
 		return 0;
 	} elsif( $tables->hasEmail( $email ) ) {
 		return usedAddress( $req, $args );
@@ -180,7 +180,7 @@ sub confirmSubmit( $$$ ) {
 	genCustomHead( $req, $args, PciIds::Address::new( $req->uri() ), 'Registered', [ [ 'Help', 'help', 'account' ] ], [ [ 'Log in', 'login' ] ] );
 	print '<p>
 			You have registered successfully.';
-	genHtmlTail();
+	genHtmlFooter( 0, undef, undef );
 	return OK;
 }
 
@@ -195,7 +195,7 @@ sub genLoginForm( $$$$ ) {
 		[ 'Password:', 'password', 'password' ],
 		[ '', 'submit', 'login', 'value="Login"' ] ], $values );
 	print '</table></form>';
-	genHtmlTail();
+	genHtmlFooter( 0, undef, undef );
 	return OK;
 }
 
@@ -268,7 +268,7 @@ sub genResetPasswdForm( $$$$ ) {
 	genForm( [ [ 'Email:', 'text', 'email', 'maxlength="255"' ],
 		[ '', 'submit', 'respass', 'value="Send"' ] ], $values );
 	print '</table></form>';
-	genHtmlTail();
+	genHtmlFooter( 0, undef, undef );
 	return OK;
 }
 
@@ -297,7 +297,7 @@ sub resetPasswdFormSubmit( $$$ ) {
 		genHtmlHead( $req, 'Reset password', undef );
 		genCustomHead( $req, $args, PciIds::Address::new( $req->uri() ), 'Reset password', [ [ 'Help', 'help', 'account' ] ], [ [ 'Log in', 'login' ] ] );
 		print "<p>An email with information has been sent to your address.\n";
-		genHtmlTail();
+		genHtmlFooter( 0, undef, undef );
 		return OK;
 	} else {
 		$error = '<p>This email address is not registered. Check it for typos or register it.';
@@ -319,7 +319,7 @@ sub genResetPasswdConfigForm( $$$$$$ ) {
 	print "</table>";
 	print "<input type='hidden' name='email' value='".encode( $email )."'><input type='hidden' name='hash' value='".encode( $hash )."'>\n";
 	print "</form>\n";
-	genHtmlTail();
+	genHtmlFooter( 0, undef, undef );
 	return OK;
 }
 
@@ -337,7 +337,7 @@ sub resetPasswdConfirmForm( $$$$ ) {
 		print "<h1>Reset password</h1>\n";
 		print "<p>Provided link is not valid. Did you use it already?\n";
 		print "<p>You can get a <a href='".$req->uri()."?action=respass'>new one</a>.\n";
-		genHtmlTail();
+		genHtmlFooter( 0, undef, undef );
 		return OK;
 	}
 }
@@ -362,7 +362,7 @@ sub resetPasswdConfirmFormSubmit( $$$ ) {
 			genHtmlHead( $req, 'Reset password', undef );
 			genCustomHead( $req, $args, PciIds::Address::new( $req->uri() ), 'Reset password', [ [ 'Help', 'help', 'account' ] ], [ [ 'Log in', 'login' ] ] );
 			print "<p>Your password was successfuly changed.\n";
-			genHtmlTail();
+			genHtmlFooter( 0, undef, undef );
 			return OK;
 		} else {
 			return genResetPasswdConfigForm( $req, $args, $error, $data, $email, $hash );
@@ -390,7 +390,7 @@ sub genProfileForm( $$$$$$ ) {
 		[ 'Xmpp batch time (min):', 'text', 'xmpp_time', 'maxlength="10"' ],
 		[ '', 'submit', 'profile', 'value="Submit"' ] ], $data );
 	print '</table></form>';
-	genHtmlTail();
+	genHtmlFooter( 0, undef, undef );
 	return OK;
 }
 

@@ -25,7 +25,7 @@ use PciIds::Users;
 use Apache2::Const qw(:common :http);
 use APR::Table;
 
-our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem &genLocMenu &genCustomHead &genPathBare &protoName);
+our @EXPORT = qw(&genHtmlHead &htmlDiv &genHtmlTail &genTableHead &genTableTail &parseArgs &buildExcept &buildArgs &genMenu &genCustomMenu &encode &setAddrPrefix &HTTPRedirect &genPath &logItem &genLocMenu &genCustomHead &genPathBare &protoName &genHtmlFooter);
 
 sub encode( $ ) {
 	return encode_entities( shift, "\"'&<>" );
@@ -51,6 +51,30 @@ sub genHtmlHead( $$$ ) {
 
 sub genHtmlTail() {
 	print '</body></html>';
+}
+
+sub genHtmlFooter( $$$ ) {
+	my( $jump, $req, $args ) = @_;
+	if( $jump ) {
+		require PciIds::Html::Jump;
+		PciIds::Html::Jump::jumpWindow( $req, $args );
+	}
+	print '<hr>
+<table width="100%">
+<tr>
+<td>
+Maintained by <a href="http://mj.ucw.cz/">Martin Mares</a> and <a href="http://vorner.pretel.cz/">Michal
+Vaner</a> with great help by volunteers from the <a href="http://www.sourceforge.net/projects/pciids/">pciids project</a>
+at <a href="http://www.sourceforge.net/">SourceForge</a>.
+</td><td rowspan=2>
+<a href="http://www.anybrowser.org/campaign/"><img src="/static/anybrowser.png" width=88 height=31 alt="Best viewed with any browser."></a>
+</td><td rowspan=2>
+<a href="http://sourceforge.net/"><img src="http://sourceforge.net/sflogo.php?group_id=35833" width="88" height="31" border="0" alt="SourceForge"></a>
+</td></tr>
+<tr><td><span style="display: block">No counters, no frames, no syntax
+errors.</span></td></tr>
+</table>
+</div>';
 }
 
 sub htmlDiv( $$ ) {
