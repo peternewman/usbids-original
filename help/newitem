@@ -1,10 +1,14 @@
 Add a new item
 <p>
-If you know about an ID not present here, you can submit it.
-Browse to the item which should contain it and click <a href='$AC_URL$newitem'>add item</a> link.
+If you know about an ID which is not listed in the database, you will be welcome
+to submit it.
+Just browse to the parent item and click on the <a href='$AC_URL$newitem'>add item</a> link.
+If you want to change an existing entry, just <a href='$HELP_URL$newdiscuss'>post a discussion
+item</a> instead.
 <p>
-You need to fill in the ID and its name.
-The ID is just the last part (without parent part, for example if you have PCI device <tt>1234:5678</tt> and the vendor <tt>1234</tt> already exists, you enter only <tt>5678</tt>).
+To create a new entry, you need to fill in the ID and its name.
+The ID is just the last part (without the parent part; for example if you have PCI device
+<tt>1234:5678</tt> and the vendor <tt>1234</tt> already exists, you enter only <tt>5678</tt>).
 If you know chip name, it is preferred over marketing name.
 <p>
 You can add some note to the name, for example, if the ID is not really owned by the company using it.
@@ -18,11 +22,12 @@ After you submit it, it will wait approval of an admin.
 
 <h2>Approval</h2>
 <p>
-Each item is checked and approved by an admin.
-It is because not all submissions are correct.
+All submissions are checked by the administrators for errors. The admins either approve
+the entry, or ask you to correct it or to provide more details. In cases of blatant
+abuse (spam in comments etc.), they have the power to remove the entry completely.
 <p>
-If you want to it to get approved, please check you enter valid information into correct place (eg. not an USB ID into PCI devices, Device into its vendor).
-You should check help specific for each tree:
+Before submitting changes, please consult the 
+You should check specific help for corresponding ID type:
 <ul class='navigation'>
 	<li><a href='$HELP_URL$pci'>PCI devices</a>
 	<li><a href='$HELP_URL$pci_class'>PCI device classes</a>

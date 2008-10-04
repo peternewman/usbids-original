@@ -1,11 +1,17 @@
 Mail submit
 <p>
-PCI IDs can be submited and edited using email.
-There is a robot at address <a href='mailto:pci-ids@ucw.cz'>pci-ids@ucw.cz</a>, which accepts patches sent to it.
-Please use unified diffs (<tt>diff -u</tt>) against the current <a href='/static/pci.ids'>pci.ids</a> file (preferably the one just downloaded from this page, but the robot tries hard to recognize older versions as well).
-Avoid base64 encoding and mail agents converting tabs to spaces, breaking lines and so on.
+PCI ID's can be also submitted and edited using email.
 <p>
-If you do not have an <a href='$HELP_URL$account'>account</a> yet, one is created for your email address.
-You will get subscribed to notifications about all the items you changed (if you like to tweak the notifications, look at their <a href='$HELP_URL$notifications'>documentation</a>.
+There is a robot listening at <a href='mailto:pci-ids@ucw.cz'>pci-ids@ucw.cz</a>, which has been
+set up to accept patches received by email.
 <p>
-Please note, the robot understands only PCI IDs. Other types of IDs must be entered by the web interface.
+Please use unified diffs (<tt>diff -u</tt>) against the current <a href='/v2.2/pci.ids'>pci.ids</a> file (preferably the one just downloaded from this page, but the robot tries hard to recognize older versions as well). Please include the patch in the body of the email (to avoid base64
+encoding which is currently not understood by the robot) and avoid mail agents which convert
+tabs to spaces or wrap long lines. The classical <tt>mail</tt> utility is a safe choice.
+<p>
+If you do not have an <a href='$HELP_URL$account'>account</a> yet, one will be created for you
+automatically. You will be also sent notifications when anybody modifies the items you have
+changed (of course you can tweak the notifications, look at their <a href='$HELP_URL$notifications'>documentation</a>).
+<p>
+Please note that the robot currently understands only PCI ID's. Other types of ID's (classes etc.)
+must be entered via the web interface.

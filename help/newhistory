@@ -1,34 +1,30 @@
 Discussion
 <p>
-If you think some information here is wrong, you know better or want to say something about some item, you can enter discussion.
+If you think that some information in the list is wrong, you know better or you want to say something about some item,
+you can enter a discussion comment.
 Browse to the item and click the <a href='$AC_URL$newhistory'>discuss</a> link.
 <p>
-If you do not want to alter current name or note, provide only text.
-If you want to change name, provide that one too (in that case, you do not have to provide text, but it is recommended to say why you think the new version is better).
-Changing note alone is not possible, you can change it with name only.
-If you change just note, enter the same name as before.
+If you do not want to change the name nor the note, enter only the text of the
+discussion item.
+If you want to change the name, enter the new version and attach a comment
+explaining the reason for the change.
+If you want to change only the note, please enter it with the same name as before.
 <p>
 You can request item deletion here, too.
 
-<h2>Approval</h2>
 <p>
-All submissions are checked by an admin for errors.
-Please try to provide valid information.
-You should check specific help for corresponding ID type:
-<ul class='navigation'>
-	<li><a href='$HELP_URL$pci'>PCI devices</a>
-	<li><a href='$HELP_URL$pci_class'>PCI device classes</a>
-</ul>
+Please see the help on <a href='$HELP_URL$newitem'>creating new items</a> for
+hints about what to submit and what to avoid.
 
 <h2>Notification subscription</h2>
 <p>
 If the subscribe checkbox is checked, a notification on the new item will be created for you.
 For more information about notifications look at <a href='$HELP_URL$notifications'>their documentation</a>.
 <p>
-The checkbox is present only unless you have a notification covering this item already.
+The checkbox is present only if you do not have a notification covering this item yet.
 
 <h2>See also</h2>
 <p>
-You can create <a href='$HELP_URL$newitem'>new items</a>.
+You can also create <a href='$HELP_URL$newitem'>new items</a>.
 <p>
 If you want to know about changes in some item, set up <a href='$HELP_URL$notifications'>a notification</a>.

@@ -12,7 +12,7 @@ Help index
 </ul>
 <h2>Editing database</h2>
 <ul class='navigation'>
-	<li><a href='$HELP_URL$newitem'>Submitting new item</a>
+	<li><a href='$HELP_URL$newitem'>Submitting a new item</a>
 	<li><a href='$HELP_URL$newhistory'>Discussion</a>
 	<li><a href='$HELP_URL$mailsubmit'>Mail submit</a>
 </ul>
