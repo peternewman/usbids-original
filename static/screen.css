@@ -57,11 +57,34 @@ div.rmenu
 	text-align: right;
 	width: 20%;
 	padding-right: 1em;
+	margin: 0px;
 }
-div.top h1
+div.bigbluesquare
 {
-	text-align: center;
-	padding-top: 0.5ex;
+	width: 100%;
+}
+div.bluesquare
+{
+	position: absolute;
+	left: 20%;
+	top: 1ex;
+	width: 60%;
+}
+div.bluesquare,
+div.bigbluesquare
+{
+	background-color: #4c3bff;
+	color: #fffa45;
+	border: solid blue;
+}
+div.rmenu,
+div.lmenu
+{
+	background: #DDDDFF;
+}
+div.top p.home
+{
+	margin-top: 1ex;
 }
 div.top ul
 {
@@ -95,11 +118,4 @@ form.admin td.empty,
 form.admin table
 {
 	background: #BBBBFF;
-}
-.header
-{
-	background-color: #4c3bff;
-	color: #fffa45;
-	border: solid blue;
-	border-width: 1px;
 }

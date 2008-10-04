@@ -38,7 +38,7 @@ sub getHelp( $$ ) {
 	my $addr = PciIds::Address::new( $req->uri() );
 	print "<div class='top'>\n";
 	genMenu( $req, $addr, $args, $auth, [ ( $helpname eq 'index' ) ? () : [ 'Help index', 'help', 'index' ] ] );
-	print "<h1>$head</h1>\n";
+	print "<div class='bluesquare'><h1>$head</h1><p class='home'>The PCI ID Repository</div>\n";
 	print "<div class='clear'></div></div>\n";
 	genPath( $req, $addr, 1 );
 	my $url = setAddrPrefix( $req->uri(), 'read' ).buildExcept( 'help', $args ).'?help=';

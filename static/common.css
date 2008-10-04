@@ -42,13 +42,22 @@ form.admin col.controls
 {
 	width: 3%;
 }
-.header
+div.top
 {
-	text-align: center;
-	padding: 1ex;
+	padding: 0ex;
 	margin: 0 0 4ex 0;
 }
-.collapse
+div.top h1,
+div.top p.home
 {
+	text-align: center;
 	margin: 0 0;
+}
+div.top h1
+{
+	margin-top: 0.5ex;
+}
+div.top p.home
+{
+	margin-bottom: 1ex;
 }
