@@ -17,7 +17,7 @@ The page is divided into several parts:
 	<li><strong>List of sub-items</strong> ‒ all direct sub-items of the current item are listed here and you can descend into them.
 </ul>
 
-You can find the menu and the hierarchy in most other pages; they work in similar way there.
+<p>You can find the menu and the hierarchy in most other pages; they work in similar way there.
 
 <h2>Colors</h2>
 
@@ -60,7 +60,7 @@ an admin), or discussion comments not yet seen by an admin.
 </div>
 <h2>Sub-items</h2>
 <table class='subnodes'><col class='id-col'><col class='name-col'><col class='note-col'>
-<th>Id<th>Name<th>Note
+<tr><th>Id<th>Name<th>Note
 <tr class='item'><td>1234<td>Sub-item<td>This is just example
 </table>
 </div>

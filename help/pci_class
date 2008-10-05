@@ -15,4 +15,4 @@ A subclass can have different program interfaces.
 An interface is identified by a single byte represented by 2 hexadecimal letters.
 
 <h2>See also</h2>
-You can have a look at <a href='/read/PC'>PCI devices</a>.
+<p>You can have a look at <a href='/read/PC'>PCI devices</a>.

@@ -27,7 +27,7 @@ If you select any history comment, it will become active.
 
 <h3>Commenting</h3>
 <p>
-The yellow line act's similarly to <a href='$HELP_URL$newietm>new item</a> form.
+The yellow line act's similarly to <a href='$HELP_URL$newietm'>new item</a> form.
 If you provide only the text (the large box), it will just appear in the history.
 If you specify a name, it will become active (even if you specified any other active by a round box).
 All comments from administration interface are marked as seen, so you do not have to approve them.
