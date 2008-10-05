@@ -89,6 +89,7 @@ div.bluesquare-example
 	background-color: #4c3bff;
 	color: #fffa45;
 	border: solid blue;
+	border-width: 1px;
 }
 div.rmenu,
 div.lmenu
