@@ -22,6 +22,10 @@ div.footer div.campaign
 	margin: 0.2em;
 	margin-top: 0.6em;
 }
+div#sourceforge img
+{
+	border: none;
+}
 input.text,
 input.password,
 textarea
