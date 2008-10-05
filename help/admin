@@ -38,5 +38,5 @@ If your browser does not run javascript, nothing appears, but the combo box over
 
 <h3>Seen history</h3>
 <p>
-If you perform any action on an item, all it's history will become marked as seen (will appear in white box in <a href='$HELP_URL$list'>browsing</a> and will not appear in administration interface</a>).
+If you perform any action on an item, all it's history will become marked as seen (will appear in white box in <a href='$HELP_URL$list'>browsing</a> and will not appear in administration interface).
 If you do not want to change anything about the item, just use the green selection box to read the history.
