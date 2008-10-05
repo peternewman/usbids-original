@@ -59,22 +59,17 @@ sub genHtmlFooter( $$$ ) {
 		require PciIds::Html::Jump;
 		PciIds::Html::Jump::jumpWindow( $req, $args );
 	}
-	print '<hr>
-<table width="100%">
-<tr>
-<td>
+	print '
+<div class="footer"><hr>
+<div class="campaign"><a href="http://sourceforge.net/"><img src="http://sourceforge.net/sflogo.php?group_id=35833" width="88" height="31" border="0" alt="SourceForge"></a></div>
+<div class="campaign"><a href="http://www.anybrowser.org/campaign/"><img src="/static/anybrowser.png" width=88 height=31 alt="Best viewed with any browser."></a></div>
+<p class="maintain">
 Maintained by <a href="http://mj.ucw.cz/">Martin Mares</a> and <a href="http://vorner.pretel.cz/">Michal
 Vaner</a> with great help by volunteers from the <a href="http://www.sourceforge.net/projects/pciids/">pciids project</a>
 at <a href="http://www.sourceforge.net/">SourceForge</a>.
-</td><td rowspan=2>
-<a href="http://www.anybrowser.org/campaign/"><img src="/static/anybrowser.png" width=88 height=31 alt="Best viewed with any browser."></a>
-</td><td rowspan=2>
-<a href="http://sourceforge.net/"><img src="http://sourceforge.net/sflogo.php?group_id=35833" width="88" height="31" border="0" alt="SourceForge"></a>
-</td></tr>
-<tr><td><span style="display: block">No counters, no frames, no syntax
-errors.</span></td></tr>
-</table>
+<p class="maintain">No counters, no frames, no syntax errors.
 </div>';
+	genHtmlTail();
 }
 
 sub htmlDiv( $$ ) {

@@ -16,6 +16,12 @@ form table col.edit
 {
 	width: 85%;
 }
+div.footer div.campaign
+{
+	float: right;
+	margin: 0.2em;
+	margin-top: 0.6em;
+}
 input.text,
 input.password,
 textarea
