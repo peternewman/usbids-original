@@ -6,7 +6,7 @@ Browse to the item and click the <a href='$AC_URL$notifications'>notifications</
 You can set:
 <ul>
 	<li><strong>Effect range</strong> ‒ which ID's are considered for this notification. If the notification is not recursive, only the current ID is taken into account. Recursive notifications work on the given ID and its whole subtree (sub-items, their sub-items, …).
-	<li><strong>Notification level</strong> ‒ how serious an event needs to happen to trigger the notification. <em>None</em> means that the notification never happens (it ceases to exist, you can delete it by setting it to this level), <em>main comment</em> means whenever an admin approves a change of the name, <em>sub-item</em> is triggered when someone submits a new item with this one as a parent, <em>suggestion</em> is when someone suggests a new name for the item (but it is not yet approved) and <em>discussion</em> means whenever anybody writes anything.
+	<li><strong>Notification level</strong> ‒ how serious an event needs to happen to trigger the notification. <em>None</em> means that the notification never happens (it ceases to exist, you can delete it by setting it to this level), <em>main comment & sub-item</em> means whenever an admin approves a change of the name or when someone submits a new item with this one as a parent, <em>suggestion</em> is when someone suggests a new name for the item (but it is not yet approved) and <em>discussion</em> means whenever anybody writes anything.
 	All the more general notifications contain the less general ones (when you check discussion and an admin approves a name change, it is triggered too, but not the other way around).
 	<li><strong>Notification way</strong> ‒ the way the notification gets to you.
 </ul>
