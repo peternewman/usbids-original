@@ -35,7 +35,7 @@ sub sendMail( $$$ ) {
 	( $error, $to ) = emailCheck( $to, undef );
 	die "Invalid email in database $to\n" if defined $error;
 	$body =~ s/^\.$/../gm;
-	open SENDMAIL, "|$sendmail -f$from $to" or die 'Can not send mail';
+	open SENDMAIL, "|$sendmail -f'$from' '$to'" or die 'Can not send mail';
 	print SENDMAIL "From: $from\n".
 		"To: $to\n".
 		"Subject: $subject\n".
