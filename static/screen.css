@@ -133,3 +133,7 @@ form.admin table
 {
 	background: #BBBBFF;
 }
+p.announce
+{
+	background: yellow;
+}
