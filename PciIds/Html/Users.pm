@@ -453,6 +453,8 @@ sub profileFormSubmit( $$$$ ) {
 		my $data = shift;
 		my $change = 0;
 		$change = 1 if $data->{'email'} ne $oldData->{'email'};
+		$data->{'login'} = undef if defined $data->{'login'} && $data->{'login'} eq '';
+		$oldData->{'login'} = undef if defined $oldData->{'login'} && $oldData->{'login'} eq '';
 		$change = 1 if ( ( ( defined $data->{'login'} ) != ( defined $oldData->{'login'} ) ) || ( ( defined $data->{'login'} ) && ( defined $oldData->{'login'} ) && ( $data->{'login'} ne $oldData->{'login'} ) ) );
 		$change = 1 if ( defined $data->{'password'} ) && ( $data->{'password'} ne '' );
 		return undef unless $change;
