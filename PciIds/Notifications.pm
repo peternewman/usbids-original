@@ -77,13 +77,13 @@ sub sendOut( $$ ) {
 			$note .= "    Time: $time\n";
 		} elsif( $reason == 2 ) {
 			if( $name ne '' ) {
-				$note = "Item name validated.\n  Id:".$addr->pretty()."\n";
+				$note = "Item name approved.\n  Id:".$addr->pretty()."\n";
 				$note .= "  Name: $newname\n";
 				$note .= "  Description: $newdesc\n" if( defined $newdesc && ( $newdesc ne '' ) );
 				$note .= "  Comment text: $text\n" if( defined $text && ( $text ne '' ) );
 				$note .= "  Address: http://".$config{'hostname'}."/read/".$addr->get()."\n";
 			} else {
-				$note = "Item deletion validated.\n  Id:".$addr->pretty()."\n";
+				$note = "Item deletion approved.\n  Id:".$addr->pretty()."\n";
 				$note .= "  Address: http://".$config{'hostname'}."/read/".$addr->get()."\n";
 			}
 		}
