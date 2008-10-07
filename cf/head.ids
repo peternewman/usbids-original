@@ -1,0 +1,21 @@
+#
+#	List of PCI ID's
+#
+#	Maintained by Martin Mares <mj@ucw.cz> and other volunteers from the
+#	Linux PCI ID's Project at http://pciids.sf.net/.
+#
+#	New data are always welcome, especially if accurate. If you have
+#	anything to contribute, please follow the instructions at the web site
+#	or send a diff -u against the most recent pci.ids to pci-ids@ucw.cz.
+#
+#	This file can be distributed under either the GNU General Public License
+#	(version 2 or higher) or the 3-clause BSD License.
+#
+
+# Vendors, devices and subsystems. Please keep sorted.
+
+# Syntax:
+# vendor  vendor_name
+#	device  device_name				<-- single tab
+#		subvendor subdevice  subsystem_name	<-- two tabs
+

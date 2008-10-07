@@ -1,0 +1,9 @@
+
+
+# List of known device classes, subclasses and programming interfaces
+
+# Syntax:
+# C class	class_name
+#	subclass	subclass_name  		<-- single tab
+#		prog-if  prog-if_name  	<-- two tabs
+
