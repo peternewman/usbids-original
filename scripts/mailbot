@@ -114,9 +114,9 @@ if (!$patch) {
 	$author = $reply_plain;
 }
 
-$tprefix = "tmp/mbot-$$";
+$tprefix = "~/tmp/mbot-$$";
 $home = "~/";
-mkdir("tmp", 0777);
+mkdir("~/tmp", 0777);
 mkdir($tprefix, 0777) || error("Cannot create tmpdir");
 chdir($tprefix) || error("Cannot chdir to tmpdir");
 
