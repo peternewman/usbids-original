@@ -35,9 +35,13 @@ if ! [ -f docs/pci.ids.nohead ] || ! cmp docs/pci.ids.nohead pci.ids.new >/dev/n
 	ln -f pci.ids.final docs/v2.2/pci.ids
 	ln -f pci.ids.new docs/pci.ids.nohead
 	rm pci.ids.final
-	bzip2 -9c <docs/pci.ids >docs/pci.ids.bz2
+
+	bzip2 -9c <docs/pci.ids >docs/pci.ids.bz2.new
+	mv docs/pci.ids.bz2.new docs/pci.ids.bz2
 	ln -f docs/pci.ids.bz2 docs/v2.2/
-	gzip -9c <docs/pci.ids >docs/pci.ids.gz
+
+	gzip -9c <docs/pci.ids >docs/pci.ids.gz.new
+	mv docs/pci.ids.gz.new docs/pci.ids.gz
 	ln -f docs/pci.ids.gz docs/v2.2/
 fi
 
