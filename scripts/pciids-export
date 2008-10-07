@@ -28,8 +28,9 @@ cd ..
 if ! [ -f docs/pci.ids.nohead ] || ! cmp docs/pci.ids.nohead pci.ids.new >/dev/null ; then
 	VERSION=`date '+%Y.%m.%d'`
 	DATE=`date '+%F %T'`
-	sed <perl/cf/head.ids >pci.ids.final -e "s/@VERSION@/$VERSION/;s/@DATE@/$DATE/'
+	sed <perl/cf/head.ids >pci.ids.final -e "s/@VERSION@/$VERSION/;s/@DATE@/$DATE/"
 	cat pci.ids.new >> pci.ids.final
+
 	ln -f pci.ids.final ~/origs/00-current
 	ln -f pci.ids.final docs/pci.ids
 	ln -f pci.ids.final docs/v2.2/pci.ids
