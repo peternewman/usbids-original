@@ -108,6 +108,7 @@ sub new( $ ) {
 			WHERE
 				pending.notification = 1
 				AND users.nextxmpp <= ?
+				AND users.xmpp IS NOT NULL
 			ORDER BY
 				pending.user, pending.reason, history.time, history.location',
 		'dropnotifsxmpp' => 'DELETE FROM pending WHERE notification = 1 AND EXISTS ( SELECT 1 FROM users WHERE users.id = pending.user AND nextxmpp <= ? )',
