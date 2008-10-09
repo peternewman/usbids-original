@@ -60,7 +60,7 @@ sub genNotifForm( $$$$$$ ) {
 		print "<div class='navigation'><h2>All notifications</h2><ul>\n";
 		foreach( @{$notifs} ) {
 			my( $location ) = @{$_};
-			print "<li><a href='/$location".buildArgs( $args )."'>".PciIds::Address::new( $location )->pretty()."</a>\n";
+			print "<li><a href='/mods/$location".buildArgs( $args )."'>".PciIds::Address::new( $location )->pretty()."</a>\n";
 		}
 		print "</ul></div>\n";
 	}
