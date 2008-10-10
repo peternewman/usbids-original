@@ -65,8 +65,8 @@ sub sendOut( $$ ) {
 		} elsif( $reason == 1 ) {
 			$note = "New comment created.\n  Item:\n";
 			$note .= "    Id: ".$addr->pretty()."\n";
-			$note .= "    Name: $name\n" if( defined $name && ( $name ne '' ) && ( $name ne $newname ) );
-			$note .= "    Description: $desc\n" if( defined $desc && ( $desc ne '' ) && ( $desc ne $newdesc ) );
+			$note .= "    Name: $name\n" if( defined $name && ( $name ne '' ) && ( ( !defined $newname ) || ( $name ne $newname ) ) );
+			$note .= "    Description: $desc\n" if( defined $desc && ( $desc ne '' ) && ( ( !defined $newdesc ) || ( $desc ne $newdesc ) ) );
 			$note .= "    Address: http://".$config{'hostname'}."/read/".$addr->get()."\n";
 			$note .= "  Comment:\n";
 			$note .= "    Proposed name: $newname\n" if( defined $newname && ( $newname ne '' ) );
