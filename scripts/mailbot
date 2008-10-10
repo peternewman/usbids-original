@@ -43,7 +43,7 @@ sub getAuthor( $ ) {
 	my( $mail ) = @_;
 	$hasAuth->execute( $mail );
 	if( my( $id ) = $hasAuth->fetchrow_array ) {
-		tlog( "mailbot: Active user ($mail) id: $nid" );
+		tlog( "mailbot: Active user ($mail) id: $id" );
 		return $id;
 	} else {
 		tlog( "mailbot: Creating user $mail" );
