@@ -100,7 +100,7 @@ sub newItemSubmit( $$$$ ) {
 			return genNewItemForm( $req, $args, $auth, $tables, $result, $data );
 		}
 		notify( $tables, $data->{'address'}->parent()->get(), $comName, 2, 0 );#Notify the parent (parent gets new items)
-		$tables->submitNotification( $auth->{'authid'}, $data->{'address'}->get(), { 'recursive' => 0, 'notification' => 1, 'way' => 0 } ) if( defined $data->{'subscribe'} && $data->{'subscribe'} eq 'subscribe' );
+		$tables->submitNotification( $auth->{'authid'}, $data->{'address'}->get(), { 'recursive' => 0, 'notification' => 0, 'way' => 0 } ) if( defined $data->{'subscribe'} && $data->{'subscribe'} eq 'subscribe' );
 		tulog( $auth->{'authid'}, "Item created ".$data->{'address'}->get()." ".logEscape( $data->{'name'} )." ".logEscape( $data->{'note'} )." ".logEscape( $data->{'discussion'} )." $comName" );
 		return HTTPRedirect( $req, '/read/'.$data->{'address'}->get().'?action=list' );
 	} else {

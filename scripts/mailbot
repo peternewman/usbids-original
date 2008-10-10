@@ -79,7 +79,7 @@ sub submitItem( $$$$$ ) {
 	tlog( "mailbot: History created $hid $id ".logEscape( $name )." ".logEscape( $description )." ".logEscape( $text ) );
 	notify( $tables, $id, $hid, $created ? 2 : 1, $created ? 0 : 1 );
 	if( !$tables->notifExists( $author, $id ) ) {
-		$tables->submitNotification( $author, $id, { 'recursive' => 0, 'notification' => 1, 'way' => 0 } );
+		$tables->submitNotification( $author, $id, { 'recursive' => 0, 'notification' => 0, 'way' => 0 } );
 	}
 }
 
