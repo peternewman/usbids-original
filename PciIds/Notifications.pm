@@ -41,6 +41,14 @@ sub sendNotif( $$$ ) {
 		"$message\nThis is automatic notification message, do not respond to it.\nYou can change your notifications at http://$config{hostname}/mods/PC/?action=notifications\n" );
 }
 
+sub indent( $$ ) {
+	my( $text, $count ) = @_;
+	return '' unless defined $text;
+	my $ident = ' 'x$count;
+	$text =~ s/\n/$ident/s;
+	return $text;
+}
+
 sub sendOut( $$ ) {
 	my( $notifs, $sendFun ) = @_;
 	my( $last_address, $last_user );
@@ -58,7 +66,8 @@ sub sendOut( $$ ) {
 		if( $reason == 0 ) {
 			$note = "New item was created.\n  Id: ".$addr->pretty()."\n  Name: $newname\n";
 			$note .= "  Description: $newdesc\n" if( defined $newdesc && ( $newdesc ne '' ) );
-			$note .= "  Comment text: $text\n" if( defined $text && ( $text ne '' ) );
+			$text = indent( $text, 4 );
+			$note .= "  Comment text: $text\n" if $text ne '';
 			$note .= "  Author: $author\n" if( defined $author && ( $author ne '' ) );
 			$note .= "  Time: $time\n";
 			$note .= "  Address: http://".$config{'hostname'}."/read/".$addr->get()."\n";
@@ -72,7 +81,8 @@ sub sendOut( $$ ) {
 			$note .= "    Proposed name: $newname\n" if( defined $newname && ( $newname ne '' ) );
 			$note .= "    Deletion request\n" if defined $newname && $newname eq '';
 			$note .= "    Proposed description: $newdesc\n" if( defined $newdesc && ( $newdesc ne '' ) );
-			$note .= "    Text: $text\n" if( defined $text && ( $text ne '' ) );
+			$text = indent( $text, 6 );
+			$note .= "    Text: $text\n" if $text ne '';
 			$note .= "    Author: $author\n" if( defined $author && ( $author ne '' ) );
 			$note .= "    Time: $time\n";
 		} elsif( $reason == 2 ) {
@@ -80,7 +90,8 @@ sub sendOut( $$ ) {
 				$note = "Item name approved.\n  Id: ".$addr->pretty()."\n";
 				$note .= "  Name: $newname\n";
 				$note .= "  Description: $newdesc\n" if( defined $newdesc && ( $newdesc ne '' ) );
-				$note .= "  Comment text: $text\n" if( defined $text && ( $text ne '' ) );
+				$text = indent( $text, 4 );
+				$note .= "  Comment text: $text\n" if $text ne '';
 				$note .= "  Address: http://".$config{'hostname'}."/read/".$addr->get()."\n";
 			} else {
 				$note = "Item deletion approved.\n  Id: ".$addr->pretty()."\n";
