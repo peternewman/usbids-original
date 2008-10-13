@@ -31,8 +31,10 @@ use Apache2::Const qw(:common :http);
 
 sub safeEncode( $ ) {
 	my( $text ) = @_;
-	return encode( $text ) if defined $text;
-	return '';
+	return '' unless defined $text;
+	$text = encode( $text );
+	$text =~ s/\n/<br>/s;
+	return $text;
 }
 
 sub mailEncode( $$ ) {
