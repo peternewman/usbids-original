@@ -217,6 +217,15 @@ sub history( $$ ) {
 	return $self->query( 'history', [ $addr ] );
 }
 
+sub spaceNorm( $ ) {
+	$_ = shift;
+	return undef unless defined $_;
+	s/[ \t]+/ /g;
+	s/^\s//;
+	s/\s$//;
+	return $_;
+}
+
 sub submitItem( $$$ ) {
 	my( $self, $data, $auth ) = @_;
 	my( $addr ) = ( $data->{'address'} );
@@ -227,7 +236,7 @@ sub submitItem( $$$ ) {
 	return( 'exists', undef ) if( defined( $self->item( $addr->get(), 0 ) ) );
 	eval {
 		$self->command( 'newitem', [ $addr->get(), $addr->parent()->get() ] );
-		$self->command( 'newhistory', [ $addr->get(), $auth->{'authid'}, $data->{'discussion'}, $data->{'name'}, $data->{'note'} ] );
+		$self->command( 'newhistory', [ $addr->get(), $auth->{'authid'}, spaceNorm( $data->{'discussion'} ), spaceNorm( $data->{'name'} ), spaceNorm( $data->{'note'} ) ] );
 	};
 	if( $@ ) {
 		$self->rollback();
@@ -239,10 +248,10 @@ sub submitItem( $$$ ) {
 sub submitHistory( $$$$ ) {
 	my( $self, $data, $auth, $address ) = @_;
 	if( $data->{'delete'} ) {
-		$self->command( 'newhistory', [ $address->get(), $auth->{'authid'}, $data->{'text'}, '', $data->{'note'} ], 1 );
+		$self->command( 'newhistory', [ $address->get(), $auth->{'authid'}, spaceNorm( $data->{'text'} ), '', '' ], 1 );
 	} else {
 		$data->{'name'} = undef if defined $data->{'name'} && $data->{'name'} eq '';
-		$self->command( 'newhistory', [ $address->get(), $auth->{'authid'}, $data->{'text'}, $data->{'name'}, $data->{'note'} ], 1 );
+		$self->command( 'newhistory', [ $address->get(), $auth->{'authid'}, spaceNorm( $data->{'text'} ), spaceNorm( $data->{'name'} ), spaceNorm( $data->{'note'} ) ], 1 );
 	}
 	return $self->last();
 }
