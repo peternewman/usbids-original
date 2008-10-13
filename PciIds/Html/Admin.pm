@@ -166,7 +166,7 @@ function answer( id ) {
 			print "<col class='author'><col class='main'><col class='controls' span='2'>\n";
 			print "<tr class='label'><p>\n";
 			print "<td class='path' colspan='2'>";
-			genPathBare( $req, $addr, 1, 0 );
+			genPathBare( $req, $addr, 1, 0, $tables );
 			print "<input type='hidden' name='loc-$cnt-subcnt' value='$subcnt'>" if( $subcnt );
 			$subcnt = 0;
 			$cnt ++;

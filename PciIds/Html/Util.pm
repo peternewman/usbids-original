@@ -193,8 +193,8 @@ sub HTTPRedirect( $$ ) {
 	return HTTP_SEE_OTHER;
 }
 
-sub genPathBare( $$$$ ) {
-	my( $req, $address, $printAddr, $started ) = @_;
+sub genPathBare( $$$$$ ) {
+	my( $req, $address, $printAddr, $started, $tables ) = @_;
 	my $path;
 	if( defined $address ) {
 		$path = $address->path();
@@ -216,7 +216,9 @@ sub genPathBare( $$$$ ) {
 		if( !$printAddr && $myAddr ) {
 			print "<strong>".encode( $addr->pretty() )."</strong>";
 		} else {
-			print "<a href='/read/".$addr->get()."'>".encode( $addr->pretty() )."</a>";
+			my $title = '';
+			$title = ' title="'.encode( $tables->itemName( $addr->get() ) ).'"' if defined $tables;
+			print "<a href='/read/".$addr->get()."'$title>".encode( $addr->pretty() )."</a>";
 		}
 		print ")" if( $exception );
 	}
@@ -226,7 +228,7 @@ sub genPath( $$$ ) {
 	my( $req, $address, $printAddr ) = @_;
 	print "<div class='path'>\n";
 	print "<p><a href='/'>Main</a>";
-	genPathBare( $req, $address, $printAddr, 1 );
+	genPathBare( $req, $address, $printAddr, 1, undef );
 	print "</div>\n";
 }
 

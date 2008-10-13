@@ -118,7 +118,8 @@ sub new( $ ) {
 		'searchlocalname' => 'SELECT l.id, l.name, p.name FROM locations AS l JOIN locations AS p ON l.parent = p.id WHERE l.name LIKE ? AND l.id LIKE ? ORDER BY LENGTH(l.id), l.id',
 		'hasChildren' => 'SELECT DISTINCT 1 FROM locations WHERE parent = ?',
 		'hasMain' => 'SELECT DISTINCT 1 FROM locations WHERE id = ? AND mainhistory IS NOT NULL',
-		'notif-exists' => 'SELECT DISTINCT 1 FROM notifications WHERE user = ? AND ( location = ? OR ( recursive = 1 AND type <= 1 AND SUBSTR( ?, 1, LENGTH( location ) ) = location ) )'
+		'notif-exists' => 'SELECT DISTINCT 1 FROM notifications WHERE user = ? AND ( location = ? OR ( recursive = 1 AND type <= 1 AND SUBSTR( ?, 1, LENGTH( location ) ) = location ) )',
+		'itemname' => 'SELECT name FROM locations WHERE id = ?'
 	} );
 }
 
@@ -385,6 +386,12 @@ sub searchName( $$$ ) {
 	my( $self, $search, $prefix ) = @_;
 	return $self->query( 'searchlocalname', [ "%$search%", "$prefix/%" ] ) if defined $prefix;
 	return $self->query( 'searchname', [ "%$search%" ] );
+}
+
+sub itemName( $$ ) {
+	my( $self, $id ) = @_;
+	my $result = $self->query( 'itemname', [ $id ] )->[0]->[0];
+	return defined $result ? $result : '';
 }
 
 1;
