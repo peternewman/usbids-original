@@ -119,7 +119,8 @@ sub new( $ ) {
 		'hasChildren' => 'SELECT DISTINCT 1 FROM locations WHERE parent = ?',
 		'hasMain' => 'SELECT DISTINCT 1 FROM locations WHERE id = ? AND mainhistory IS NOT NULL',
 		'notif-exists' => 'SELECT DISTINCT 1 FROM notifications WHERE user = ? AND ( location = ? OR ( recursive = 1 AND type <= 1 AND SUBSTR( ?, 1, LENGTH( location ) ) = location ) )',
-		'itemname' => 'SELECT name FROM locations WHERE id = ?'
+		'itemname' => 'SELECT name FROM locations WHERE id = ?',
+		'admincount' => 'SELECT COUNT( DISTINCT location ) FROM history WHERE seen = 0 AND location LIKE ?'
 	} );
 }
 
@@ -392,6 +393,11 @@ sub itemName( $$ ) {
 	my( $self, $id ) = @_;
 	my $result = $self->query( 'itemname', [ $id ] )->[0]->[0];
 	return defined $result ? $result : '';
+}
+
+sub adminCount( $$ ) {
+	my( $tables, $prefix ) = @_;
+	return $tables->query( 'admincount', [ "$prefix%" ] )->[0]->[0];
 }
 
 1;
