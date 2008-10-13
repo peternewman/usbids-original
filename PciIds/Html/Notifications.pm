@@ -23,6 +23,7 @@ use PciIds::Html::Util;
 use PciIds::Html::Forms;
 use PciIds::Html::Users;
 use PciIds::Address;
+use PciIds::Config;
 use Apache2::Const qw(:common :http);
 
 sub genNotifForm( $$$$$$ ) {
@@ -70,6 +71,7 @@ sub genNotifForm( $$$$$$ ) {
 
 sub notifForm( $$$$ ) {
 	my( $req, $args, $tables, $auth ) = @_;
+	return HTTPRedirect( $req, '/mods/'.$config{'default_uri'}.'?action=notifications' ) if $req->uri() =~ /^(\/(read|mods))?\/?$/;
 	if( defined $auth->{'authid'} ) {
 		return genNotifForm( $req, $args, $tables, $auth, undef, $tables->getNotifData( $auth->{'authid'}, PciIds::Address::new( $req->uri() )->get() ) );
 	} else {
@@ -101,5 +103,7 @@ sub notifFormSubmit( $$$$ ) {
 	$tables->submitNotification( $auth->{'authid'}, PciIds::Address::new( $req->uri() )->get(), $data );
 	return HTTPRedirect( $req, setAddrPrefix( $req->uri(), 'read' ).buildExcept( 'action', $args )."?action=list" );
 }
+
+checkConf( [ 'default_uri' ] );
 
 1;

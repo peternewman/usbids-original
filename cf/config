@@ -11,3 +11,4 @@ hostname = localhost
 jelnet = /home/vorner/bin/jelnet
 xmpp_passwd = 1234
 xmpp_name = none
+default_uri = PC/
