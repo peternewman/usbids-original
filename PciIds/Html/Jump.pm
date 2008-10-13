@@ -40,7 +40,7 @@ sub jumpWindow( $$ ) {
 sub redirect( $$$$ ) {
 	my( $req, $args, $addr, $hasSSL ) = @_;
 	my $prefix = ( !defined $args->{'action'} || $args->{'action'} eq '' || $args->{'action'} eq 'list' ) ? 'read' : 'mods';
-	my $url = protoName( $hasSSL )."://".$req->hostname()."/$prefix/$addr".buildArgs( $args );
+	my $url = protoName( $hasSSL )."://".$req->hostname()."/$prefix/$addr";
 	return HTTPRedirect( $req, $url );
 }
 
@@ -90,11 +90,10 @@ sub jump( $$$$ ) {
 			print "<h2>Found items</h2>\n";
 			genTableHead( 'found', [ 'ID', 'Name', 'Parent' ], [] );
 			my $prefix = '/'.( ( !defined $args->{'action'} || $args->{'action'} eq '' || $args->{'action'} eq 'list' ) ? 'read/' : 'mods/' );
-			my $suffix = buildArgs( $args );
 			htmlFormatTable( $result, 3, [], [ sub {
 				my $addr = shift;
 				my $address = PciIds::Address::new( $addr );
-				return "<a href='$prefix".$address->get()."$suffix'>".encode( $address->fullPretty() )."</a>";
+				return "<a href='$prefix".$address->get()."'>".encode( $address->fullPretty() )."</a>";
 			} ], sub { 1; }, sub { ' class="item"'; } );
 			genTableTail();
 			genHtmlFooter( 1, $req, $args );
