@@ -46,10 +46,14 @@ sub mailEncode( $$ ) {
 
 sub genHist( $$$$$$$$$$$ ) {
 	my( $class, $email, $login, $time, $name, $note, $disc, $selname, $selvalue, $delname, $delvalue ) = @_;
-	print "<tr class='$class'><td>";
-	print "<span class='author'>".mailEncode( $email, $login )."<br></span>" if( defined $email );
-	print "<span class='time'>".safeEncode( $time )."</span>";
-	print "<td>";
+	print "<tr class='$class'>\n";
+	print "<td class='selects'><input type='radio' name='$selname' value='$selvalue'>\n";
+	if( defined $delname ) {
+		print "<td class='deletes'><input type='checkbox' name='$delname' value='$delvalue'>\n" if defined $delname
+	} else {
+		print "<td class='empty'>";
+	}
+	print "<td>\n";
 	if( defined $name ) {
 		if( $name eq '' ) {
 			print "<span class='name'>Deletion request<br></span>";
@@ -59,13 +63,19 @@ sub genHist( $$$$$$$$$$$ ) {
 	}
 	print "<span class='note'>Note: ".encode( $note )."<br></span>" if defined $note && $note ne '';
 	print safeEncode( $disc );
-	print "<td class='selects'><input type='radio' name='$selname' value='$selvalue'>\n";
-	print "<td class='deletes'><input type='checkbox' name='$delname' value='$delvalue'>\n" if defined $delname
+	print "<td>";
+	print "<span class='author'>".mailEncode( $email, $login )."<br></span>" if( defined $email );
+	print "<span class='time'>".safeEncode( $time )."</span>";
+	print "<td>";
 }
 
 sub genNewForm( $$ ) {
 	my( $num, $values ) = @_;
-	print "<tr class='newhistory'><td>";
+	print "<tr class='newhistory'>";
+	print "<td><td class='deletes'><input type='checkbox' name='loc-$num-softdel' value='del'>\n";
+	print "<td><span class='newname'>Name: <input type='text' name='name-$num'></span><span class='newnote'>Note: <input type='text' name='note-$num'></span><br>\n";
+	print "<textarea id='disc-$num' name='disc-$num'></textarea>\n";
+	print "<td>\n";
 	if( @{$values} ) {
 		print "<select id='ans-$num' name='ans-$num' onchange='answer( \"$num\" );'><option value='0'>Stock answers</option>";
 		my $i = 0;
@@ -78,9 +88,6 @@ sub genNewForm( $$ ) {
 	} else {
 		print "No stock answers";
 	}
-	print "<td><span class='newname'>Name: <input type='text' name='name-$num'></span><span class='newnote'>Note: <input type='text' name='note-$num'></span><br>\n";
-	print "<textarea id='disc-$num' name='disc-$num'></textarea>\n";
-	print "<td><td class='deletes'><input type='checkbox' name='loc-$num-softdel' value='del'>\n";
 }
 
 sub loadStock() {
@@ -159,25 +166,29 @@ function answer( id ) {
 				$started = 1;
 			}
 			my $addr = PciIds::Address::new( $locId );
+			$subcnt = 0;
+			$cnt ++;
 			if( defined( $actHist ) ) {
 				print "<table class='item'>\n";
 			} else {
 				print "<table class='unnamedItem'>\n";
 			}
-			print "<col class='author'><col class='main'><col class='controls' span='2'>\n";
+			print "<col class='controls' span='2'><col class='main'><col class='author'>\n";
 			print "<tr class='label'><p>\n";
+			print "<td class='selects'><input type='radio' name='loc-$cnt-sel' value='curr' checked='checked'>";
+			if( hasRight( $auth->{'accrights'}, 'prune' ) || ( !defined $actHist && !$tables->hasChildren( $addr->get() ) ) ) {
+				print "<td class='deletes'><input type='checkbox' name='loc-$cnt-del' value='del'>";
+			} else {
+				print "<td class='empty'>";
+			}
+			print "<input type='hidden' name='loc-$cnt' value='$locId'>";
 			print "<td class='path' colspan='2'>";
 			genPathBare( $req, $addr, 1, 0, $tables );
 			print "<input type='hidden' name='loc-$cnt-subcnt' value='$subcnt'>" if( $subcnt );
-			$subcnt = 0;
-			$cnt ++;
-			print "<td class='selects'><input type='radio' name='loc-$cnt-sel' value='curr' checked='checked'>";
-			print "<td class='deletes'><input type='checkbox' name='loc-$cnt-del' value='del'>" if hasRight( $auth->{'accrights'}, 'prune' ) || ( !defined $actHist && !$tables->hasChildren( $addr->get() ) );
-			print "<input type='hidden' name='loc-$cnt' value='$locId'>";
 			if( defined $actHist ) {
 				genHist( 'main-history', $actEmail, $actLogin, $actTime, $actName, $actNote, $actDisc, "loc-$cnt-sel", 'seen', undef, undef );
 			} else {
-				print "<tr class='main-history'><td class='empty' colspan='2'><td><input type='radio' name='loc-$cnt-sel' value='seen'>";
+				print "<tr class='main-history'><td><input type='radio' name='loc-$cnt-sel' value='seen'>";
 			}
 		}
 		$hiscnt ++;
