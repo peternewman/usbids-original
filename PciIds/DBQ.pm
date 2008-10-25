@@ -225,6 +225,7 @@ sub spaceNorm( $ ) {
 	s/[ \t]+/ /g;
 	s/^\s//;
 	s/\s$//;
+	s/\r//;
 	return $_;
 }
 
