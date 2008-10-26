@@ -47,7 +47,11 @@ sub mailEncode( $$ ) {
 sub genHist( $$$$$$$$$$$ ) {
 	my( $class, $email, $login, $time, $name, $note, $disc, $selname, $selvalue, $delname, $delvalue ) = @_;
 	print "<tr class='$class'>";
-	print "<td class='selects'><input type='radio' name='$selname' value='$selvalue'>\n";
+	if( defined $selname ) {
+		print "<td class='selects'><input type='radio' name='$selname' value='$selvalue'>\n";
+	} else {
+		print "<td class='empty'>\n";
+	}
 	if( defined $delname ) {
 		print "<td class='deletes'><input type='checkbox' name='$delname' value='$delvalue'>\n";
 	} else {
@@ -155,7 +159,7 @@ function answer( id ) {
 	print "// --></script>";
 	foreach( @{$tables->adminDump( $prefix, $limit )} ) {
 		my( $locId, $actName, $actNote, $actHist, $actEmail, $actLogin, $actDisc, $actTime,
-			$hist, $disc, $name, $note, $email, $login, $time ) = @{$_};
+			$hist, $disc, $name, $note, $email, $login, $time, $seen ) = @{$_};
 		if( !defined( $lastId ) || ( $lastId ne $locId ) ) {
 			last if( $hiscnt > ( defined $limit ? $limit : 80 ) );
 			$lastId = $locId;
@@ -186,15 +190,17 @@ function answer( id ) {
 			print "<td class='path' colspan='2'>";
 			genPathBare( $req, $addr, 1, 0, $tables );
 			print "<input type='hidden' name='loc-$cnt' value='$locId'>";
-			if( defined $actHist ) {
-				genHist( 'main-history', $actEmail, $actLogin, $actTime, $actName, $actNote, $actDisc, "loc-$cnt-sel", 'seen', undef, undef );
-			} else {
+			if( !defined $actHist ) {
 				print "<tr class='main-history'><td><input type='radio' name='loc-$cnt-sel' value='seen'>";
 			}
 		}
 		$hiscnt ++;
 		$subcnt ++;
-		genHist( 'unseen-history', $email, $login, $time, $name, $note, $disc, "loc-$cnt-sel", $hist, "del-$hiscnt", "del-$hist" );
+		if( $hist eq $actHist ) {
+			genHist( 'main-history', $actEmail, $actLogin, $actTime, $actName, $actNote, $actDisc, "loc-$cnt-sel", 'seen', undef, undef );
+		} else {
+			genHist( $seen ? 'history' : 'unseen-history', $email, $login, $time, $name, $note, $disc, ( defined $name && $name ne '' ) ? "loc-$cnt-sel" : undef, $hist, "del-$hiscnt", "del-$hist" );
+		}
 		print "<input type='hidden' name='owner-$hist' value='$locId'>";
 		print "<input type='hidden' name='his-$cnt-$subcnt' value='$hist'>";
 	}

@@ -21,15 +21,16 @@ use strict;
 use warnings;
 use base 'PciIds::DBQAny';
 
-my $adminDumpSql = 'SELECT
+my $adminDumpSql = 'SELECT DISTINCT
 			locations.id, locations.name, locations.note, locations.mainhistory, musers.email, musers.login, main.discussion, main.time,
-			history.id, history.discussion, history.nodename, history.nodenote, users.email, users.login, history.time
+			history.id, history.discussion, history.nodename, history.nodenote, users.email, users.login, history.time, history.seen
 		FROM
 			locations INNER JOIN history ON history.location = locations.id
 			LEFT OUTER JOIN users ON history.owner = users.id
 			LEFT OUTER JOIN history AS main ON locations.mainhistory = main.id
 			LEFT OUTER JOIN users AS musers ON main.owner = musers.id
-		WHERE history.seen = "0" AND locations.id LIKE ?
+			LEFT OUTER JOIN history AS test ON test.location = locations.id
+		WHERE test.seen = "0" AND locations.id LIKE ?
 		ORDER BY locations.id, history.id
 		LIMIT ';
 
