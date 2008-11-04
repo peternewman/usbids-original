@@ -199,7 +199,7 @@ function answer( id ) {
 		if( $hist eq $actHist ) {
 			genHist( 'main-history', $actEmail, $actLogin, $actTime, $actName, $actNote, $actDisc, "loc-$cnt-sel", 'seen', undef, undef );
 		} else {
-			genHist( $seen ? 'history' : 'unseen-history', $email, $login, $time, $name, $note, $disc, ( defined $name && $name ne '' ) ? "loc-$cnt-sel" : undef, $hist, "del-$hiscnt", "del-$hist" );
+			genHist( $seen ? 'history' : 'unseen-history', $email, $login, $time, $name, $note, $disc, ( defined $name ) ? "loc-$cnt-sel" : undef, $hist, "del-$hiscnt", "del-$hist" );
 		}
 		print "<input type='hidden' name='owner-$hist' value='$locId'>";
 		print "<input type='hidden' name='his-$cnt-$subcnt' value='$hist'>";
