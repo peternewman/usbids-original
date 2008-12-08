@@ -54,13 +54,15 @@ sub tryDirect( $$$$$ ) {
 	my $address = PciIds::Address::new( $req->uri() );
 	$search =~ s/:/\//g;
 	$search =~ s/ //g;
-	my( $top ) = $address->get() =~ /^([^\/]+)/;
-	$search =~ s/^\//$top\//;
-	#Is it absolute address?
-	my $saddr = PciIds::Address::new( $search );
-	return redirect( $req, $args, $saddr->get(), $hasSSL ) if( defined $saddr && itemExists( $tables, $saddr->get() ) );
+	if( defined $address ) {
+		my( $top ) = $address->get() =~ /^([^\/]+)/;
+		$search =~ s/^\//$top\//;
+		#Is it absolute address?
+		my $saddr = PciIds::Address::new( $search );
+		return redirect( $req, $args, $saddr->get(), $hasSSL ) if( defined $saddr && itemExists( $tables, $saddr->get() ) );
+	}
 	while( defined $address ) {
-		$saddr = PciIds::Address::new( $address->get()."/$search" );
+		my $saddr = PciIds::Address::new( $address->get()."/$search" );
 		return redirect( $req, $args, $saddr->get(), $hasSSL ) if( defined $saddr && itemExists( $tables, $saddr->get() ) );
 		$address = $address->parent();
 	}
@@ -75,6 +77,7 @@ sub jump( $$$$ ) {
 	my $direct = tryDirect( $req, $args, $tables, $search, $auth->{'ssl'} );
 	return $direct if defined $direct;
 	my $address = PciIds::Address::new( $req->uri() );
+	$address = PciIds::Address::new( 'PC' ) unless defined $address;
 	unless( $idOnly || length $search < 3 ) {#Try extended search
 		my( $prefix ) = $address->get() =~ /^([^\/]+)/;
 		$prefix = undef if $search =~ s/^\*//;

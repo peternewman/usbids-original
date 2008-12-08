@@ -80,7 +80,7 @@ my %handlers = (
 sub handler( $$ ) {
 	my( $req, $hasSSL ) = @_;
 	my $args = parseArgs( $req->args() );
-	return HTTPRedirect( $req, protoName( $hasSSL ).'://'.$req->hostname().'/index.html' ) if( $req->uri() eq '/' && ( !defined $args->{'action'} || $args->{'action'} ne 'help' ) );
+	return HTTPRedirect( $req, protoName( $hasSSL ).'://'.$req->hostname().'/index.html' ) if( $req->uri() eq '/' && ( !defined $args->{'action'} || ( $args->{'action'} ne 'help' && $args->{'action'} ne 'jump' ) ) );
 	return DECLINED if( $req->uri() =~ /^\/((static)\/|robots.txt|index.html)/ );
 	my $action = $args->{'action'};
 	$action = '' unless( defined $action );
