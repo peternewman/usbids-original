@@ -1,0 +1,7 @@
+
+# List of HID Usages
+
+# Syntax:
+# HUT hi  _usage_page  hid_usage_page_name
+#	hid_usage  hid_usage_name
+

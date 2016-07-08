@@ -1,0 +1,8 @@
+
+# List of known device classes, subclasses and protocols
+
+# Syntax:
+# C class  class_name
+#	subclass  subclass_name			<-- single tab
+#		protocol  protocol_name		<-- two tabs
+

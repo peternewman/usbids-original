@@ -32,8 +32,11 @@ my $comment = $dbh->prepare( "INSERT INTO history (location, nodename, nodenote,
 my $update = $dbh->prepare( "UPDATE locations SET mainhistory = ? WHERE id = ?" ) or die "Could not create query (".DBI->errstr.")\n";
 my( $vendor, $type, $sub, $description, $name );
 
-$query->execute( "PC", undef, undef, undef ) or die "Could not add toplevel node\n";
-$query->execute( "PD", undef, undef, undef ) or die "Could not add toplevel node\n";
+my @nodes=( "UD", "UC", "AT", "HD", "UR", "BS", "PH", "HT", "UL", "HC", "VT" );
+my $node;
+foreach $node ( @nodes ) {
+    $query->execute( $node, undef, undef, undef ) or die "Could not add toplevel node\n";
+}
 
 sub submit( $ ) {
 	my( $id ) = @_;
@@ -55,7 +58,7 @@ foreach( <> ) {
 	} elsif( /^\s*$/ ) {
 		undef $description;
 	} elsif( /^\t\t/ ) {
-		if( $vendor =~ /^PC/ ) {
+		if( $vendor =~ /^UD/ ) {
 			( $sub, $name ) = /^\s*([0-9a-fA-F]+\s[0-9a-fA-F]+)\s+(.*)$/;
 			$sub =~ s/\s+//g;
 		} else {
@@ -67,11 +70,47 @@ foreach( <> ) {
 		submit( $vendor.'/'.$type );
 	} elsif( /^C\s/ ) {
 		( $vendor, $name ) = /^C\s+([0-9a-fA-F]+)\s+(.*)$/;
-		$vendor = 'PD/'.$vendor;
+		$vendor = 'UC/'.$vendor;
+		submit( $vendor );
+	} elsif( /^AT\s/ ) {
+		( $vendor, $name ) = /^AT\s+([0-9a-fA-F]+)\s+(.*)$/;
+		$vendor = 'AT/'.$vendor;
+		submit( $vendor );
+	} elsif( /^HID\s/ ) {
+		( $vendor, $name ) = /^HID\s+([0-9a-fA-F]+)\s+(.*)$/;
+		$vendor = 'HD/'.$vendor;
+		submit( $vendor );
+	} elsif( /^R\s/ ) {
+		( $vendor, $name ) = /^R\s+([0-9a-fA-F]+)\s+(.*)$/;
+		$vendor = 'UR/'.$vendor;
+		submit( $vendor );
+	} elsif( /^BIAS\s/ ) {
+		( $vendor, $name ) = /^BIAS\s+([0-9a-fA-F]+)\s+(.*)$/;
+		$vendor = 'BS/'.$vendor;
+		submit( $vendor );
+	} elsif( /^PHY\s/ ) {
+		( $vendor, $name ) = /^PHY\s+([0-9a-fA-F]+)\s+(.*)$/;
+		$vendor = 'PH/'.$vendor;
+		submit( $vendor );
+	} elsif( /^HUT\s/ ) {
+		( $vendor, $name ) = /^HUT\s+([0-9a-fA-F]+)\s+(.*)$/;
+		$vendor = 'HT/'.$vendor;
+		submit( $vendor );
+	} elsif( /^L\s/ ) {
+		( $vendor, $name ) = /^L\s+([0-9a-fA-F]+)\s+(.*)$/;
+		$vendor = 'UL/'.$vendor;
+		submit( $vendor );
+	} elsif( /^HCC\s/ ) {
+		( $vendor, $name ) = /^HCC\s+([0-9a-fA-F]+)\s+(.*)$/;
+		$vendor = 'HC/'.$vendor;
+		submit( $vendor );
+	} elsif( /^VT\s/ ) {
+		( $vendor, $name ) = /^VT\s+([0-9a-fA-F]+)\s+(.*)$/;
+		$vendor = 'VT/'.$vendor;
 		submit( $vendor );
 	} elsif( /^[0-9a-fA-F]/ ) {
 		( $vendor, $name ) = /([0-9a-fA-F]+)\s+(.*)$/;
-		$vendor = 'PC/'.$vendor;
+		$vendor = 'UD/'.$vendor;
 		submit( $vendor );
 	} else {
 		die "Um what?? $_\n";

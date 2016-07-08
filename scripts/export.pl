@@ -25,6 +25,7 @@ BEGIN {
 }
 use PciIds::Db;
 use PciIds::DBQAny;
+use Switch;
 
 my $tree = shift;
 
@@ -44,8 +45,30 @@ foreach( @{$db->query( 'list', [ "$tree/%" ] )} ) {
 		next;
 	}
 	$_ = $id;
-	my $prefix = ( /^PD\/..$/ ) ? 'C ' : '';
-	s/^P.\///;
+	my $prefix = '';
+	# check to see if this is a main node
+	if ( rindex($_,'/') == 2 ) {
+	    switch (substr $_,0,2) {
+		case 'UC'  {$prefix='C ';}
+		case 'AT'  {$prefix='AT ';}
+		case 'HD'  {$prefix='HID ';}
+		case 'UR'  {$prefix='R ';}
+		case 'BS'  {$prefix='BIAS ';}
+		case 'PH'  {$prefix='PHY ';}
+		case 'HT'  {$prefix='HUT ';}
+		case 'UL'  {$prefix='L ';}
+		case 'HC'  {$prefix='HCC ';}
+		case 'VT'  {$prefix='VT ';}
+	    }
+	}
+	s/^U.\///;
+	s/^AT\///;
+	s/^HD\///;
+	s/^BS\///;
+	s/^PH\///;
+	s/^HT\///;
+	s/^HC\///;
+	s/^VT\///;
 	s/[^\/]//g;
 	s/\//\t/g;
 	my $tabs = $_;

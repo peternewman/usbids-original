@@ -1,23 +1,23 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en"><head><title>The PCI ID Repository</title>
+<html lang="en"><head><title>The USB ID Repository</title>
 <link rel="stylesheet" type="text/css" media="all" href="/static/common.css">
 <link rel="stylesheet" type="text/css" media="screen" href="/static/screen.css">
 <link rel="stylesheet" type="text/css" media="print" href="/static/print.css">
 </head><body>
 
 <div class="top"><div class="bigbluesquare">
-<h1>The PCI ID Repository</h1>
-<p class="home">The home of the <code>pci.ids</code> file
+<h1>The USD ID Repository</h1>
+<p class="home">The home of the <code>usb.ids</code> file
 </div></div>
 
-<p>This is a public repository of all known ID's used in PCI devices:
+<p>This is a public repository of all known ID's used in USB devices:
 ID's of vendors, devices, subsystems and device classes. It is used in
-various programs (e.g., <a href="http://mj.ucw.cz/pciutils.html">The PCI Utilities</a>)
+various programs (e.g., <a href="https://sourceforge.net/project/showfiles.php?group_id=3581&package_id=142529">The USB Utilities</a>)
 to display full human-readable names instead of cryptic numeric codes.
 
-<p class='announce'>Welcome to the new web interface of the PCI ID database.
+<p class='announce'>Welcome to the new web interface of the USB ID database. It is using the <a href="http://pciids.sourceforge.net/">new PCI IDs web interface</a>.
 Many a thing has changed, so please read the <a href="/read/?action=help?help=index">help</a>
-even if you were familiar with the old website.
+even if you were familiar with the old PCI IDs website.
 
 <h2>Browse</h2>
 
@@ -25,8 +25,8 @@ even if you were familiar with the old website.
 entries or to update the existing ones:
 
 <ul>
-	<li><a href="/read/PC/">PCI devices</a>
-	<li><a href="/read/PD/">PCI device classes</a>
+	<li><a href="/read/UD/">USB devices</a>
+	<li><a href="/read/UC/">USB device classes</a>
 </ul>
 
 <p>Or you can go directly to your <a href="/mods/?action=profile">profile</a> or <a href="/mods/?action=notifications">notification list</a>.
@@ -37,19 +37,14 @@ web interface.
 <h2>Download</h2>
 
 <p>We generate daily snapshots of the database in form of a
-<code>pci.ids</code> file. You can download the snapshot to update
+<code>usb.ids</code> file. You can download the snapshot to update
 the list used by your system:
 
 <ul>
-	<li><a href="/v2.2/pci.ids">pci.ids</a>
-	<li><a href="/v2.2/pci.ids.gz">pci.ids.gz</a> (compressed by gzip)
-	<li><a href="/v2.2/pci.ids.bz2">pci.ids.bz2</a> (compressed by bzip2)
+	<li><a href="/usb.ids">usb.ids</a>
+	<li><a href="/usb.ids.gz">usb.ids.gz</a> (compressed by gzip)
+	<li><a href="/usb.ids.bz2">usb.ids.bz2</a> (compressed by bzip2)
 </ul>
-
-<p>The above files require pciutils v2.2 or newer. If you are still using an older
-version for some reason, please get these instead: <a href="/pci.ids">pci.ids-2.0</a>,
-<a href="/pci.ids.gz">pci.ids-2.0.gz</a>, or <a href="/pci.ids.bz2">pci.ids-2.0.bz2</a>. They
-could however lack some subsystems.
 
 <p>The contents of the database and the generated files can be distributed
 under the terms of either the <a href="http://www.opensource.org/licenses/gpl-license.php">GNU General Public License</a> (version 2 or later)
@@ -61,14 +56,15 @@ or of the <a href="http://www.opensource.org/licenses/bsd-license.php">3-clause 
 devices which are not identified properly, please help us by adding them
 to the database or by fixing the existing entry.
 
-<p>New entries are always welcome, but please submit only accurate information
-&ndash; descriptions like "unknown modem device" are hardly useful for anybody.
-of existing entries to clarify the description or to correct mistakes are also
-welcome, but in this case please always add a discussion comment explaining the
-reason for the change.
+<p>New entries are always welcome, but please submit only accurate
+information &ndash; descriptions like "unknown modem device" are
+hardly useful for anybody.  Updates of existing entries to clarify the
+description or to correct mistakes are also welcome, but in this case
+please always add a discussion comment explaining the reason for the
+change.
 
-<p>Updates can be submitted either via the web interface, or as patches to the <code>pci.ids</code>
-file sent by e-mail to our mail robot at <a href="mailto:pci-ids@ucw.cz">pci-ids@ucw.cz</a>
+<p>Updates can be submitted either via the web interface, or as patches to the <code>usb.ids</code>
+file sent by e-mail to our mail robot at <a href="mailto:linux.usb.ids@gmail.com">linux.usb.ids@gmail.com</a>
 (see the <a href="/read/?action=help?help=mailsubmit">mail submit help</a>).
 
 <p><em>In all cases, please read the <a href="/read/?action=help?help=newitem">submission guidelines</a>
@@ -76,20 +72,22 @@ first.</em>
 
 <h2>Feedback</h2>
 
-<p>If you have encountered any problems or if you have any suggestions, please <a href="mailto:pciids-devel@lists.sourceforge.net">let
-us know</a>.
+<p>If you have encountered any problems or if you have any suggestions, please email <a href="mailto:linux.usb.ids+web@gmail.com">linux.usb.ids+web@gmail.com</a>, If
+it is about the original PCI IDs code you could email to <a href="mailto:pciids-devel@lists.sourceforge.net">let
+them know</a>.
 
 <h2>Source code</h2>
 <p>
 The source code of this web application is publicly available.
-If you want to examine it or need some similar application, you can find it <a href='http://vorner.pretel.cz/en/pciids.html'>here</a>.
+You can find the original code <a href='http://vorner.pretel.cz/en/pciids.html'>here</a>. The diffs applied
+for this USB version are <a href="usb-ids.diff">here</a>. The full thing is available <a href="usbids.tgz">here</a>.
 
 </body></html>
 <div class="footer"><hr>
 <div class="campaign" id="sourceforge"><a href="http://sourceforge.net/"><img src="http://sourceforge.net/sflogo.php?group_id=35833" width="88" height="31" alt="SourceForge"></a></div>
 <div class="campaign"><a href="http://www.anybrowser.org/campaign/"><img src="/static/anybrowser.png" width=88 height=31 alt="Best viewed with any browser."></a></div>
 <p class="maintain">
-Maintained by <a href="http://mj.ucw.cz/">Martin Mares</a> and <a href="http://vorner.pretel.cz/">Michal
+This site maintained by <a href="http://cern.ch/gowdy">Stephen J. Gowdy</a>. It is based on PCI ID site software, maintained by <a href="http://mj.ucw.cz/">Martin Mares</a> and <a href="http://vorner.pretel.cz/">Michal
 Vaner</a> with great help by volunteers from the <a href="http://www.sourceforge.net/projects/pciids/">pciids project</a>
 at <a href="http://www.sourceforge.net/">SourceForge</a>.
 <p class="maintain">No counters, no frames, no syntax errors.

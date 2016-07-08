@@ -14,7 +14,6 @@ cp -p $O/usbids.tgz .
 sed <$O/index.html >usb-ids.html -e '
 	s@href="/\(read\|mods\)/@href="http://usb-ids.gowdy.us/\1/@g
 '
-touch -r $O/index.html usb-ids.html
 
 cvs ci -m 'Updating to latest version'
 rsync -avz --delete ~/sf.net/htdocs gowdy,linux-usb@web.sourceforge.net:

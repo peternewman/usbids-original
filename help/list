@@ -43,8 +43,8 @@ an admin), or discussion comments not yet seen by an admin.
 	<li><a href='$HELP_URL$account'>Log in</a>
 </ul></div>
 <div class='bluesquare-example'>
-<h1>The PCI ID Repository</h1>
-<p class='home'>The home of the pci.ids file
+<h1>The USB ID Repository</h1>
+<p class='home'>The home of the usb.ids file
 </div>
 <div class='clear'></div></div>
 <div class='path'><p><a href='$HELP_URL$index'>Main page</a>&nbsp;-&gt;&nbsp<a href='$HELP_URL$index'>Parent</a></div>

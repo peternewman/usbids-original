@@ -206,11 +206,11 @@ sub process
 			print LOG "Parsing patched file.\n";
 			print LOG `$home/bin/ids_to_dbdump <$orig 2>&1 >orig.db.unsorted`;
 			$? && error("Error parsing original ID database");
-			print LOG `sort -k 2 <orig.db.unsorted >orig.db`;
+			print LOG `sort -rk 2 <orig.db.unsorted >orig.db`;
 			$? && error("Error sorting original ID database");
 			print LOG `$home/bin/ids_to_dbdump <usb.ids 2>&1 >new.db.unsorted`;
 			$? && error("Error parsing the patched usb.ids file");
-			print LOG `sort -k 2 <new.db.unsorted >new.db`;
+			print LOG `sort -rk 2 <new.db.unsorted >new.db`;
 			$? && error("Error sorting the patched usb.ids file");
 			print LOG "Finding ID differences.\n";
 			`diff -U0 new.db orig.db >diffs`;

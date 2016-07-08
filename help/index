@@ -18,6 +18,6 @@ Help index
 </ul>
 <h2>Information about ID types</h2>
 <ul class='navigation'>
-	<li><a href='$HELP_URL$pci'>PCI devices</a>
-	<li><a href='$HELP_URL$pci_class'>PCI device classes</a>
+	<li><a href='$HELP_URL$usb'>USB devices</a>
+	<li><a href='$HELP_URL$usb_class'>USB device classes</a>
 </ul>

@@ -19,18 +19,18 @@
 package PciIds::Address;
 use strict;
 use warnings;
-use PciIds::Address::Pci;
-use PciIds::Address::PciClass;
+use PciIds::Address::Usb;
+use PciIds::Address::UsbClass;
 
 sub new( $ ) {
 	my( $address ) = @_;
 	$address =~ s/\/(mods|read|static)//;#Eat the prefix
 	$address =~ s/\/$//;
 	$address =~ s/^\///;
-	if( $address =~ /^PC/ ) {
-		return PciIds::Address::Pci::new( $address );
-	} elsif( $address =~ /^PD/ ) {
-		return PciIds::Address::PciClass::new( $address );
+	if( $address =~ /^UD/ ) {
+		return PciIds::Address::Usb::new( $address );
+	} elsif( $address =~ /^UC/ ) {
+		return PciIds::Address::UsbClass::new( $address );
 	} else {
 		return undef;
 	}

@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+# Convert pci.ids to format used by the database.
+
+sub id {
+	$_ = shift @_;
+	tr/A-F/a-f/;
+	return $_;
+}
+
+$last = "????"; $lastd = "????????"; $cmt = "";
+while (<>) {
+	chomp;
+	s/ +$//;
+	s/([^\t])\t+/$1 /g;
+	if (/^$/) { $cmt=""; next; }
+	if (/^#/) { s/^#//; $cmt="$cmt $_"; next; }
+	/^C/ && last;
+	$cmt =~ s/  +/ /g;
+	$cmt =~ s/^ +//;
+	if (/^\t\t([0-9a-fA-F]{4}) ([0-9a-fA-F]{4})\s+([^\t]*)$/) {
+		print "s\t",id("$lastd$1$2"),"\t$3\t0\t$cmt\n";
+	} elsif (/^\t([0-9a-fA-F]{4})\s+([^\t]*)$/) {
+		$lastd="$last$1";
+		print "d\t",id($lastd),"\t$2\t0\t$cmt\n";
+	} elsif (/^([0-9a-fA-F]{4})\s+([^\t]*)$/) {
+		$last=$1; $lastd="$1????";
+		print "v\t",id($1),"\t$2\t0\t$cmt\n";
+	} else {
+		die "Syntax error: $_";
+	}
+	$cmt="";
+}

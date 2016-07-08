@@ -1,7 +1,7 @@
 body
 {
 	color: black;
-	background: #DDDDFF;
+	background: #ffffff;
 }
 form.admin table.unnamedItem tr.label,
 .unnamedItem, .unseen-history
@@ -39,7 +39,7 @@ form.admin table.item tr.label,
 .author, .time
 {
 	font-style: italic;
-color: #444444;
+	color: green;
 }
 .discussion div p, .admin div p
 {
@@ -54,10 +54,10 @@ width: 20%;
 div.rmenu
 {
 float: right;
-       text-align: right;
-width: 20%;
-       padding-right: 1em;
-margin: 0px;
+	text-align: right;
+	width: 20%;
+     	padding-right: 1em;
+	margin: 0px;
 }
 div.bigbluesquare
 {
@@ -86,15 +86,15 @@ div.bluesquare,
 div.bigbluesquare,
 div.bluesquare-example
 {
-	background-color: #4c3bff;
-	color: #fffa45;
-	border: solid blue;
+	background-color: #aaaaaa;
+	color: blue;
+	border: solid grey;
 	border-width: 1px;
 }
 div.rmenu,
 div.lmenu
 {
-	background: #DDDDFF;
+	background: #11ff11;
 }
 div.top p.home
 {
@@ -135,5 +135,5 @@ form.admin table
 }
 p.announce
 {
-	background: yellow;
+	background: #11ff11;
 }

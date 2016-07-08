@@ -81,7 +81,7 @@ sub handler( $$ ) {
 	my( $req, $hasSSL ) = @_;
 	my $args = parseArgs( $req->args() );
 	return HTTPRedirect( $req, protoName( $hasSSL ).'://'.$req->hostname().'/index.html' ) if( $req->uri() eq '/' && ( !defined $args->{'action'} || ( $args->{'action'} ne 'help' && $args->{'action'} ne 'jump' ) ) );
-	return DECLINED if( $req->uri() =~ /^\/((static)\/|robots.txt|index.html)/ );
+	return DECLINED if( $req->uri() =~ /^\/((static)\/|robots.txt|index.html|usb.ids|usb.ids.gz|usb.ids.hz2|usb-ids.diff|usbids.tgz)/ );
 	my $action = $args->{'action'};
 	$action = '' unless( defined $action );
 	return HTTPRedirect( $req, protoName( $hasSSL ).'://'.$req->hostname().'/' ) if $req->uri() =~ /^\/(read|mods)\/?$/  && ( $action eq '' || $action eq 'list' );

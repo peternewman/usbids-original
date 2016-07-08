@@ -1,0 +1,7 @@
+
+# HID Descriptor bCountryCode
+# HID Specification 1.11 (2001-06-27) page 23
+#
+# Syntax:
+# HCC country_code keymap_type
+

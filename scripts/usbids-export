@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #	PciIds web database
 #	Copyright (C) 2008 Michal Vaner (vorner@ucw.cz)
 #
@@ -16,16 +18,33 @@
 #	along with this program; if not, write to the Free Software
 #	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-package PciIds::Startup;
-use strict;
-use warnings;
-use base 'Exporter';
+set -e
 
-#Where are data?
-our $directory = '/var/www/html/';
-our @EXPORT=qw($directory);
+#cd perl
+touch usb.ids.new
+nodes="UD UC AT HD UR BS PH HT UL HC VT"
+for node in $nodes; do
+    if [ -e cf/header_$node.ids ]; then
+	cat cf/header_$node.ids >> usb.ids.new
+    fi
+    ./scripts/export.pl $node >> usb.ids.new
+done
+#cd ..
+if ! [ -f usb.ids.nohead ] || ! cmp usb.ids.nohead usb.ids.new >/dev/null ; then
+	VERSION=`date '+%Y.%m.%d'`
+	DATE=`date '+%F %T'`
+	sed <cf/head.ids >usb.ids.final -e "s/@VERSION@/$VERSION/;s/@DATE@/$DATE/"
+	cat usb.ids.new >> usb.ids.final
 
-#Where are the modules?
-use lib ( '/var/www/html/' );
+	ln -f usb.ids.final usb.ids
+	ln -f usb.ids.new usb.ids.nohead
+	rm usb.ids.final
 
-1;
+	bzip2 -9c <usb.ids >usb.ids.bz2.new
+	mv usb.ids.bz2.new usb.ids.bz2
+
+	gzip -9c <usb.ids >usb.ids.gz.new
+	mv usb.ids.gz.new usb.ids.gz
+fi
+
+rm usb.ids.new

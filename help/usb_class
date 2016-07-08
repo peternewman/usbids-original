@@ -1,0 +1,18 @@
+USB Device Classes
+<h2>Device classes</h2>
+<p>
+Device class is identified by a single byte. It is stored as 2 hexadecimal digits (all in lowercase).
+They can be examined <a href='/read/UC'>here</a>.
+
+<h2>Device subclasses</h2>
+<p>
+A device class is divided into subclasses.
+Each subclass is identified in a same way as a device class, by single byte represented by 2 hexadecimal letters.
+
+<h2>Program interface</h2>
+<p>
+A subclass can have different program interfaces.
+An interface is identified by a single byte represented by 2 hexadecimal letters.
+
+<h2>See also</h2>
+<p>You can have a look at <a href='/read/UD'>USB devices</a>.

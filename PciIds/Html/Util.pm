@@ -245,7 +245,7 @@ sub genCustomHead( $$$$$$ ) {
 	my( $req, $args, $addr, $caption, $lactions, $ractions ) = @_;
 	print "<div class='top'>\n";
 	genLocMenu( $req, $args, $addr, $lactions, $ractions );
-	print "<div class='bluesquare'><h1>$caption</h1><p class='home'>The PCI ID Repository</div>\n";
+	print "<div class='bluesquare'><h1>$caption</h1><p class='home'>The USB ID Repository</div>\n";
 	print "<div class='clear'></div></div>\n";
 	genPath( $req, $addr, 1 );
 }

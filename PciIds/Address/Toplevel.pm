@@ -23,7 +23,7 @@ use base 'PciIds::Address::Base';
 
 sub new( $ ) {
 	my( $value ) = @_;
-	if( $value =~ /^P[CD]\/?/ ) {
+	if( $value =~ /^U[CD]\/?/ ) {
 		return bless PciIds::Address::Base::new( $value );
 	} else {
 		return undef;
@@ -32,10 +32,10 @@ sub new( $ ) {
 
 sub pretty( $ ) {
 	my $self = shift;
-	if( $self->{'value'} =~ /^PC/ ) {
-		return 'PCI Devices';
+	if( $self->{'value'} =~ /^UD/ ) {
+		return 'USB Devices';
 	} else {
-		return 'PCI Device Classes';
+		return 'USB Device Classes';
 	}
 }
 
@@ -55,7 +55,7 @@ sub leaf( $ ) {
 sub append( $$ ) {
 	my( $self, $suffix ) = @_;
 	$suffix = lc $suffix;
-	if( $self->{'value'} =~ /^PC/ ) {#PCI
+	if( $self->{'value'} =~ /^UD/ ) {#PCI
 		return ( undef, "Invalid ID syntax" ) unless ( $suffix =~ /^[0-9a-f]{4,4}$/ );
 	} else {#PCI Device Class
 		return ( undef, "Invalid ID syntax" ) unless ( $suffix =~ /^[0-9a-f]{2,2}$/ );
@@ -67,7 +67,7 @@ sub canDiscuss( $ ) { return 0; }
 
 sub defaultRestrict( $ ) {
 	my( $self ) = @_;
-	if( $self->get() =~ /^PC/ ) {
+	if( $self->get() =~ /^UD/ ) {
 		return "0";
 	} else {
 		return "";
@@ -76,7 +76,7 @@ sub defaultRestrict( $ ) {
 
 sub defaultRestrictList( $ ) {
 	my( $self ) = @_;
-	if( $self->get() =~ /^PC/ ) {
+	if( $self->get() =~ /^UD/ ) {
 		my @result;
 		for(my $i = '0'; $i < '10'; ++ $i ) {
 			push @result, $i;
@@ -97,16 +97,16 @@ sub parent( $ ) {
 
 sub helpName( $ ) {
 	my( $self ) = @_;
-	if( $self->{'value'} =~ /^PC/ ) {
-		return 'pci';
+	if( $self->{'value'} =~ /^UD/ ) {
+		return 'usb';
 	} else {
-		return 'pci_class';
+		return 'usb_class';
 	}
 }
 
 sub subName( $ ) {
 	my( $self ) = @_;
-	if( $self->get() =~ /^PC/ ) {
+	if( $self->get() =~ /^UD/ ) {
 		return 'Vendors';
 	} else {
 		return 'Device classes';
@@ -115,7 +115,7 @@ sub subName( $ ) {
 
 sub subIdSize( $ ) {
 	my( $self ) = @_;
-	if( $self->get() =~ /^PC/ ) {
+	if( $self->get() =~ /^UD/ ) {
 		return 4;
 	} else {
 		return 2;

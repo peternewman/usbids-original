@@ -1,11 +1,11 @@
 Mail submit
 <p>
-PCI ID's can be also submitted and edited using email.
+USB ID's can be also submitted and edited using email.
 <p>
-There is a robot listening at <a href='mailto:pci-ids@ucw.cz'>pci-ids@ucw.cz</a>, which has been
+There is a robot listening at <a href='mailto:linux.usb.ids@gmail.com'>linux.usb.ids@gmail.com</a>, which has been
 set up to accept patches received by email.
 <p>
-Please use unified diffs (<tt>diff -u</tt>) against the current <a href='/v2.2/pci.ids'>pci.ids</a> file (preferably the one just downloaded from this page, but the robot tries hard to recognize older versions as well). Please include the patch in the body of the email (to avoid base64
+Please use unified diffs (<tt>diff -u</tt>) against the current <a href='usb.ids'>usb.ids</a> file (preferably the one just downloaded from this page, but the robot tries hard to recognize older versions as well). Please include the patch in the body of the email (to avoid base64
 encoding which is currently not understood by the robot) and avoid mail agents which convert
 tabs to spaces or wrap long lines. The classical <tt>mail</tt> utility is a safe choice.
 <p>
@@ -13,5 +13,5 @@ If you do not have an <a href='$HELP_URL$account'>account</a> yet, one will be c
 automatically. You will be also sent notifications when anybody modifies the items you have
 changed (of course you can tweak the notifications, look at their <a href='$HELP_URL$notifications'>documentation</a>).
 <p>
-Please note that the robot currently understands only PCI ID's. Other types of ID's (classes etc.)
+Please note that the robot currently understands only USB ID's. Other types of ID's (classes etc.)
 must be entered via the web interface.

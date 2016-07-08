@@ -1,0 +1,7 @@
+
+# List of HID Descriptor Item Types
+# Note: 2 bits LSB encode data length following
+
+# Syntax:
+# R item_type  item_type_name
+

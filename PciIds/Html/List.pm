@@ -44,7 +44,7 @@ sub list( $$$$ ) {
 	genHtmlHead( $req, $id, "<style type='text/css' media='screen,print'>col.id-col { width: ".$address->subIdSize()*1.25."ex; }</style>\n" );
 	print "<div class='top'>\n";
 	genMenu( $req, $address, $args, $auth, [ [ 'Help', 'help', 'list' ], $address->helpName() ? [ 'ID syntax', 'help', $address->helpName() ] : () ] );
-	print '<div class="bluesquare"><h1>The PCI ID Repository</h1><p class="home">The home of the <code>pci.ids</code> file</div>';
+	print '<div class="bluesquare"><h1>The USB ID Repository</h1><p class="home">The home of the <code>usb.ids</code> file</div>';
 	print "<div class='clear'></div></div>\n";
 	genPath( $req, $address, 0 );
 	print htmlDiv( 'name', '<p>Name: '.encode( $name ) ) if defined $name && $name ne '';

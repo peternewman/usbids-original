@@ -16,7 +16,7 @@ The last, yellow, line is for submitting answer.
 The last column (with square check-boxes) is for deleting.
 To delete the whole item, use red one in the first line (present only if it is possible to delete this item).
 Each discussion comment has it's own one.
-The delete checkbox in the yellow line will delete name of the current item (eg. the history is preserved, but it will not appear in pci.ids or other exports).
+The delete checkbox in the yellow line will delete name of the current item (eg. the history is preserved, but it will not appear in usb.ids or other exports).
 
 <h3>Selecting</h3>
 <p>
